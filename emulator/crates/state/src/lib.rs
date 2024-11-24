@@ -1,8 +1,10 @@
 mod reg;
 mod mem;
+mod device;
 
 use reg::Registers;
 use mem::Memory;
+use device::DeviceMap;
 
 #[derive(Debug, Clone)]
 pub struct State {
@@ -10,6 +12,7 @@ pub struct State {
     pub regs: Registers,
     pub imem: Memory<{1024 * 6}>,
     pub dmem: Memory<{1024 * 4}>,
+    pub devices: DeviceMap,
 }
 
 impl State {
@@ -19,6 +22,7 @@ impl State {
             regs: Registers::new(),
             imem: Memory::new(),
             dmem: Memory::new(),
+            devices: DeviceMap::new(),
         }
     }
 }
