@@ -33,22 +33,22 @@ pub struct WidgetsManager {
 }
 
 impl WidgetsManager {
-    pub fn new(emu: &EmuState) -> Self {
+    pub fn new() -> Self {
         WidgetsManager {
-            inst_view_state: InstViewState::new(true, emu),
-            output_view_state: OutputViewState::new(false, emu),
-            state_view_state: RegisterViewState::new(false, emu),
-            mem_view_state: MemViewState::new(false, emu),
+            inst_view_state: InstViewState::new(true),
+            output_view_state: OutputViewState::new(false),
+            state_view_state: RegisterViewState::new(false),
+            mem_view_state: MemViewState::new(false),
             cursor: (0, 0),
         }
     }
 
-    pub fn gen_widgets(&self) -> Widgets {
+    pub fn gen_widgets(&self, emu: &EmuState) -> Widgets {
         Widgets {
-            inst_view: self.inst_view_state.gen_widget(),
-            output_view: self.output_view_state.gen_widget(),
-            state_view: self.state_view_state.gen_widget(),
-            mem_view: self.mem_view_state.gen_widget(),
+            inst_view: self.inst_view_state.gen_widget(emu),
+            output_view: self.output_view_state.gen_widget(emu),
+            state_view: self.state_view_state.gen_widget(emu),
+            mem_view: self.mem_view_state.gen_widget(emu),
         }
     }
 
@@ -73,12 +73,5 @@ impl WidgetsManager {
         self.output_view_state.set_selected(self.cursor == (0, 1));
         self.state_view_state.set_selected(self.cursor == (1, 0));
         self.mem_view_state.set_selected(self.cursor == (1, 1));
-    }
-
-    pub fn update_emu(&mut self, emu: &EmuState) {
-        self.inst_view_state.update_emu(&emu);
-        self.output_view_state.update_emu(&emu);
-        self.state_view_state.update_emu(&emu);
-        self.mem_view_state.update_emu(&emu);
     }
 }

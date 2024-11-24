@@ -31,16 +31,14 @@ pub struct InstViewState {
 }
 
 impl InstViewState {
-    pub fn new(selected: bool, emu: &EmuState) -> Self {
-        let mut state = InstViewState {
+    pub fn new(selected: bool) -> Self {
+        InstViewState {
             selected,
             latest_event: String::new(),
-        };
-        state.update_emu(emu);
-        state
+        }
     }
 
-    pub fn gen_widget(&self) -> InstView {
+    pub fn gen_widget(&self, _emu: &EmuState) -> InstView {
         InstView {
             selected: self.selected,
             body: self.latest_event.clone(),
@@ -53,9 +51,5 @@ impl InstViewState {
 
     pub fn set_selected(&mut self, selected: bool) {
         self.selected = selected;
-    }
-
-    pub fn update_emu(&mut self, emu: &EmuState) {
-
     }
 }

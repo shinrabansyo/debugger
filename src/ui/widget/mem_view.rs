@@ -30,40 +30,17 @@ impl Widget for MemView {
 pub struct MemViewState {
     selected: bool,
     offset: i32,
-    text: Text<'static>,
 }
 
 impl MemViewState {
-    pub fn new(selected: bool, emu: &EmuState) -> Self {
-        let mut state = MemViewState {
+    pub fn new(selected: bool) -> Self {
+        MemViewState {
             selected,
             offset: 0,
-            text: Text::default(),
-        };
-        state.update_emu(emu);
-        state
-    }
-
-    pub fn gen_widget(&self) -> MemView {
-        MemView {
-            selected: self.selected,
-            text: self.text.clone(),
         }
     }
 
-    pub fn handle_key_event(&mut self, event: KeyEvent) {
-        self.offset = match event.code {
-            KeyCode::Up => max(0, self.offset - 16),
-            KeyCode::Down => self.offset + 16,
-            _ => self.offset,
-        };
-    }
-
-    pub fn set_selected(&mut self, selected: bool) {
-        self.selected = selected;
-    }
-
-    pub fn update_emu(&mut self, emu: &EmuState) {
+    pub fn gen_widget(&self, emu: &EmuState) -> MemView {
         let mut lines = vec![];
         for row in 0..20 {
             let mut line = vec![];
@@ -88,6 +65,21 @@ impl MemViewState {
             lines.push(Line::from(line));
         }
 
-        self.text = Text::from(lines);
+        MemView {
+            selected: self.selected,
+            text: Text::from(lines),
+        }
+    }
+
+    pub fn handle_key_event(&mut self, event: KeyEvent) {
+        self.offset = match event.code {
+            KeyCode::Up => max(0, self.offset - 16),
+            KeyCode::Down => self.offset + 16,
+            _ => self.offset,
+        };
+    }
+
+    pub fn set_selected(&mut self, selected: bool) {
+        self.selected = selected;
     }
 }

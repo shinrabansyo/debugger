@@ -31,16 +31,14 @@ pub struct OutputViewState {
 }
 
 impl OutputViewState {
-    pub fn new(selected: bool, emu: &EmuState) -> Self {
-        let mut state = OutputViewState {
+    pub fn new(selected: bool) -> Self {
+        OutputViewState {
             selected,
             latest_event: String::new(),
-        };
-        state.update_emu(emu);
-        state
+        }
     }
 
-    pub fn gen_widget(&self) -> OutputView {
+    pub fn gen_widget(&self, _emu: &EmuState) -> OutputView {
         OutputView {
             selected: self.selected,
             body: self.latest_event.clone(),
@@ -53,9 +51,5 @@ impl OutputViewState {
 
     pub fn set_selected(&mut self, selected: bool) {
         self.selected = selected;
-    }
-
-    pub fn update_emu(&mut self, emu: &EmuState) {
-
     }
 }

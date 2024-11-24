@@ -27,35 +27,16 @@ impl Widget for RegisterView {
 
 pub struct RegisterViewState {
     selected: bool,
-    text: Text<'static>,
 }
 
 impl RegisterViewState {
-    pub fn new(selected: bool, emu: &EmuState) -> Self {
-        let mut state = RegisterViewState {
+    pub fn new(selected: bool) -> Self {
+        RegisterViewState {
             selected,
-            text: Text::default(),
-        };
-        state.update_emu(emu);
-        state
-    }
-
-    pub fn gen_widget(&self) -> RegisterView {
-        RegisterView {
-            selected: self.selected,
-            text: self.text.clone(),
         }
     }
 
-    pub fn handle_key_event(&mut self, _: KeyEvent) {
-        // do nothing
-    }
-
-    pub fn set_selected(&mut self, selected: bool) {
-        self.selected = selected;
-    }
-
-    pub fn update_emu(&mut self, emu: &EmuState) {
+    pub fn gen_widget(&self, emu: &EmuState) -> RegisterView {
         let mut lines = vec![];
 
         // PC 表示
@@ -81,6 +62,17 @@ impl RegisterViewState {
             lines.push(Line::from(reg_items));
         }
 
-        self.text = Text::from(lines);
+        RegisterView {
+            selected: self.selected,
+            text: Text::from(lines),
+        }
+    }
+
+    pub fn handle_key_event(&mut self, _: KeyEvent) {
+        // do nothing
+    }
+
+    pub fn set_selected(&mut self, selected: bool) {
+        self.selected = selected;
     }
 }

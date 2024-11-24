@@ -25,7 +25,7 @@ impl UI {
     pub fn new(emu: EmuState) -> Self {
         UI {
             layout_man: LayoutManager::default(),
-            widgets_man: WidgetsManager::new(&emu),
+            widgets_man: WidgetsManager::new(),
             running: true,
             emu: Some(emu),
         }
@@ -43,7 +43,7 @@ impl UI {
 // Rendering
 impl UI {
     fn draw(&mut self, frame: &mut Frame) {
-        let widegts = self.widgets_man.gen_widgets();
+        let widegts = self.widgets_man.gen_widgets(self.emu.as_ref().unwrap());
         let layout = self.layout_man.gen(frame);
 
         frame.render_widget(widegts.inst_view, layout.inst);
@@ -69,7 +69,6 @@ impl UI {
                 let emu = self.emu.take().unwrap();
                 let emu = sb_emu::step(emu).unwrap();
                 self.emu = Some(emu);
-                self.widgets_man.update_emu(self.emu.as_ref().unwrap());
             }
             KeyCode::Char('q') => self.running = false,
             _ => self.widgets_man.handle_key_event(event),
