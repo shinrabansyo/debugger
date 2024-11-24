@@ -1,22 +1,18 @@
-mod reg;
-mod mem;
+mod state;
 
-use reg::Registers;
-use mem::Memory;
+use state::State;
 
 #[derive(Debug, Clone)]
-pub struct State {
-    pub regs: Registers,
-    pub imem: Memory<{1024 * 6}>,
-    pub dmem: Memory<{1024 * 4}>,
+pub struct Executor {
+    state: State,
 }
 
-impl State {
-    pub fn new() -> Self {
-        State {
-            regs: Registers::new(),
-            imem: Memory::new(),
-            dmem: Memory::new(),
-        }
+impl Executor {
+    pub fn exec() -> anyhow::Result<()> {
+        Ok(())
     }
+}
+
+pub trait Execulatble {
+    fn exec(&self, state: &mut State) -> anyhow::Result<()>;
 }
