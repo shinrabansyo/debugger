@@ -9,14 +9,6 @@ pub struct StateView {
     selected: bool,
 }
 
-impl StateView {
-    pub fn new(selected: bool) -> Self {
-        StateView {
-            selected,
-        }
-    }
-}
-
 impl Widget for StateView {
     fn render(self, area: Rect, buf: &mut Buffer) {
         Paragraph::new("This is body.")
@@ -36,6 +28,24 @@ impl StateView {
             Block::bordered()
                 .title(Line::from(" State ".bold()).centered())
                 .border_set(border::ROUNDED)
+        }
+    }
+}
+
+pub struct StateViewState {
+    pub selected: bool,
+}
+
+impl StateViewState {
+    pub fn new(selected: bool) -> Self {
+        StateViewState {
+            selected,
+        }
+    }
+
+    pub fn gen_widget(&self) -> StateView {
+        StateView {
+            selected: self.selected,
         }
     }
 }

@@ -9,14 +9,6 @@ pub struct MemView {
     selected: bool,
 }
 
-impl MemView {
-    pub fn new(selected: bool) -> Self {
-        MemView {
-            selected,
-        }
-    }
-}
-
 impl Widget for MemView {
     fn render(self, area: Rect, buf: &mut Buffer) {
         Paragraph::new("This is body.")
@@ -36,6 +28,24 @@ impl MemView {
             Block::bordered()
                 .title(Line::from(" Memory ".bold()).centered())
                 .border_set(border::ROUNDED)
+        }
+    }
+}
+
+pub struct MemViewState {
+    pub selected: bool,
+}
+
+impl MemViewState {
+    pub fn new(selected: bool) -> Self {
+        MemViewState {
+            selected,
+        }
+    }
+
+    pub fn gen_widget(&self) -> MemView {
+        MemView {
+            selected: self.selected,
         }
     }
 }
