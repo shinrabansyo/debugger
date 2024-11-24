@@ -2,12 +2,12 @@ use sb_emu_ir_macros::{I_style, S_style, R_style, B_style};
 
 #[test]
 fn check_compile_i() {
-    #[I_style]
+    #[I_style(0b10101, 0b111)]
     struct TestInst;
 
     const RAW_INST: u64 = 0x0
-        | (0b10101    << 0)   // opcode
-        | (0b111      << 5)   // opcode_sub
+        | (0b00000    << 0)   // opcode
+        | (0b000      << 5)   // opcode_sub
         | (0b00100    << 8)   // rd
         | (0b101      << 13)  // rs1
         | (0x12345678 << 18); // imm
@@ -22,12 +22,12 @@ fn check_compile_i() {
 
 #[test]
 fn check_compile_s() {
-    #[S_style]
+    #[S_style(0b10101, 0b111)]
     struct TestInst;
 
     const RAW_INST: u64 = 0x0
-        | (0b10101    << 0)   // opcode
-        | (0b111      << 5)   // opcode_sub
+        | (0b00000    << 0)   // opcode
+        | (0b000      << 5)   // opcode_sub
         | (0b00100    << 8)   // rs2
         | (0b101      << 13)  // rs1
         | (0x12345678 << 18); // imm
@@ -42,12 +42,12 @@ fn check_compile_s() {
 
 #[test]
 fn check_compile_r() {
-    #[R_style]
+    #[R_style(0b10101, 0b111)]
     struct TestInst;
 
     const RAW_INST: u64 = 0x0
-        | (0b10101    << 0)   // opcode
-        | (0b111      << 5)   // opcode_sub
+        | (0b00000    << 0)   // opcode
+        | (0b000      << 5)   // opcode_sub
         | (0b00100    << 8)   // rd
         | (0b10100    << 13)  // rs1
         | (0b00101    << 18); // rs2
@@ -62,12 +62,12 @@ fn check_compile_r() {
 
 #[test]
 fn check_compile_b() {
-    #[B_style]
+    #[B_style(0b10101, 0b111)]
     struct TestInst;
 
     const RAW_INST: u64 = 0x0
-        | (0b10101    << 0)   // opcode
-        | (0b111      << 5)   // opcode_sub
+        | (0b00000    << 0)   // opcode
+        | (0b000      << 5)   // opcode_sub
         | (0b00100    << 8)   // rd
         | (0b10100    << 13)  // rs1
         | (0b00101    << 18)  // rs2
