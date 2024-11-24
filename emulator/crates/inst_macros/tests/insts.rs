@@ -13,8 +13,6 @@ fn check_compile_i() {
         | (0x12345678 << 18); // imm
 
     let inst = TestInst::from(RAW_INST);
-    assert_eq!(inst.opcode, 0b10101);
-    assert_eq!(inst.opcode_sub, 0b111);
     assert_eq!(inst.rd, 0b00100);
     assert_eq!(inst.rs1, 0b101);
     assert_eq!(inst.imm, 0x12345678);
@@ -33,8 +31,6 @@ fn check_compile_s() {
         | (0x12345678 << 18); // imm
 
     let inst = TestInst::from(RAW_INST);
-    assert_eq!(inst.opcode, 0b10101);
-    assert_eq!(inst.opcode_sub, 0b111);
     assert_eq!(inst.rs2, 0b00100);
     assert_eq!(inst.rs1, 0b101);
     assert_eq!(inst.imm, 0x12345678);
@@ -53,8 +49,6 @@ fn check_compile_r() {
         | (0b00101    << 18); // rs2
 
     let inst = TestInst::from(RAW_INST);
-    assert_eq!(inst.opcode, 0b10101);
-    assert_eq!(inst.opcode_sub, 0b111);
     assert_eq!(inst.rd, 0b00100);
     assert_eq!(inst.rs1, 0b10100);
     assert_eq!(inst.rs2, 0b00101);
@@ -74,8 +68,6 @@ fn check_compile_b() {
         | (0x1345678 << 23); // imm
 
     let inst = TestInst::from(RAW_INST);
-    assert_eq!(inst.opcode, 0b10101);
-    assert_eq!(inst.opcode_sub, 0b111);
     assert_eq!(inst.rd, 0b00100);
     assert_eq!(inst.rs1, 0b10100);
     assert_eq!(inst.rs2, 0b00101);

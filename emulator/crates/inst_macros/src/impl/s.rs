@@ -15,8 +15,6 @@ pub fn proc_macro_impl(args: TokenStream, ast: ItemStruct) -> TokenStream {
 
     quote! {
         #vis struct #ident {
-            opcode: u8,
-            opcode_sub: u8,
             rs2: usize,
             rs1: usize,
             imm: u32,
@@ -27,8 +25,6 @@ pub fn proc_macro_impl(args: TokenStream, ast: ItemStruct) -> TokenStream {
                 assert_eq!(((raw >> 0) & 0b11111) as u8, #opcode);
                 assert_eq!(((raw >> 5) & 0b111) as u8, #opcode_sb);
                 Self {
-                    opcode: #opcode,
-                    opcode_sub: #opcode_sb,
                     rs2: ((raw >>  8) &    0b11111) as usize,
                     rs1: ((raw >> 13) &      0b111) as usize,
                     imm: ((raw >> 18) & 0xffffffff) as u32,
