@@ -61,7 +61,7 @@ impl RegisterViewState {
         // PC 表示
         let pc_line = Line::from(vec![
             Span::styled("PC: ", Style::new().fg(Color::Yellow)),
-            Span::raw(format!("0x{:08x}", emu.pc)),
+            Span::styled(format!("0x{:08x}", emu.pc), Style::new().fg(Color::White)),
         ]);
         lines.push(pc_line);
 
@@ -71,10 +71,11 @@ impl RegisterViewState {
             for reg in row*4..row*4+4 {
                 reg_items.push(Span::styled(
                     format!("r{:02}: ", reg),
-                    Style::new().fg(Color::Yellow)
+                    Style::new().fg(Color::Yellow),
                 ));
-                reg_items.push(Span::raw(
-                    format!("0x{:08x} ", emu.regs.read(reg).unwrap())
+                reg_items.push(Span::styled(
+                    format!("0x{:08x} ", emu.regs.read(reg).unwrap()),
+                    Style::new().fg(Color::White),
                 ));
             }
             lines.push(Line::from(reg_items));
