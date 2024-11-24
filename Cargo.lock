@@ -31,12 +31,44 @@ name = "sb_emu"
 version = "0.1.0"
 dependencies = [
  "anyhow",
+ "sb_emu_inst",
+ "sb_emu_state",
  "thiserror",
 ]
 
 [[package]]
 name = "sb_emu_cli"
 version = "0.1.0"
+
+[[package]]
+name = "sb_emu_inst"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "sb_emu_inst_macros",
+ "sb_emu_state",
+ "thiserror",
+]
+
+[[package]]
+name = "sb_emu_inst_macros"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "proc-macro2",
+ "quote",
+ "sb_emu_inst_macros",
+ "syn",
+ "thiserror",
+]
+
+[[package]]
+name = "sb_emu_state"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "thiserror",
+]
 
 [[package]]
 name = "syn"
