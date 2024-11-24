@@ -1,12 +1,24 @@
 #[derive(Debug, Clone)]
-pub struct Memory<const BYTE: usize> {
-    mem: Vec<u8>,
+pub struct Memory<const SIZE: usize> {
+    pub mem: Vec<u8>,
 }
 
-impl<const BYTE: usize> Memory<BYTE> {
+impl<const SIZE: usize> From<&[u8]> for Memory<SIZE> {
+    fn from(bytes: &[u8]) -> Self {
+        assert!(bytes.len() <= SIZE);
+
+        let mut mem = vec![0; SIZE];
+        for (idx, byte) in bytes.iter().enumerate() {
+            mem[idx] = *byte;
+        }
+        Memory { mem }
+    }
+}
+
+impl<const SIZE: usize> Memory<SIZE> {
     pub fn new() -> Self {
         Memory {
-            mem: vec![0; BYTE],
+            mem: vec![0; SIZE],
         }
     }
 
@@ -55,7 +67,7 @@ impl<const BYTE: usize> Memory<BYTE> {
     }
 
     fn bound_check(begin: usize, len: usize) -> anyhow::Result<()> {
-        if begin + len > BYTE {
+        if begin + len > SIZE {
             Err(anyhow::anyhow!("Out of bound memory access : [{}..{})", begin, begin+len))
         } else {
             Ok(())
