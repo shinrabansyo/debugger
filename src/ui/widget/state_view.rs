@@ -13,24 +13,13 @@ pub struct StateView {
 
 impl Widget for StateView {
     fn render(self, area: Rect, buf: &mut Buffer) {
-        Paragraph::new(self.body.as_str())
-            .centered()
-            .block(self.gen_block())
-            .render(area, buf);
-    }
-}
+        let block = Block::bordered()
+                .title(Line::from(" State ".bold()).centered())
+                .border_set(if self.selected { border::THICK } else { border::ROUNDED });
 
-impl StateView {
-    fn gen_block(&self) -> Block {
-        if self.selected {
-            Block::bordered()
-                .title(Line::from(" State ".bold()).centered())
-                .border_set(border::THICK)
-        } else {
-            Block::bordered()
-                .title(Line::from(" State ".bold()).centered())
-                .border_set(border::ROUNDED)
-        }
+        Paragraph::new(self.body.as_str())
+            .block(block)
+            .render(area, buf);
     }
 }
 
@@ -54,11 +43,11 @@ impl StateViewState {
         }
     }
 
-    pub fn set_selected(&mut self, selected: bool) {
-        self.selected = selected;
-    }
-
     pub fn handle_key_event(&mut self, event: KeyEvent) {
         self.latest_event = format!("{:?}", event);
+    }
+
+    pub fn set_selected(&mut self, selected: bool) {
+        self.selected = selected;
     }
 }
