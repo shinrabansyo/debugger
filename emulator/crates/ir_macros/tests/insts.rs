@@ -66,12 +66,12 @@ fn check_compile_b() {
     struct TestInst;
 
     const RAW_INST: u64 = 0x0
-        | (0b00000    << 0)   // opcode
-        | (0b000      << 5)   // opcode_sub
-        | (0b00100    << 8)   // rd
-        | (0b10100    << 13)  // rs1
-        | (0b00101    << 18)  // rs2
-        | (0xff345678 << 23); // imm
+        | (0b00000   << 0)   // opcode
+        | (0b000     << 5)   // opcode_sub
+        | (0b00100   << 8)   // rd
+        | (0b10100   << 13)  // rs1
+        | (0b00101   << 18)  // rs2
+        | (0x1345678 << 23); // imm
 
     let inst = TestInst::from(RAW_INST);
     assert_eq!(inst.opcode, 0b10101);
@@ -80,4 +80,5 @@ fn check_compile_b() {
     assert_eq!(inst.rs1, 0b10100);
     assert_eq!(inst.rs2, 0b00101);
     assert_eq!(inst.imm, 0x1345678);
+    assert_eq!(inst.simm as u32, 0xff345678);
 }

@@ -21,17 +21,28 @@ pub fn proc_macro_impl(args: TokenStream, ast: ItemStruct) -> TokenStream {
             rs1: usize,
             rs2: usize,
             imm: u32,
+            simm: i32,
         }
 
         impl From<u64> for #ident {
             fn from(raw: u64) -> Self {
+                let sext = |value: u32| {
+                    if (value >> 24) & 1 == 1{
+                        let extended_value = (value as u32) | 0xFF000000;
+                        extended_value as i32
+                    } else {
+                        value as i32
+                    }
+                };
+
                 Self {
                     opcode: #opcode,
                     opcode_sub: #opcode_sb,
-                    rd:         ((raw >>  8) &    0b11111) as usize,
-                    rs1:        ((raw >> 13) &    0b11111) as usize,
-                    rs2:        ((raw >> 18) &    0b11111) as usize,
-                    imm:        ((raw >> 23) &  0x1ffffff) as u32,
+                    rd:        ((raw >>  8) &    0b11111) as usize,
+                    rs1:       ((raw >> 13) &    0b11111) as usize,
+                    rs2:       ((raw >> 18) &    0b11111) as usize,
+                    imm:       ((raw >> 23) &  0x1ffffff) as u32,
+                    simm: sext(((raw >> 23) &  0x1ffffff) as u32),
                 }
             }
         }
