@@ -50,6 +50,7 @@ impl UI {
         frame.render_widget(widegts.output_view, layout.output);
         frame.render_widget(widegts.state_view, layout.state);
         frame.render_widget(widegts.mem_view, layout.memory);
+        frame.render_widget(widegts.help_view, layout.help);
     }
 }
 

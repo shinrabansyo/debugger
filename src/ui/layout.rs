@@ -7,6 +7,7 @@ pub struct Layout {
     pub output: Rect,
     pub state: Rect,
     pub memory: Rect,
+    pub help: Rect,
 }
 
 #[derive(Default)]
@@ -19,18 +20,27 @@ impl LayoutManager {
         // |              |     State     |
         // | Instructions |               |
         // |              |---------------|
-        // |--------------|               |
-        // |    Output    |     Memory    |
-        // |              |               |
+        // |--------------|     Memory    |
+        // |    Output    |               |
+        // |--------------+---------------|
+        // |         Help Message         |
         // +------------------------------+
 
         let outer_layout = RataLayout::default()
+            .direction(Direction::Vertical)
+            .constraints(vec![
+                Constraint::Percentage(100),
+                Constraint::Length(1),
+            ])
+            .split(frame.area());
+
+        let upper_layout = RataLayout::default()
             .direction(Direction::Horizontal)
             .constraints(vec![
                 Constraint::Percentage(50),
                 Constraint::Percentage(50),
             ])
-            .split(frame.area());
+            .split(outer_layout[0]);
 
         let left_layout = RataLayout::default()
             .direction(Direction::Vertical)
@@ -38,7 +48,7 @@ impl LayoutManager {
                 Constraint::Percentage(70),
                 Constraint::Percentage(30),
             ])
-            .split(outer_layout[0]);
+            .split(upper_layout[0]);
 
         let right_layout = RataLayout::default()
             .direction(Direction::Vertical)
@@ -46,13 +56,14 @@ impl LayoutManager {
                 Constraint::Percentage(40),
                 Constraint::Percentage(60),
             ])
-            .split(outer_layout[1]);
+            .split(upper_layout[1]);
 
         Layout {
             inst: left_layout[0],
             output: left_layout[1],
             state: right_layout[0],
             memory: right_layout[1],
+            help: outer_layout[1],
         }
     }
 }

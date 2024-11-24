@@ -2,6 +2,7 @@ mod inst_view;
 mod outout_view;
 mod reg_view;
 mod mem_view;
+mod help_view;
 
 use std::cmp::{min, max};
 
@@ -13,12 +14,14 @@ use inst_view::{InstView, InstViewState};
 use outout_view::{OutputView, OutputViewState};
 use reg_view::{RegisterView, RegisterViewState};
 use mem_view::{MemView, MemViewState};
+use help_view::HelpView;
 
 pub struct Widgets {
     pub inst_view: InstView,
     pub output_view: OutputView,
     pub state_view: RegisterView,
     pub mem_view: MemView,
+    pub help_view: HelpView,
 }
 
 pub struct WidgetsManager {
@@ -49,6 +52,7 @@ impl WidgetsManager {
             output_view: self.output_view_state.gen_widget(emu),
             state_view: self.state_view_state.gen_widget(emu),
             mem_view: self.mem_view_state.gen_widget(emu),
+            help_view: HelpView,
         }
     }
 
