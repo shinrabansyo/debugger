@@ -33,6 +33,7 @@ dependencies = [
  "anyhow",
  "sb_emu_exec",
  "sb_emu_ir",
+ "sb_emu_state",
  "thiserror",
 ]
 
@@ -45,6 +46,7 @@ name = "sb_emu_exec"
 version = "0.1.0"
 dependencies = [
  "anyhow",
+ "sb_emu_state",
  "thiserror",
 ]
 
@@ -66,6 +68,14 @@ dependencies = [
  "quote",
  "sb_emu_ir_macros",
  "syn",
+ "thiserror",
+]
+
+[[package]]
+name = "sb_emu_state"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
  "thiserror",
 ]
 

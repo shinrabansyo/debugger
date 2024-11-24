@@ -1,6 +1,4 @@
-mod state;
-
-use state::State;
+use sb_emu_state::State;
 
 #[derive(Debug, Clone)]
 pub struct Executor {
