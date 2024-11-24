@@ -6,8 +6,8 @@ fn check_compile_i() {
     struct TestInst;
 
     const RAW_INST: u64 = 0x0
-        | (0b00000    << 0)   // opcode
-        | (0b000      << 5)   // opcode_sub
+        | (0b10101    << 0)   // opcode
+        | (0b111      << 5)   // opcode_sub
         | (0b00100    << 8)   // rd
         | (0b101      << 13)  // rs1
         | (0x12345678 << 18); // imm
@@ -26,8 +26,8 @@ fn check_compile_s() {
     struct TestInst;
 
     const RAW_INST: u64 = 0x0
-        | (0b00000    << 0)   // opcode
-        | (0b000      << 5)   // opcode_sub
+        | (0b10101    << 0)   // opcode
+        | (0b111      << 5)   // opcode_sub
         | (0b00100    << 8)   // rs2
         | (0b101      << 13)  // rs1
         | (0x12345678 << 18); // imm
@@ -46,8 +46,8 @@ fn check_compile_r() {
     struct TestInst;
 
     const RAW_INST: u64 = 0x0
-        | (0b00000    << 0)   // opcode
-        | (0b000      << 5)   // opcode_sub
+        | (0b10101    << 0)   // opcode
+        | (0b111      << 5)   // opcode_sub
         | (0b00100    << 8)   // rd
         | (0b10100    << 13)  // rs1
         | (0b00101    << 18); // rs2
@@ -66,8 +66,8 @@ fn check_compile_b() {
     struct TestInst;
 
     const RAW_INST: u64 = 0x0
-        | (0b00000   << 0)   // opcode
-        | (0b000     << 5)   // opcode_sub
+        | (0b10101   << 0)   // opcode
+        | (0b111     << 5)   // opcode_sub
         | (0b00100   << 8)   // rd
         | (0b10100   << 13)  // rs1
         | (0b00101   << 18)  // rs2

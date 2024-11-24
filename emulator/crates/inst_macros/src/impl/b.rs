@@ -35,6 +35,8 @@ pub fn proc_macro_impl(args: TokenStream, ast: ItemStruct) -> TokenStream {
                     }
                 };
 
+                assert_eq!(((raw >> 0) & 0b11111) as u8, #opcode);
+                assert_eq!(((raw >> 5) & 0b111) as u8, #opcode_sb);
                 Self {
                     opcode: #opcode,
                     opcode_sub: #opcode_sb,
