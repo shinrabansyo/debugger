@@ -32,6 +32,7 @@ version = "0.1.0"
 dependencies = [
  "anyhow",
  "sb_emu_exec",
+ "sb_emu_ir",
  "thiserror",
 ]
 
@@ -44,6 +45,27 @@ name = "sb_emu_exec"
 version = "0.1.0"
 dependencies = [
  "anyhow",
+ "thiserror",
+]
+
+[[package]]
+name = "sb_emu_ir"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "sb_emu_ir_macros",
+ "thiserror",
+]
+
+[[package]]
+name = "sb_emu_ir_macros"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "proc-macro2",
+ "quote",
+ "sb_emu_ir_macros",
+ "syn",
  "thiserror",
 ]
 
