@@ -8,15 +8,15 @@ use ratatui::text::{Line, Span, Text};
 
 use sb_emu::State as EmuState;
 
-pub struct StateView {
+pub struct RegisterView {
     selected: bool,
     text: Text<'static>,
 }
 
-impl Widget for StateView {
+impl Widget for RegisterView {
     fn render(self, area: Rect, buf: &mut Buffer) {
         let block = Block::bordered()
-                .title(Line::from(" State ".bold()).centered())
+                .title(Line::from(" Register ".bold()).centered())
                 .border_set(if self.selected { border::THICK } else { border::ROUNDED });
 
         Paragraph::new(self.text)
@@ -25,14 +25,14 @@ impl Widget for StateView {
     }
 }
 
-pub struct StateViewState {
+pub struct RegisterViewState {
     selected: bool,
     text: Text<'static>,
 }
 
-impl StateViewState {
+impl RegisterViewState {
     pub fn new(selected: bool, emu: &EmuState) -> Self {
-        let mut state = StateViewState {
+        let mut state = RegisterViewState {
             selected,
             text: Text::default(),
         };
@@ -40,8 +40,8 @@ impl StateViewState {
         state
     }
 
-    pub fn gen_widget(&self) -> StateView {
-        StateView {
+    pub fn gen_widget(&self) -> RegisterView {
+        RegisterView {
             selected: self.selected,
             text: self.text.clone(),
         }

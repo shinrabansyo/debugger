@@ -1,6 +1,6 @@
 mod inst_view;
 mod outout_view;
-mod state_view;
+mod reg_view;
 mod mem_view;
 
 use std::cmp::{min, max};
@@ -11,13 +11,13 @@ use sb_emu::State as EmuState;
 
 use inst_view::{InstView, InstViewState};
 use outout_view::{OutputView, OutputViewState};
-use state_view::{StateView, StateViewState};
+use reg_view::{RegisterView, RegisterViewState};
 use mem_view::{MemView, MemViewState};
 
 pub struct Widgets {
     pub inst_view: InstView,
     pub output_view: OutputView,
-    pub state_view: StateView,
+    pub state_view: RegisterView,
     pub mem_view: MemView,
 }
 
@@ -25,7 +25,7 @@ pub struct WidgetsManager {
     // 各 Widget の状態
     inst_view_state: InstViewState,
     output_view_state: OutputViewState,
-    state_view_state: StateViewState,
+    state_view_state: RegisterViewState,
     mem_view_state: MemViewState,
 
     // 全体の状態
@@ -37,7 +37,7 @@ impl WidgetsManager {
         WidgetsManager {
             inst_view_state: InstViewState::new(true, emu),
             output_view_state: OutputViewState::new(false, emu),
-            state_view_state: StateViewState::new(false, emu),
+            state_view_state: RegisterViewState::new(false, emu),
             mem_view_state: MemViewState::new(false, emu),
             cursor: (0, 0),
         }
