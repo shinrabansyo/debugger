@@ -27,9 +27,9 @@ pub fn proc_macro_impl(args: TokenStream, ast: ItemStruct) -> TokenStream {
                 Self {
                     opcode: #opcode,
                     opcode_sub: #opcode_sb,
-                    rd:         ((raw >>  8) &    0b11111) as usize,
-                    rs1:        ((raw >> 13) &    0b11111) as usize,
-                    rs2:        ((raw >> 18) &    0b11111) as usize,
+                    rd:  ((raw >>  8) &    0b11111) as usize,
+                    rs1: ((raw >> 13) &    0b11111) as usize,
+                    rs2: ((raw >> 18) &    0b11111) as usize,
                 }
             }
         }
