@@ -6,6 +6,6 @@ edition = "2021"
 [dependencies]
 anyhow = { workspace = true }
 thiserror = { workspace = true }
-sb_emu_ir = { path = "./crates/ir" }
+sb_emu_inst = { path = "./crates/inst" }
 sb_emu_state = { path = "./crates/state" }
 sb_emu_exec = { path = "./crates/exec" }
