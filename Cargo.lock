@@ -3,5 +3,5 @@
 version = 4
 
 [[package]]
-name = "sb_emu"
+name = "sb_emu_cli"
 version = "0.1.0"

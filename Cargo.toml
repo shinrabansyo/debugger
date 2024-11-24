@@ -1,6 +1,10 @@
-[package]
-name = "sb_emu"
-version = "0.1.0"
-edition = "2021"
+[workspace]
+resolver = "2"
+members = [
+    "./src/cli",
+]
+exclude = []
 
-[dependencies]
+[workspace.dependencies]
+anyhow = "1.0.93"
+thiserror = "2.0.3"
