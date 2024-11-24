@@ -8,6 +8,7 @@ use ratatui::symbols::border;
 use ratatui::style::{Color, Style, Stylize};
 use ratatui::text::{Text, Line, Span};
 
+use sb_disasm::disassemble;
 use sb_emu::State as EmuState;
 
 pub struct InstView {
@@ -54,7 +55,7 @@ impl InstViewState {
 
             // 命令
             let raw_inst = emu.imem.read::<6>(addr).unwrap();
-            let assembly = "(TODO)";
+            let assembly = disassemble(raw_inst);
             if addr == emu.pc as usize {
                 line.push(Span::styled(
                     format!("{:32} 0x{:08b}", assembly, raw_inst),

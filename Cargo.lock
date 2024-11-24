@@ -394,7 +394,16 @@ dependencies = [
  "anyhow",
  "crossterm",
  "ratatui",
+ "sb_disasm",
  "sb_emu",
+ "thiserror",
+]
+
+[[package]]
+name = "sb_disasm"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
  "thiserror",
 ]
 

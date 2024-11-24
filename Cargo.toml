@@ -9,10 +9,12 @@ thiserror = { workspace = true }
 ratatui = "0.29.0"
 crossterm = "0.28.1"
 sb_emu = { path = "./emulator" }
+sb_disasm = { path = "./disassembler" }
 
 [workspace]
 resolver = "2"
 members = [
+    "./disassembler",
     "./emulator",
 ]
 
