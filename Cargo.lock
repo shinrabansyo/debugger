@@ -31,12 +31,21 @@ name = "sb_emu"
 version = "0.1.0"
 dependencies = [
  "anyhow",
+ "sb_emu_exec",
  "thiserror",
 ]
 
 [[package]]
 name = "sb_emu_cli"
 version = "0.1.0"
+
+[[package]]
+name = "sb_emu_exec"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "thiserror",
+]
 
 [[package]]
 name = "syn"

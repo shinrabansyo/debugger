@@ -1,9 +1,8 @@
 [package]
-name = "sb_emu"
+name = "sb_emu_exec"
 version = "0.1.0"
 edition = "2021"
 
 [dependencies]
 anyhow = { workspace = true }
 thiserror = { workspace = true }
-sb_emu_exec = { path = "./crates/exec" }
