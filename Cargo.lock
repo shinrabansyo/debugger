@@ -31,7 +31,6 @@ name = "sb_emu"
 version = "0.1.0"
 dependencies = [
  "anyhow",
- "sb_emu_exec",
  "sb_emu_inst",
  "sb_emu_state",
  "thiserror",
@@ -40,15 +39,6 @@ dependencies = [
 [[package]]
 name = "sb_emu_cli"
 version = "0.1.0"
-
-[[package]]
-name = "sb_emu_exec"
-version = "0.1.0"
-dependencies = [
- "anyhow",
- "sb_emu_state",
- "thiserror",
-]
 
 [[package]]
 name = "sb_emu_inst"

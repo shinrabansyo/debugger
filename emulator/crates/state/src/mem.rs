@@ -34,7 +34,7 @@ impl<const SIZE: usize> Memory<SIZE> {
         self.read::<4>(addr).map(|val| val as u32)
     }
 
-    fn read<const WIDTH: usize>(&self, addr: usize) -> anyhow::Result<u64> {
+    pub fn read<const WIDTH: usize>(&self, addr: usize) -> anyhow::Result<u64> {
         Self::bound_check(addr, WIDTH)?;
 
         let local_mem = &self.mem[addr..addr+WIDTH];
@@ -57,7 +57,7 @@ impl<const SIZE: usize> Memory<SIZE> {
         self.write::<4>(addr, value as u64)
     }
 
-    fn write<const WIDTH: usize>(&mut self, addr: usize, value: u64) -> anyhow::Result<()> {
+    pub fn write<const WIDTH: usize>(&mut self, addr: usize, value: u64) -> anyhow::Result<()> {
         Self::bound_check(addr, WIDTH)?;
 
         for idx in 0..WIDTH {
