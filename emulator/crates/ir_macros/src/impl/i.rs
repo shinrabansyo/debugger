@@ -17,8 +17,8 @@ pub fn proc_macro_impl(args: TokenStream, ast: ItemStruct) -> TokenStream {
         #vis struct #ident {
             opcode: u8,
             opcode_sub: u8,
-            rd: u8,
-            rs1: u8,
+            rd: usize,
+            rs1: usize,
             imm: u32,
         }
 
@@ -27,8 +27,8 @@ pub fn proc_macro_impl(args: TokenStream, ast: ItemStruct) -> TokenStream {
                 Self {
                     opcode: #opcode,
                     opcode_sub: #opcode_sb,
-                    rd:         ((raw >>  8) &    0b11111) as u8,
-                    rs1:        ((raw >> 13) &      0b111) as u8,
+                    rd:         ((raw >>  8) &    0b11111) as usize,
+                    rs1:        ((raw >> 13) &      0b111) as usize,
                     imm:        ((raw >> 18) & 0xffffffff) as u32,
                 }
             }
