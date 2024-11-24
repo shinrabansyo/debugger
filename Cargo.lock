@@ -394,6 +394,7 @@ dependencies = [
  "anyhow",
  "crossterm",
  "ratatui",
+ "sb_emu",
  "thiserror",
 ]
 

@@ -6,6 +6,8 @@ use ratatui::symbols::border;
 use ratatui::style::Stylize;
 use ratatui::text::Line;
 
+use sb_emu::State as EmuState;
+
 pub struct InstView {
     selected: bool,
     body: String,
@@ -29,11 +31,13 @@ pub struct InstViewState {
 }
 
 impl InstViewState {
-    pub fn new(selected: bool) -> Self {
-        InstViewState {
+    pub fn new(selected: bool, emu: &EmuState) -> Self {
+        let mut state = InstViewState {
             selected,
             latest_event: String::new(),
-        }
+        };
+        state.update_emu(emu);
+        state
     }
 
     pub fn gen_widget(&self) -> InstView {
@@ -49,5 +53,9 @@ impl InstViewState {
 
     pub fn set_selected(&mut self, selected: bool) {
         self.selected = selected;
+    }
+
+    pub fn update_emu(&mut self, emu: &EmuState) {
+
     }
 }

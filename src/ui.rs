@@ -5,22 +5,29 @@ use crossterm::event::{KeyEvent, KeyCode};
 use crossterm::event;
 use ratatui::{DefaultTerminal, Frame};
 
+use sb_emu::State as EmuState;
+
 use widget::WidgetsManager;
 use layout::LayoutManager;
 
 pub struct UI {
+    // 各 Manager の状態
     layout_man: LayoutManager,
     widgets_man: WidgetsManager,
+
+    // 全体の状態
     running: bool,
+    emu: Option<EmuState>,
 }
 
 // Main
 impl UI {
-    pub fn new() -> Self {
+    pub fn new(emu: EmuState) -> Self {
         UI {
             layout_man: LayoutManager::default(),
-            widgets_man: WidgetsManager::new(),
+            widgets_man: WidgetsManager::new(&emu),
             running: true,
+            emu: Some(emu),
         }
     }
 
@@ -57,10 +64,15 @@ impl UI {
     }
 
     fn handle_key_event(&mut self, event: KeyEvent) {
-        self.widgets_man.handle_key_event(event);
         match event.code {
+            KeyCode::Enter => {
+                let emu = self.emu.take().unwrap();
+                let emu = sb_emu::step(emu).unwrap();
+                self.emu = Some(emu);
+                self.widgets_man.update_emu(self.emu.as_ref().unwrap());
+            }
             KeyCode::Char('q') => self.running = false,
-            _ => {}
+            _ => self.widgets_man.handle_key_event(event),
         }
     }
 }

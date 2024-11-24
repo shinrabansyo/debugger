@@ -7,6 +7,8 @@ use std::cmp::{min, max};
 
 use crossterm::event::{KeyCode, KeyEvent};
 
+use sb_emu::State as EmuState;
+
 use inst_view::{InstView, InstViewState};
 use outout_view::{OutputView, OutputViewState};
 use state_view::{StateView, StateViewState};
@@ -31,12 +33,12 @@ pub struct WidgetsManager {
 }
 
 impl WidgetsManager {
-    pub fn new() -> Self {
+    pub fn new(emu: &EmuState) -> Self {
         WidgetsManager {
-            inst_view_state: InstViewState::new(true),
-            output_view_state: OutputViewState::new(false),
-            state_view_state: StateViewState::new(false),
-            mem_view_state: MemViewState::new(false),
+            inst_view_state: InstViewState::new(true, emu),
+            output_view_state: OutputViewState::new(false, emu),
+            state_view_state: StateViewState::new(false, emu),
+            mem_view_state: MemViewState::new(false, emu),
             cursor: (0, 0),
         }
     }
@@ -71,5 +73,12 @@ impl WidgetsManager {
         self.output_view_state.set_selected(self.cursor == (0, 1));
         self.state_view_state.set_selected(self.cursor == (1, 0));
         self.mem_view_state.set_selected(self.cursor == (1, 1));
+    }
+
+    pub fn update_emu(&mut self, emu: &EmuState) {
+        self.inst_view_state.update_emu(&emu);
+        self.output_view_state.update_emu(&emu);
+        self.state_view_state.update_emu(&emu);
+        self.mem_view_state.update_emu(&emu);
     }
 }

@@ -8,6 +8,7 @@ anyhow = { workspace = true }
 thiserror = { workspace = true }
 ratatui = "0.29.0"
 crossterm = "0.28.1"
+sb_emu = { path = "./emulator" }
 
 [workspace]
 resolver = "2"
