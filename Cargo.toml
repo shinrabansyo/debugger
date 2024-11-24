@@ -1,10 +1,19 @@
+[package]
+name = "sb_dbg"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+anyhow = { workspace = true }
+thiserror = { workspace = true }
+ratatui = "0.29.0"
+crossterm = "0.28.1"
+
 [workspace]
 resolver = "2"
 members = [
     "./emulator",
-    "./src/cli",
 ]
-exclude = []
 
 [workspace.dependencies]
 anyhow = "1.0.93"
