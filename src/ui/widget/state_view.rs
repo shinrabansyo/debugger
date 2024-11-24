@@ -5,18 +5,37 @@ use ratatui::symbols::border;
 use ratatui::style::Stylize;
 use ratatui::text::Line;
 
-pub struct StateView;
+pub struct StateView {
+    selected: bool,
+}
+
+impl StateView {
+    pub fn new(selected: bool) -> Self {
+        StateView {
+            selected,
+        }
+    }
+}
 
 impl Widget for StateView {
     fn render(self, area: Rect, buf: &mut Buffer) {
-        let title = Line::from(" State ".bold());
-        let block = Block::bordered()
-            .title(title.centered())
-            .border_set(border::THICK);
-
         Paragraph::new("This is body.")
             .centered()
-            .block(block)
+            .block(self.gen_block())
             .render(area, buf);
+    }
+}
+
+impl StateView {
+    fn gen_block(&self) -> Block {
+        if self.selected {
+            Block::bordered()
+                .title(Line::from(" State ".bold()).centered())
+                .border_set(border::THICK)
+        } else {
+            Block::bordered()
+                .title(Line::from(" State ".bold()).centered())
+                .border_set(border::ROUNDED)
+        }
     }
 }
