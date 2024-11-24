@@ -10,18 +10,18 @@ use device::DeviceMap;
 pub struct State {
     pub pc: u32,
     pub regs: Registers,
-    pub imem: Memory<{1024 * 6}>,
     pub dmem: Memory<{1024 * 4}>,
+    pub imem: Memory<{1024 * 6}>,
     pub devices: DeviceMap,
 }
 
 impl State {
-    pub fn new() -> Self {
+    pub fn new(pc: u32, dmem: &[u8], imem: &[u8]) -> Self {
         State {
-            pc: 0,
+            pc,
             regs: Registers::new(),
-            imem: Memory::new(),
-            dmem: Memory::new(),
+            dmem: Memory::from(dmem),
+            imem: Memory::from(imem),
             devices: DeviceMap::new(),
         }
     }
