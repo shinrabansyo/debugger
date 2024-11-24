@@ -56,16 +56,20 @@ impl WidgetsManager {
             KeyCode::Char('l') => self.cursor.0 = min(1, self.cursor.0 + 1),
             KeyCode::Char('k') => self.cursor.1 = max(0, self.cursor.1 - 1),
             KeyCode::Char('j') => self.cursor.1 = min(1, self.cursor.1 + 1),
-            _ => {}
+            _ => {
+                match self.cursor {
+                    (0, 0) => self.inst_view_state.handle_key_event(event),
+                    (0, 1) => self.output_view_state.handle_key_event(event),
+                    (1, 0) => self.state_view_state.handle_key_event(event),
+                    (1, 1) => self.mem_view_state.handle_key_event(event),
+                    _ => {}
+                }
+            }
         }
-        self.update_widgets();
-    }
 
-    fn update_widgets(&mut self) {
-        // cursor
-        self.inst_view_state.selected = self.cursor == (0, 0);
-        self.output_view_state.selected = self.cursor == (0, 1);
-        self.state_view_state.selected = self.cursor == (1, 0);
-        self.mem_view_state.selected = self.cursor == (1, 1);
+        self.inst_view_state.set_selected(self.cursor == (0, 0));
+        self.output_view_state.set_selected(self.cursor == (0, 1));
+        self.state_view_state.set_selected(self.cursor == (1, 0));
+        self.mem_view_state.set_selected(self.cursor == (1, 1));
     }
 }
