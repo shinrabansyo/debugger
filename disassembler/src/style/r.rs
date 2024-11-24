@@ -5,3 +5,7 @@ pub fn r_common(name: &str, raw_inst: u64) -> String {
 
     format!("{} r{} = r{}, r{}", name, rd, rs1, rs2)
 }
+
+pub fn r_nop(_: &str, _: u64) -> String {
+    format!("nop")
+}
