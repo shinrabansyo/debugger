@@ -31,6 +31,8 @@ mod srli;   pub use srli::Srli;
 mod srai;   pub use srai::Srai;
 mod slli;   pub use slli::Slli;
 
+use sb_emu_state::State;
+
 pub trait Inst {
-    fn exec(&self) -> anyhow::Result<()>;
+    fn exec(&self, state: State) -> anyhow::Result<State>;
 }
