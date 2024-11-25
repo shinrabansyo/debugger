@@ -11,6 +11,7 @@ use ui::UI;
 fn main() -> anyhow::Result<()> {
     let options = parse_args();
 
+    // エミュレータ初期化
     let dmem = match (options.data, options.format) {
         (Some(data), FileFormat::ByteChar) => load_bytechar(&data)?,
         _ => vec![],
@@ -20,6 +21,7 @@ fn main() -> anyhow::Result<()> {
     };
     let init_state = EmuState::new(options.pc, &dmem, &imem);
 
+    // TUI 起動
     let mut terminal = ratatui::init();
     UI::new(init_state).run(&mut terminal)?;
     ratatui::restore();
