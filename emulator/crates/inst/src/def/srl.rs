@@ -8,9 +8,9 @@ pub struct Srl;
 
 impl Inst for Srl {
     fn exec(&self, mut state: State) -> anyhow::Result<State> {
-        let rs1 = state.regs.read(self.rs1)?;
+        let rs1 = state.regs.read(self.rs1)? as u32;
         let rs2 = state.regs.read(self.rs2)?;
-        state.regs.write(self.rd, rs1 >> rs2)?;
+        state.regs.write(self.rd, (rs1 >> rs2) as i32)?;
         state.pc += 6;
         Ok(state)
     }

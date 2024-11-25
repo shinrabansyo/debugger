@@ -11,8 +11,8 @@ impl Inst for Blt {
         let rs1_s = state.regs.read(self.rs1)? as i32;
         let rs2_s = state.regs.read(self.rs2)? as i32;
         if rs1_s < rs2_s {
-            state.regs.write(self.rd, state.pc + 6)?;
-            state.pc = ((state.pc as i32) + self.simm) as u32;
+            state.regs.write(self.rd, (state.pc as i32) + 6)?;
+            state.pc = ((state.pc as i32) + self.imm).try_into()?;
         } else {
             state.pc += 6;
         }

@@ -17,7 +17,7 @@ pub fn proc_macro_impl(args: TokenStream, ast: ItemStruct) -> TokenStream {
         #vis struct #ident {
             rd: usize,
             rs1: usize,
-            imm: u32,
+            imm: i32,
         }
 
         impl From<u64> for #ident {
@@ -27,7 +27,7 @@ pub fn proc_macro_impl(args: TokenStream, ast: ItemStruct) -> TokenStream {
                 Self {
                     rd:  ((raw >>  8) &    0b11111) as usize,
                     rs1: ((raw >> 13) &      0b111) as usize,
-                    imm: ((raw >> 16) & 0xffffffff) as u32,
+                    imm: ((raw >> 16) & 0xffffffff) as i32,
                 }
             }
         }
