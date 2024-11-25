@@ -5,7 +5,7 @@ pub fn b_common(name: &str, raw_inst: u64) -> String {
     let imm = (raw_inst >> 23) & 0x1ffffff;
     let imm_s = sext_u25(imm);
 
-    format!("{} r{}, (r{}, r{}) -> {}", name, rd, rs1, rs2, imm_s)
+    format!("{:<4} r{}, (r{}, r{}) -> {}", name, rd, rs1, rs2, imm_s)
 }
 
 fn sext_u25(value: u64) -> i32 {
