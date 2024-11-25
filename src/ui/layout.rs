@@ -4,7 +4,7 @@ use ratatui::Frame;
 
 pub struct Layout {
     pub inst: Rect,
-    pub output: Rect,
+    pub device: Rect,
     pub state: Rect,
     pub memory: Rect,
     pub help: Rect,
@@ -21,7 +21,7 @@ impl LayoutManager {
         // | Instructions |               |
         // |              |---------------|
         // |--------------|     Memory    |
-        // |    Output    |               |
+        // |    Device    |               |
         // |--------------+---------------|
         // |         Help Message         |
         // +------------------------------+
@@ -60,7 +60,7 @@ impl LayoutManager {
 
         Layout {
             inst: left_layout[0],
-            output: left_layout[1],
+            device: left_layout[1],
             state: right_layout[0],
             memory: right_layout[1],
             help: outer_layout[1],

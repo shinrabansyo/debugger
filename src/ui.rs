@@ -47,7 +47,7 @@ impl UI {
         let layout = self.layout_man.gen(frame);
 
         frame.render_widget(widegts.inst_view, layout.inst);
-        frame.render_widget(widegts.output_view, layout.output);
+        frame.render_widget(widegts.device_view, layout.device);
         frame.render_widget(widegts.state_view, layout.state);
         frame.render_widget(widegts.mem_view, layout.memory);
         frame.render_widget(widegts.help_view, layout.help);

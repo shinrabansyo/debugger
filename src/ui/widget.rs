@@ -1,5 +1,5 @@
 mod inst_view;
-mod outout_view;
+mod device_view;
 mod reg_view;
 mod mem_view;
 mod help_view;
@@ -11,14 +11,14 @@ use crossterm::event::{KeyCode, KeyEvent};
 use sb_emu::State as EmuState;
 
 use inst_view::{InstView, InstViewState};
-use outout_view::{OutputView, OutputViewState};
+use device_view::{DeviceView, DeviceViewState};
 use reg_view::{RegisterView, RegisterViewState};
 use mem_view::{MemView, MemViewState};
 use help_view::HelpView;
 
 pub struct Widgets {
     pub inst_view: InstView,
-    pub output_view: OutputView,
+    pub device_view: DeviceView,
     pub state_view: RegisterView,
     pub mem_view: MemView,
     pub help_view: HelpView,
@@ -27,7 +27,7 @@ pub struct Widgets {
 pub struct WidgetsManager {
     // 各 Widget の状態
     inst_view_state: InstViewState,
-    output_view_state: OutputViewState,
+    device_view_state: DeviceViewState,
     state_view_state: RegisterViewState,
     mem_view_state: MemViewState,
 
@@ -39,7 +39,7 @@ impl WidgetsManager {
     pub fn new() -> Self {
         WidgetsManager {
             inst_view_state: InstViewState::new(true),
-            output_view_state: OutputViewState::new(false),
+            device_view_state: DeviceViewState::new(false),
             state_view_state: RegisterViewState::new(false),
             mem_view_state: MemViewState::new(false),
             cursor: (0, 0),
@@ -49,7 +49,7 @@ impl WidgetsManager {
     pub fn gen_widgets(&self, emu: &EmuState) -> Widgets {
         Widgets {
             inst_view: self.inst_view_state.gen_widget(emu),
-            output_view: self.output_view_state.gen_widget(emu),
+            device_view: self.device_view_state.gen_widget(emu),
             state_view: self.state_view_state.gen_widget(emu),
             mem_view: self.mem_view_state.gen_widget(emu),
             help_view: HelpView,
@@ -65,7 +65,7 @@ impl WidgetsManager {
             _ => {
                 match self.cursor {
                     (0, 0) => self.inst_view_state.handle_key_event(event),
-                    (0, 1) => self.output_view_state.handle_key_event(event),
+                    (0, 1) => self.device_view_state.handle_key_event(event),
                     (1, 0) => self.state_view_state.handle_key_event(event),
                     (1, 1) => self.mem_view_state.handle_key_event(event),
                     _ => {}
@@ -74,7 +74,7 @@ impl WidgetsManager {
         }
 
         self.inst_view_state.set_selected(self.cursor == (0, 0));
-        self.output_view_state.set_selected(self.cursor == (0, 1));
+        self.device_view_state.set_selected(self.cursor == (0, 1));
         self.state_view_state.set_selected(self.cursor == (1, 0));
         self.mem_view_state.set_selected(self.cursor == (1, 1));
     }
