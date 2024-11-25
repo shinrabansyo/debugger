@@ -10,8 +10,8 @@ impl Inst for Sw {
     fn exec(&self, mut state: State) -> anyhow::Result<State> {
         let rs1 = state.regs.read(self.rs1)?;
         let rs2 = state.regs.read(self.rs2)?;
-        let addr = (rs1 + self.imm) as usize;
-        state.dmem.write_word(addr, rs2)?;
+        let addr = (rs1 + self.imm).try_into()?;
+        state.dmem.write_word(addr, rs2 as u32)?;
         state.pc += 6;
         Ok(state)
     }

@@ -8,8 +8,8 @@ pub struct Srai;
 
 impl Inst for Srai {
     fn exec(&self, mut state: State) -> anyhow::Result<State> {
-        let rs1 = state.regs.read(self.rs1)? as i32;
-        state.regs.write(self.rd, (rs1 >> self.imm) as u32)?;
+        let rs1 = state.regs.read(self.rs1)?;
+        state.regs.write(self.rd, rs1 >> self.imm)?;
         state.pc += 6;
         Ok(state)
     }

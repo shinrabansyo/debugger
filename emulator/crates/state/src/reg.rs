@@ -1,6 +1,6 @@
 #[derive(Debug, Clone)]
 pub struct Registers {
-    regs: [u32; 32],
+    regs: [i32; 32],
 }
 
 impl Registers {
@@ -10,14 +10,14 @@ impl Registers {
         }
     }
 
-    pub fn read(&self, reg: usize) -> anyhow::Result<u32> {
+    pub fn read(&self, reg: usize) -> anyhow::Result<i32> {
         self.regs
             .get(reg)
             .map(|&val| val)
             .ok_or(anyhow::anyhow!("Invalid register number : {}", reg))
     }
 
-    pub fn write(&mut self, reg: usize, val: u32) -> anyhow::Result<()> {
+    pub fn write(&mut self, reg: usize, val: i32) -> anyhow::Result<()> {
         match reg {
             0 => Ok(()),
             1..=31 => {

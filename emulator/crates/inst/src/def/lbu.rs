@@ -9,9 +9,9 @@ pub struct Lbu;
 impl Inst for Lbu {
     fn exec(&self, mut state: State) -> anyhow::Result<State> {
         let rs1 = state.regs.read(self.rs1)?;
-        let addr = (rs1 + self.imm) as usize;
-        let data = state.dmem.read_byte(addr)? as u32;
-        state.regs.write(self.rd, data)?;
+        let addr = (rs1 + self.imm).try_into()?;
+        let data = state.dmem.read_byte(addr)?;
+        state.regs.write(self.rd, data as i32)?;
         state.pc += 6;
         Ok(state)
     }

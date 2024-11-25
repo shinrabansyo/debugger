@@ -11,8 +11,8 @@ impl Inst for Bne {
         let rs1 = state.regs.read(self.rs1)?;
         let rs2 = state.regs.read(self.rs2)?;
         if rs1 != rs2 {
-            state.regs.write(self.rd, state.pc + 6)?;
-            state.pc = ((state.pc as i32) + self.simm) as u32;
+            state.regs.write(self.rd, (state.pc as i32) + 6)?;
+            state.pc = ((state.pc as i32) + self.imm).try_into()?;
         } else {
             state.pc += 6;
         }

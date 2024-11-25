@@ -9,9 +9,9 @@ pub struct In;
 impl Inst for In {
     fn exec(&self, mut state: State) -> anyhow::Result<State> {
         let rs1 = state.regs.read(self.rs1)?;
-        let addr = (rs1 + self.imm) as usize;
+        let addr = (rs1 + self.imm).try_into()?;
         let data = state.devices.read(addr)?;
-        state.regs.write(self.rd, data)?;
+        state.regs.write(self.rd, data as i32)?;
         state.pc += 6;
         Ok(state)
     }

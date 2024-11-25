@@ -1,10 +1,23 @@
+[package]
+name = "sb_dbg"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+anyhow = { workspace = true }
+thiserror = { workspace = true }
+ratatui = "0.29.0"
+crossterm = "0.28.1"
+bpaf = { version = "0.9.15", features = ["derive"] }
+sb_emu = { path = "./emulator" }
+sb_disasm = { path = "./disassembler" }
+
 [workspace]
 resolver = "2"
 members = [
+    "./disassembler",
     "./emulator",
-    "./src/cli",
 ]
-exclude = []
 
 [workspace.dependencies]
 anyhow = "1.0.93"

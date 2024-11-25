@@ -8,8 +8,8 @@ pub struct Srli;
 
 impl Inst for Srli {
     fn exec(&self, mut state: State) -> anyhow::Result<State> {
-        let rs1 = state.regs.read(self.rs1)?;
-        state.regs.write(self.rd, rs1 >> self.imm)?;
+        let rs1 = state.regs.read(self.rs1)? as u32;
+        state.regs.write(self.rd, (rs1 >> self.imm) as i32)?;
         state.pc += 6;
         Ok(state)
     }

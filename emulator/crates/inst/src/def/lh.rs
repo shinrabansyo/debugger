@@ -9,7 +9,7 @@ pub struct Lh;
 impl Inst for Lh {
     fn exec(&self, mut state: State) -> anyhow::Result<State> {
         let rs1 = state.regs.read(self.rs1)?;
-        let addr = (rs1 + self.imm) as usize;
+        let addr = (rs1 + self.imm).try_into()?;
         let data = state.dmem.read_half(addr)?;
         state.regs.write(self.rd, sext(data))?;
         state.pc += 6;
@@ -17,10 +17,10 @@ impl Inst for Lh {
     }
 }
 
-fn sext(data: u16) -> u32 {
+fn sext(data: u16) -> i32 {
     if data & 0x8000 != 0 {
-        data as u32 | 0xFFFF_0000
+        (data as u32 | 0xFFFF_0000) as i32
     } else {
-        data as u32
+        (data as u32) as i32
     }
 }

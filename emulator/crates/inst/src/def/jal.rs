@@ -9,8 +9,8 @@ pub struct Jal;
 impl Inst for Jal {
     fn exec(&self, mut state: State) -> anyhow::Result<State> {
         let rs1 = state.regs.read(self.rs1)?;
-        state.regs.write(self.rd, state.pc + 6)?;
-        state.pc = rs1 + self.imm;
+        state.regs.write(self.rd, (state.pc as i32) + 6)?;
+        state.pc = (rs1 + self.imm).try_into()?;
         Ok(state)
     }
 }

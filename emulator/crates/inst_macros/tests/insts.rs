@@ -10,7 +10,7 @@ fn check_compile_i() {
         | (0b111      << 5)   // opcode_sub
         | (0b00100    << 8)   // rd
         | (0b101      << 13)  // rs1
-        | (0x12345678 << 18); // imm
+        | (0x12345678 << 16); // imm
 
     let inst = TestInst::from(RAW_INST);
     assert_eq!(inst.rd, 0b00100);
@@ -28,7 +28,7 @@ fn check_compile_s() {
         | (0b111      << 5)   // opcode_sub
         | (0b00100    << 8)   // rs2
         | (0b101      << 13)  // rs1
-        | (0x12345678 << 18); // imm
+        | (0x12345678 << 16); // imm
 
     let inst = TestInst::from(RAW_INST);
     assert_eq!(inst.rs2, 0b00100);
@@ -71,6 +71,5 @@ fn check_compile_b() {
     assert_eq!(inst.rd, 0b00100);
     assert_eq!(inst.rs1, 0b10100);
     assert_eq!(inst.rs2, 0b00101);
-    assert_eq!(inst.imm, 0x1345678);
-    assert_eq!(inst.simm as u32, 0xff345678);
+    assert_eq!(inst.imm as u32, 0xff345678);
 }
