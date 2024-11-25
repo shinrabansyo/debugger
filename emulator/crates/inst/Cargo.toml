@@ -1,0 +1,10 @@
+[package]
+name = "sb_emu_inst"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+anyhow = { workspace = true }
+thiserror = { workspace = true }
+sb_emu_inst_macros = { path = "../inst_macros" }
+sb_emu_state = {  path = "../state" }
