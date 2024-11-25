@@ -1,4 +1,6 @@
-use crossterm::event::KeyEvent;
+use std::cmp::{min, max};
+
+use crossterm::event::{KeyCode, KeyEvent};
 use ratatui::buffer::Buffer;
 use ratatui::layout::Rect;
 use ratatui::widgets::{Widget, Block, Paragraph};
@@ -28,7 +30,7 @@ impl Widget for DeviceView {
 
 pub struct DeviceViewState {
     selected: bool,
-    device_id: usize,
+    device_id: i32,
 }
 
 impl DeviceViewState {
@@ -56,7 +58,13 @@ impl DeviceViewState {
         }
     }
 
-    pub fn handle_key_event(&mut self, event: KeyEvent) {}
+    pub fn handle_key_event(&mut self, event: KeyEvent) {
+        self.device_id = match event.code {
+            KeyCode::Left => max(0, self.device_id- 1),
+            KeyCode::Right => min(0, self.device_id + 1),
+            _ => self.device_id,
+        };
+    }
 
     pub fn set_selected(&mut self, selected: bool) {
         self.selected = selected;
