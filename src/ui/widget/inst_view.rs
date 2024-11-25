@@ -47,7 +47,8 @@ impl InstViewState {
             let mut line = vec![];
 
             // 命令アドレス
-            let addr = (self.offset + row * 6) as usize;
+            let pc = emu.pc as i32;
+            let addr = max(0, self.offset + pc + row * 6) as usize;
             line.push(Span::styled(
                 format!("0x{:08x}: ", addr),
                 Style::new().fg(Color::Yellow),
@@ -79,7 +80,7 @@ impl InstViewState {
 
     pub fn handle_key_event(&mut self, event: KeyEvent) {
         self.offset = match event.code {
-            KeyCode::Up => max(0, self.offset - 6),
+            KeyCode::Up => self.offset - 6,
             KeyCode::Down => self.offset + 6,
             _ => self.offset,
         };
