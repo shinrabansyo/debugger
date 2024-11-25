@@ -58,12 +58,12 @@ impl InstViewState {
             let assembly = disassemble(raw_inst);
             if addr == emu.pc as usize {
                 line.push(Span::styled(
-                    format!("{:32} 0x{:08b}", assembly, raw_inst),
+                    format!("{:32} 0x{:012x}", assembly, raw_inst),
                     Style::new().fg(Color::Red).underlined().bold(),
                 ));
             } else {
                 line.push(Span::styled(
-                    format!("{:32} 0x{:08b}", assembly, raw_inst),
+                    format!("{:32} 0x{:012x}", assembly, raw_inst),
                     Style::new().fg(Color::White),
                 ));
             }
