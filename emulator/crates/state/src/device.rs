@@ -38,6 +38,14 @@ impl DeviceMap {
             Err(anyhow::anyhow!("Device addr {} is not registered", addr))
         }
     }
+
+    pub fn get_stat(&self, addr: usize) -> anyhow::Result<String> {
+        if let Some(device) = self.map.get(&addr) {
+            device.read().unwrap().get_stat(addr)
+        } else {
+            Err(anyhow::anyhow!("Device addr {} is not registered", addr))
+        }
+    }
 }
 
 #[derive(Debug, Clone)]
@@ -55,6 +63,12 @@ impl Device {
     pub fn write(&mut self, addr: usize, data: u32) -> anyhow::Result<()> {
         match self {
             Device::Uart(uart) => uart.write(addr, data),
+        }
+    }
+
+    pub fn get_stat(&self, addr: usize) -> anyhow::Result<String> {
+        match self {
+            Device::Uart(uart) => uart.get_stat(addr),
         }
     }
 }

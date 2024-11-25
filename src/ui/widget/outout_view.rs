@@ -4,13 +4,13 @@ use ratatui::layout::Rect;
 use ratatui::widgets::{Widget, Block, Paragraph};
 use ratatui::symbols::border;
 use ratatui::style::Stylize;
-use ratatui::text::Line;
+use ratatui::text::{Line, Text};
 
 use sb_emu::State as EmuState;
 
 pub struct OutputView {
     selected: bool,
-    body: String,
+    text: Text<'static>,
 }
 
 impl Widget for OutputView {
@@ -19,7 +19,7 @@ impl Widget for OutputView {
                 .title(Line::from(" Output ".bold()).centered())
                 .border_set(if self.selected { border::THICK } else { border::ROUNDED });
 
-        Paragraph::new(self.body.as_str())
+        Paragraph::new(self.text)
             .block(block)
             .render(area, buf);
     }
@@ -38,10 +38,10 @@ impl OutputViewState {
         }
     }
 
-    pub fn gen_widget(&self, _emu: &EmuState) -> OutputView {
+    pub fn gen_widget(&self, emu: &EmuState) -> OutputView {
         OutputView {
             selected: self.selected,
-            body: self.latest_event.clone(),
+            text: Text::raw(emu.devices.get_stat(0).unwrap())
         }
     }
 
