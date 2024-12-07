@@ -48,6 +48,11 @@ impl DeviceViewState {
                 let content = Text::raw(emu.devices.get_stat(0).unwrap());
                 (title, content)
             },
+            1 => {
+                let title = Line::raw(" Device 1: GPIO ");
+                let content = Text::raw(emu.devices.get_stat(4).unwrap());
+                (title, content)
+            }
             _ => unreachable!(),
         };
 
@@ -59,9 +64,11 @@ impl DeviceViewState {
     }
 
     pub fn handle_key_event(&mut self, event: KeyEvent) {
+        const REGISTERED_DEVICES: i32 = 2;
+
         self.device_id = match event.code {
-            KeyCode::Left => max(0, self.device_id- 1),
-            KeyCode::Right => min(0, self.device_id + 1),
+            KeyCode::Left => max(0, self.device_id - 1),
+            KeyCode::Right => min(REGISTERED_DEVICES - 1, self.device_id + 1),
             _ => self.device_id,
         };
     }
