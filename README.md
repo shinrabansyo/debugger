@@ -6,5 +6,5 @@
 - [fizzbuzz](examples/fizzbuzz/)
 
 ```
-$ cargo run -- --inst examples/helloworld/imem.hex --data examples/helloworld.dmem.hex
+$ cargo run -- --inst examples/helloworld/imem.hex --data examples/helloworld/dmem.hex
 ```
