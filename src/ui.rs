@@ -61,11 +61,11 @@ impl UI {
         let widegts = self.widgets_man.gen_widgets(self.emu.as_ref().unwrap());
         let layout = self.layout_man.gen(frame);
 
-        frame.render_widget(widegts.inst_view, layout.inst);
-        frame.render_widget(widegts.device_view, layout.device);
-        frame.render_widget(widegts.state_view, layout.state);
-        frame.render_widget(widegts.mem_view, layout.memory);
-        frame.render_widget(widegts.help_view, layout.help);
+        frame.render_widget(widegts.inst, layout.inst);
+        frame.render_widget(widegts.device, layout.device);
+        frame.render_widget(widegts.state, layout.state);
+        frame.render_widget(widegts.mem, layout.memory);
+        frame.render_widget(widegts.help, layout.help);
     }
 }
 
