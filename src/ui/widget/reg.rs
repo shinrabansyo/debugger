@@ -1,19 +1,25 @@
 use crossterm::event::KeyEvent;
 use ratatui::buffer::Buffer;
 use ratatui::layout::Rect;
-use ratatui::widgets::{Widget, Block, Paragraph};
+use ratatui::widgets::{Block, Paragraph};
 use ratatui::symbols::border;
 use ratatui::style::{Color, Style, Stylize};
 use ratatui::text::{Line, Span, Text};
 
 use sb_emu::State as EmuState;
 
-pub struct RegisterView {
+use crate::ui::widget::Widget;
+
+pub struct Register {
     selected: bool,
     text: Text<'static>,
 }
 
-impl Widget for RegisterView {
+impl Widget for Register {
+    type State = RegisterState;
+}
+
+impl ratatui::widgets::Widget for Register {
     fn render(self, area: Rect, buf: &mut Buffer) {
         let block = Block::bordered()
                 .title(Line::from(" Register ".bold()).centered())
@@ -25,18 +31,20 @@ impl Widget for RegisterView {
     }
 }
 
-pub struct RegisterViewState {
+pub struct RegisterState {
     selected: bool,
 }
 
-impl RegisterViewState {
-    pub fn new(selected: bool) -> Self {
-        RegisterViewState {
-            selected,
+impl Default for RegisterState {
+    fn default() -> Self {
+        RegisterState {
+            selected: false,
         }
     }
+}
 
-    pub fn gen_widget(&self, emu: &EmuState) -> RegisterView {
+impl RegisterState {
+    pub fn gen_widget(&self, emu: &EmuState) -> Register {
         let mut lines = vec![];
 
         // PC 表示
@@ -62,7 +70,7 @@ impl RegisterViewState {
             lines.push(Line::from(reg_items));
         }
 
-        RegisterView {
+        Register {
             selected: self.selected,
             text: Text::from(lines),
         }
