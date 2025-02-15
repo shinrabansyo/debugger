@@ -6,15 +6,15 @@ use bpaf::Bpaf;
 #[derive(Debug, Clone, Bpaf)]
 #[bpaf(options, version)]
 pub struct Options {
-    /// Initial PC value [default: 0]
-    #[bpaf(short, long, fallback(0))]
-    pub pc: u32,
-    /// D-Mem file (optional)
-    #[bpaf(short, long)]
-    pub data: Option<PathBuf>,
     /// I-Mem file
     #[bpaf(short, long)]
     pub inst: PathBuf,
+    /// D-Mem file (optional)
+    #[bpaf(short, long)]
+    pub data: Option<PathBuf>,
+    /// Initial PC value [default: 0]
+    #[bpaf(short, long, fallback(0))]
+    pub pc: u32,
     /// File format [default: bytechar]
     #[bpaf(short, long, fallback(FileFormat::Assembly))]
     pub format: FileFormat,
