@@ -417,7 +417,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "sb_dbg"
+name = "sb_dbg_tui"
 version = "0.1.0"
 dependencies = [
  "anyhow",
