@@ -10,11 +10,15 @@ use crossterm::event::{KeyCode, KeyEvent};
 
 use sb_emu::State as EmuState;
 
-use inst::{Inst, InstState};
-use device::{Device, DeviceState};
-use reg::{Register, RegisterState};
-use mem::{Mem, MemState};
+use inst::Inst;
+use device::Device;
+use reg::Register;
+use mem::Mem;
 use help::Help;
+
+pub trait Widget {
+    type State: Default;
+}
 
 pub struct Widgets {
     pub inst: Inst,
@@ -26,10 +30,10 @@ pub struct Widgets {
 
 pub struct WidgetsManager {
     // 各 Widget の状態
-    inst_state: InstState,
-    device_state: DeviceState,
-    state_state: RegisterState,
-    mem_state: MemState,
+    inst_state: <Inst as Widget>::State,
+    device_state: <Device as Widget>::State,
+    state_state: <Register as Widget>::State,
+    mem_state: <Mem as Widget>::State,
 
     // 全体の状態
     cursor: (i32, i32),
@@ -38,10 +42,10 @@ pub struct WidgetsManager {
 impl WidgetsManager {
     pub fn new() -> Self {
         WidgetsManager {
-            inst_state: InstState::new(true),
-            device_state: DeviceState::new(false),
-            state_state: RegisterState::new(false),
-            mem_state: MemState::new(false),
+            inst_state: <Inst as Widget>::State::default(),
+            device_state: <Device as Widget>::State::default(),
+            state_state: <Register as Widget>::State::default(),
+            mem_state: <Mem as Widget>::State::default(),
             cursor: (0, 0),
         }
     }

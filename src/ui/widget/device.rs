@@ -3,12 +3,14 @@ use std::cmp::{min, max};
 use crossterm::event::{KeyCode, KeyEvent};
 use ratatui::buffer::Buffer;
 use ratatui::layout::Rect;
-use ratatui::widgets::{Widget, Block, Paragraph};
+use ratatui::widgets::{Block, Paragraph};
 use ratatui::symbols::border;
 use ratatui::style::Stylize;
 use ratatui::text::{Line, Text};
 
 use sb_emu::State as EmuState;
+
+use crate::ui::widget::Widget;
 
 pub struct Device {
     selected: bool,
@@ -17,6 +19,10 @@ pub struct Device {
 }
 
 impl Widget for Device {
+    type State = DeviceState;
+}
+
+impl ratatui::widgets::Widget for Device {
     fn render(self, area: Rect, buf: &mut Buffer) {
         let block = Block::bordered()
                 .title(self.title.bold().centered())
@@ -33,14 +39,16 @@ pub struct DeviceState {
     device_id: i32,
 }
 
-impl DeviceState {
-    pub fn new(selected: bool) -> Self {
+impl Default for DeviceState {
+    fn default() -> Self {
         DeviceState {
-            selected,
+            selected: false,
             device_id: 0,
         }
     }
+}
 
+impl DeviceState {
     pub fn gen_widget(&self, emu: &EmuState) -> Device {
         let (title, content) = match self.device_id {
             0 => {

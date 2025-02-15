@@ -3,12 +3,14 @@ use std::cmp::max;
 use crossterm::event::{KeyCode, KeyEvent};
 use ratatui::buffer::Buffer;
 use ratatui::layout::Rect;
-use ratatui::widgets::{Widget, Block, Paragraph};
+use ratatui::widgets::{Block, Paragraph};
 use ratatui::symbols::border;
 use ratatui::style::{Color, Style, Stylize};
 use ratatui::text::{Line, Text, Span};
 
 use sb_emu::State as EmuState;
+
+use crate::ui::widget::Widget;
 
 pub struct Mem {
     selected: bool,
@@ -16,6 +18,10 @@ pub struct Mem {
 }
 
 impl Widget for Mem {
+    type State = MemState;
+}
+
+impl ratatui::widgets::Widget for Mem {
     fn render(self, area: Rect, buf: &mut Buffer) {
         let block = Block::bordered()
                 .title(Line::from(" Memory ".bold()).centered())
@@ -32,14 +38,16 @@ pub struct MemState {
     offset: i32,
 }
 
-impl MemState {
-    pub fn new(selected: bool) -> Self {
+impl Default for MemState {
+    fn default() -> Self {
         MemState {
-            selected,
+            selected: false,
             offset: 0,
         }
     }
+}
 
+impl MemState {
     pub fn gen_widget(&self, emu: &EmuState) -> Mem {
         let mut lines = vec![];
         for row in 0..20 {

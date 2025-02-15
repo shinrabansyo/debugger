@@ -1,7 +1,7 @@
 use crossterm::event::{KeyCode, KeyEvent};
 use ratatui::buffer::Buffer;
 use ratatui::layout::Rect;
-use ratatui::widgets::{Widget, Block, Paragraph};
+use ratatui::widgets::{Block, Paragraph};
 use ratatui::symbols::border;
 use ratatui::style::{Color, Style, Stylize};
 use ratatui::text::{Text, Line, Span};
@@ -9,12 +9,18 @@ use ratatui::text::{Text, Line, Span};
 use sb_disasm::disassemble;
 use sb_emu::State as EmuState;
 
+use crate::ui::widget::Widget;
+
 pub struct Inst {
     selected: bool,
     text: Text<'static>,
 }
 
 impl Widget for Inst {
+    type State = InstState;
+}
+
+impl ratatui::widgets::Widget for Inst {
     fn render(self, area: Rect, buf: &mut Buffer) {
         let block = Block::bordered()
                 .title(Line::from(" Instructions ".bold()).centered())
@@ -31,14 +37,16 @@ pub struct InstState {
     offset: i32,
 }
 
-impl InstState {
-    pub fn new(selected: bool) -> Self {
+impl Default for InstState {
+    fn default() -> Self {
         InstState {
-            selected,
+            selected: false,
             offset: 0,
         }
     }
+}
 
+impl InstState {
     pub fn gen_widget(&self, emu: &EmuState) -> Inst {
         let mut lines = vec![];
         for row in 0..24 {

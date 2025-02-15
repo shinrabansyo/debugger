@@ -1,12 +1,14 @@
 use crossterm::event::KeyEvent;
 use ratatui::buffer::Buffer;
 use ratatui::layout::Rect;
-use ratatui::widgets::{Widget, Block, Paragraph};
+use ratatui::widgets::{Block, Paragraph};
 use ratatui::symbols::border;
 use ratatui::style::{Color, Style, Stylize};
 use ratatui::text::{Line, Span, Text};
 
 use sb_emu::State as EmuState;
+
+use crate::ui::widget::Widget;
 
 pub struct Register {
     selected: bool,
@@ -14,6 +16,10 @@ pub struct Register {
 }
 
 impl Widget for Register {
+    type State = RegisterState;
+}
+
+impl ratatui::widgets::Widget for Register {
     fn render(self, area: Rect, buf: &mut Buffer) {
         let block = Block::bordered()
                 .title(Line::from(" Register ".bold()).centered())
@@ -29,13 +35,15 @@ pub struct RegisterState {
     selected: bool,
 }
 
-impl RegisterState {
-    pub fn new(selected: bool) -> Self {
+impl Default for RegisterState {
+    fn default() -> Self {
         RegisterState {
-            selected,
+            selected: false,
         }
     }
+}
 
+impl RegisterState {
     pub fn gen_widget(&self, emu: &EmuState) -> Register {
         let mut lines = vec![];
 
