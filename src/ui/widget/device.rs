@@ -10,13 +10,13 @@ use ratatui::text::{Line, Text};
 
 use sb_emu::State as EmuState;
 
-pub struct DeviceView {
+pub struct Device {
     selected: bool,
     title: Line<'static>,
     content: Text<'static>,
 }
 
-impl Widget for DeviceView {
+impl Widget for Device {
     fn render(self, area: Rect, buf: &mut Buffer) {
         let block = Block::bordered()
                 .title(self.title.bold().centered())
@@ -28,20 +28,20 @@ impl Widget for DeviceView {
     }
 }
 
-pub struct DeviceViewState {
+pub struct DeviceState {
     selected: bool,
     device_id: i32,
 }
 
-impl DeviceViewState {
+impl DeviceState {
     pub fn new(selected: bool) -> Self {
-        DeviceViewState {
+        DeviceState {
             selected,
             device_id: 0,
         }
     }
 
-    pub fn gen_widget(&self, emu: &EmuState) -> DeviceView {
+    pub fn gen_widget(&self, emu: &EmuState) -> Device {
         let (title, content) = match self.device_id {
             0 => {
                 let title = Line::raw(" Device 0: UART ");
@@ -56,7 +56,7 @@ impl DeviceViewState {
             _ => unreachable!(),
         };
 
-        DeviceView {
+        Device {
             selected: self.selected,
             title,
             content,

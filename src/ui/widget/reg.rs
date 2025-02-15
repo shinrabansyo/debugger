@@ -8,12 +8,12 @@ use ratatui::text::{Line, Span, Text};
 
 use sb_emu::State as EmuState;
 
-pub struct RegisterView {
+pub struct Register {
     selected: bool,
     text: Text<'static>,
 }
 
-impl Widget for RegisterView {
+impl Widget for Register {
     fn render(self, area: Rect, buf: &mut Buffer) {
         let block = Block::bordered()
                 .title(Line::from(" Register ".bold()).centered())
@@ -25,18 +25,18 @@ impl Widget for RegisterView {
     }
 }
 
-pub struct RegisterViewState {
+pub struct RegisterState {
     selected: bool,
 }
 
-impl RegisterViewState {
+impl RegisterState {
     pub fn new(selected: bool) -> Self {
-        RegisterViewState {
+        RegisterState {
             selected,
         }
     }
 
-    pub fn gen_widget(&self, emu: &EmuState) -> RegisterView {
+    pub fn gen_widget(&self, emu: &EmuState) -> Register {
         let mut lines = vec![];
 
         // PC 表示
@@ -62,7 +62,7 @@ impl RegisterViewState {
             lines.push(Line::from(reg_items));
         }
 
-        RegisterView {
+        Register {
             selected: self.selected,
             text: Text::from(lines),
         }

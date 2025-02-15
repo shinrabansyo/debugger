@@ -10,12 +10,12 @@ use ratatui::text::{Line, Text, Span};
 
 use sb_emu::State as EmuState;
 
-pub struct MemView {
+pub struct Mem {
     selected: bool,
     text: Text<'static>,
 }
 
-impl Widget for MemView {
+impl Widget for Mem {
     fn render(self, area: Rect, buf: &mut Buffer) {
         let block = Block::bordered()
                 .title(Line::from(" Memory ".bold()).centered())
@@ -27,20 +27,20 @@ impl Widget for MemView {
     }
 }
 
-pub struct MemViewState {
+pub struct MemState {
     selected: bool,
     offset: i32,
 }
 
-impl MemViewState {
+impl MemState {
     pub fn new(selected: bool) -> Self {
-        MemViewState {
+        MemState {
             selected,
             offset: 0,
         }
     }
 
-    pub fn gen_widget(&self, emu: &EmuState) -> MemView {
+    pub fn gen_widget(&self, emu: &EmuState) -> Mem {
         let mut lines = vec![];
         for row in 0..20 {
             let mut line = vec![];
@@ -65,7 +65,7 @@ impl MemViewState {
             lines.push(Line::from(line));
         }
 
-        MemView {
+        Mem {
             selected: self.selected,
             text: Text::from(lines),
         }

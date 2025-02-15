@@ -4,9 +4,9 @@ use ratatui::widgets::{Widget, Paragraph};
 use ratatui::style::Stylize;
 use ratatui::text::Line;
 
-pub struct HelpView;
+pub struct Help;
 
-impl Widget for HelpView {
+impl Widget for Help {
     fn render(self, area: Rect, buf: &mut Buffer) {
         let help_line = Line::from(vec![
             " Up ".into(),
