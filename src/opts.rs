@@ -16,12 +16,13 @@ pub struct Options {
     #[bpaf(short, long)]
     pub inst: PathBuf,
     /// File format [default: bytechar]
-    #[bpaf(short, long, fallback(FileFormat::ByteChar))]
+    #[bpaf(short, long, fallback(FileFormat::Assembly))]
     pub format: FileFormat,
 }
 
 #[derive(Debug, Clone)]
 pub enum FileFormat {
+    Assembly,
     ByteChar,
 }
 
@@ -30,6 +31,7 @@ impl FromStr for FileFormat {
 
     fn from_str(s: &str) -> anyhow::Result<Self> {
         match s {
+            "assembly" => Ok(FileFormat::Assembly),
             "bytechar" => Ok(FileFormat::ByteChar),
             _ => Err(anyhow::anyhow!("Invalid file format")),
         }

@@ -11,6 +11,7 @@ crossterm = "0.28.1"
 bpaf = { version = "0.9.15", features = ["derive"] }
 sb_emu = { path = "./emulator" }
 sb_disasm = { path = "./disassembler" }
+sb_asm = { package = "sb_asm", git = "https://github.com/shinrabansyo/assembler", rev = "16955a950b30a2c879f4acd7dff661db6d2bf741" }
 
 [workspace]
 resolver = "2"
