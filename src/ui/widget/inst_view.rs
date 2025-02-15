@@ -46,9 +46,16 @@ impl InstViewState {
         for row in 0..24 {
             let mut line = vec![];
 
-            // 命令アドレス
+            // 表示対象命令のアドレスを計算
             let pc = emu.pc as i32;
-            let addr = max(0, self.offset + pc + row * 6) as usize;
+            let addr = self.offset + pc + row * 6;
+            if addr < 0 {
+                lines.push(Line::from(line));
+                continue;
+            }
+            let addr = addr as usize;
+
+            // 命令アドレス
             line.push(Span::styled(
                 format!("0x{:08x}: ", addr),
                 Style::new().fg(Color::Yellow),
