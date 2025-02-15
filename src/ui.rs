@@ -1,6 +1,8 @@
 mod widget;
 mod layout;
 
+use std::time::Duration;
+
 use crossterm::event::{KeyEvent, KeyCode};
 use crossterm::event;
 use ratatui::{DefaultTerminal, Frame};
@@ -18,6 +20,7 @@ pub struct UI {
     // 全体の状態
     running: bool,
     emu: Option<EmuState>,
+    remain_exec_cnt: u32,
 }
 
 // Main
@@ -28,12 +31,24 @@ impl UI {
             widgets_man: WidgetsManager::new(),
             running: true,
             emu: Some(emu),
+            remain_exec_cnt: 0,
         }
     }
 
     pub fn run(&mut self, terminal: &mut DefaultTerminal) -> anyhow::Result<()> {
         while self.running {
+            // エミュレータ実行
+            if self.remain_exec_cnt > 0 {
+                let emu = self.emu.take().unwrap();
+                let emu = sb_emu::step(emu).unwrap();
+                self.emu = Some(emu);
+                self.remain_exec_cnt -= 1;
+            }
+
+            // 描画
             terminal.draw(|frame| self.draw(frame))?;
+
+            // イベント処理
             self.handle_events()?;
         }
         Ok(())
@@ -57,20 +72,23 @@ impl UI {
 // Event Handling
 impl UI {
     fn handle_events(&mut self) -> anyhow::Result<()> {
-        match event::read()? {
-            event::Event::Key(event) => self.handle_key_event(event),
-            _ => {}
+        if event::poll(Duration::from_millis(10))? {
+            match event::read()? {
+                event::Event::Key(event) => self.handle_key_event(event),
+                _ => {}
+            }
         }
         Ok(())
     }
 
     fn handle_key_event(&mut self, event: KeyEvent) {
         match event.code {
-            KeyCode::Enter => {
-                let emu = self.emu.take().unwrap();
-                let emu = sb_emu::step(emu).unwrap();
-                self.emu = Some(emu);
-            }
+            KeyCode::Enter => self.remain_exec_cnt = 1,
+            KeyCode::Char(' ') => if self.remain_exec_cnt == 0 {
+                self.remain_exec_cnt = u32::MAX;
+            } else {
+                self.remain_exec_cnt = 0;
+            },
             KeyCode::Char('q') => self.running = false,
             _ => self.widgets_man.handle_key_event(event),
         }

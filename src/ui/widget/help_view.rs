@@ -18,6 +18,8 @@ impl Widget for HelpView {
             " Right ".into(),
             "<l> ".blue().bold(),
             "|".into(),
+            " Auto-Exec ".into(),
+            "<Space>".blue().bold(),
             " Step ".into(),
             "<Enter> ".blue().bold(),
             "|".into(),
