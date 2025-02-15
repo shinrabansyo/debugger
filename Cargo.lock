@@ -418,7 +418,7 @@ dependencies = [
 
 [[package]]
 name = "sb_dbg_tui"
-version = "0.1.0"
+version = "0.1.2"
 dependencies = [
  "anyhow",
  "bpaf",
@@ -432,7 +432,7 @@ dependencies = [
 
 [[package]]
 name = "sb_disasm"
-version = "0.1.0"
+version = "0.1.2"
 dependencies = [
  "anyhow",
  "thiserror",
@@ -472,7 +472,7 @@ dependencies = [
 
 [[package]]
 name = "sb_emu_state"
-version = "0.1.0"
+version = "0.1.2"
 dependencies = [
  "anyhow",
  "thiserror",
