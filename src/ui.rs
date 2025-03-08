@@ -28,7 +28,7 @@ impl UI {
     pub fn new(emu: EmuState) -> Self {
         UI {
             layout_man: LayoutManager::default(),
-            widgets_man: WidgetsManager::new(),
+            widgets_man: WidgetsManager::default(),
             running: true,
             emu: Some(emu),
             remain_exec_cnt: 0,
@@ -39,8 +39,12 @@ impl UI {
         while self.running {
             // エミュレータ実行
             if self.remain_exec_cnt > 0 {
+                // 1ステップ実行
                 let emu = self.emu.take().unwrap();
-                let emu = sb_emu::step(emu).unwrap();
+                let emu = self.widgets_man.affect(emu);
+                let emu = sb_emu::step(emu).unwrap(); // (命令実行)
+
+                // 状態更新
                 self.emu = Some(emu);
                 self.remain_exec_cnt -= 1;
             }
@@ -58,13 +62,14 @@ impl UI {
 // Rendering
 impl UI {
     fn draw(&mut self, frame: &mut Frame) {
-        let widegts = self.widgets_man.gen_widgets(self.emu.as_ref().unwrap());
         let layout = self.layout_man.gen(frame);
+        let widegts = self.widgets_man.draw(&layout, self.emu.as_ref().unwrap());
 
         frame.render_widget(widegts.inst, layout.inst);
         frame.render_widget(widegts.device, layout.device);
         frame.render_widget(widegts.state, layout.state);
         frame.render_widget(widegts.mem, layout.memory);
+        frame.render_widget(widegts.mode, layout.mode);
         frame.render_widget(widegts.help, layout.help);
     }
 }

@@ -10,7 +10,7 @@ use ratatui::text::{Line, Text, Span};
 
 use sb_emu::State as EmuState;
 
-use crate::ui::widget::Widget;
+use crate::ui::widget::{Widget, WidgetState};
 
 pub struct Mem {
     selected: bool,
@@ -33,24 +33,24 @@ impl ratatui::widgets::Widget for Mem {
     }
 }
 
+#[derive(Default)]
 pub struct MemState {
     selected: bool,
     offset: i32,
 }
 
-impl Default for MemState {
-    fn default() -> Self {
-        MemState {
-            selected: false,
-            offset: 0,
-        }
-    }
-}
+impl WidgetState for MemState {
+    type Widget = Mem;
 
-impl MemState {
-    pub fn gen_widget(&self, emu: &EmuState) -> Mem {
+    fn affect(&self, emu: EmuState) -> EmuState {
+        emu
+    }
+
+    fn draw(&self, area: &Rect, emu: &EmuState) -> Mem {
+        let max_lines = area.height as i32;
+
         let mut lines = vec![];
-        for row in 0..20 {
+        for row in 0..max_lines {
             let mut line = vec![];
 
             // 行アドレス
@@ -70,6 +70,26 @@ impl MemState {
                 ));
             }
 
+            // 出力幅調整
+            let padding_size = max(0, area.width as i32 - 10 - 47 - 20) as usize;
+            let padding = " ".repeat(padding_size);
+            line.push(Span::from(padding));
+
+            // ASCII 表示
+            for col in 0..16 {
+                let addr = row_addr + col;
+                let byte = emu.dmem.read_byte(addr).unwrap();
+                let c = if byte.is_ascii_alphanumeric() {
+                    byte as char
+                } else {
+                    '.'
+                };
+                line.push(Span::styled(
+                    format!("{}", c),
+                    Style::new().fg(Color::White)
+                ));
+            }
+
             lines.push(Line::from(line));
         }
 
@@ -79,7 +99,7 @@ impl MemState {
         }
     }
 
-    pub fn handle_key_event(&mut self, event: KeyEvent) {
+    fn handle_key_event(&mut self, event: KeyEvent) {
         self.offset = match event.code {
             KeyCode::Up => max(0, self.offset - 16),
             KeyCode::Down => self.offset + 16,
@@ -87,7 +107,7 @@ impl MemState {
         };
     }
 
-    pub fn set_selected(&mut self, selected: bool) {
+    fn set_selected(&mut self, selected: bool) {
         self.selected = selected;
     }
 }

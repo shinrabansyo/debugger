@@ -1,3 +1,5 @@
+use std::cmp::max;
+
 use crossterm::event::{KeyCode, KeyEvent};
 use ratatui::buffer::Buffer;
 use ratatui::layout::Rect;
@@ -9,7 +11,7 @@ use ratatui::text::{Text, Line, Span};
 use sb_disasm::disassemble;
 use sb_emu::State as EmuState;
 
-use crate::ui::widget::Widget;
+use crate::ui::widget::{Widget, WidgetState};
 
 pub struct Inst {
     selected: bool,
@@ -32,24 +34,24 @@ impl ratatui::widgets::Widget for Inst {
     }
 }
 
+#[derive(Default)]
 pub struct InstState {
     selected: bool,
     offset: i32,
 }
 
-impl Default for InstState {
-    fn default() -> Self {
-        InstState {
-            selected: false,
-            offset: 0,
-        }
-    }
-}
+impl WidgetState for InstState {
+    type Widget = Inst;
 
-impl InstState {
-    pub fn gen_widget(&self, emu: &EmuState) -> Inst {
+    fn affect(&self, emu: EmuState) -> EmuState {
+        emu
+    }
+
+    fn draw(&self, area: &Rect, emu: &EmuState) -> Inst {
+        let max_lines = area.height as i32;
+
         let mut lines = vec![];
-        for row in 0..24 {
+        for row in 0..max_lines {
             let mut line = vec![];
 
             // 表示対象命令のアドレスを計算
@@ -67,17 +69,21 @@ impl InstState {
                 Style::new().fg(Color::Yellow),
             ));
 
+            // 出力幅調整用スペースの準備
+            let padding_size = max(0, area.width as i32 - 12 - 32 - 16) as usize;
+            let padding = " ".repeat(padding_size);
+
             // 命令
             let raw_inst = emu.imem.read::<6>(addr).unwrap();
             let assembly = disassemble(raw_inst);
             if addr == emu.pc as usize {
                 line.push(Span::styled(
-                    format!("{:32} 0x{:012x}", assembly, raw_inst),
+                    format!("{:32}{}0x{:012x}", assembly, padding, raw_inst),
                     Style::new().fg(Color::Red).underlined().bold(),
                 ));
             } else {
                 line.push(Span::styled(
-                    format!("{:32} 0x{:012x}", assembly, raw_inst),
+                    format!("{:32}{}0x{:012x}", assembly, padding, raw_inst),
                     Style::new().fg(Color::White),
                 ));
             }
@@ -91,7 +97,7 @@ impl InstState {
         }
     }
 
-    pub fn handle_key_event(&mut self, event: KeyEvent) {
+    fn handle_key_event(&mut self, event: KeyEvent) {
         self.offset = match event.code {
             KeyCode::Up => self.offset - 6,
             KeyCode::Down => self.offset + 6,
@@ -99,7 +105,7 @@ impl InstState {
         };
     }
 
-    pub fn set_selected(&mut self, selected: bool) {
+    fn set_selected(&mut self, selected: bool) {
         self.selected = selected;
     }
 }
