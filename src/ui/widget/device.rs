@@ -1,3 +1,6 @@
+mod uart;
+mod gpout;
+
 use std::cmp::{min, max};
 
 use crossterm::event::{KeyCode, KeyEvent};
@@ -11,6 +14,8 @@ use ratatui::text::{Line, Text};
 use sb_emu::State as EmuState;
 
 use crate::ui::widget::Widget;
+use uart::Uart;
+use gpout::GPOut;
 
 pub struct Device {
     selected: bool,
@@ -36,49 +41,45 @@ impl ratatui::widgets::Widget for Device {
 
 pub struct DeviceState {
     selected: bool,
-    device_id: i32,
+    show_dev_id: u32,
+    uart: Uart,
+    gpout: GPOut,
 }
 
 impl Default for DeviceState {
     fn default() -> Self {
         DeviceState {
             selected: false,
-            device_id: 0,
+            show_dev_id: 0,
+            uart: Uart::default(),
+            gpout: GPOut::default(),
         }
     }
 }
 
 impl DeviceState {
     pub fn gen_widget(&self, emu: &EmuState) -> Device {
-        let (title, content) = match self.device_id {
-            0 => {
-                let title = Line::raw(" Device 0: UART ");
-                let content = Text::raw(emu.devices.get_stat(0).unwrap());
-                (title, content)
-            },
-            1 => {
-                let title = Line::raw(" Device 1: GPIO ");
-                let content = Text::raw(emu.devices.get_stat(4).unwrap());
-                (title, content)
-            }
+        let mut device = match self.show_dev_id {
+            0 => self.uart.gen_widget(emu),
+            1 => self.gpout.gen_widget(emu),
             _ => unreachable!(),
         };
-
-        Device {
-            selected: self.selected,
-            title,
-            content,
-        }
+        device.selected = self.selected;
+        device
     }
 
     pub fn handle_key_event(&mut self, event: KeyEvent) {
-        const REGISTERED_DEVICES: i32 = 2;
+        const REGISTERED_DEVICES: u32 = 2;
 
-        self.device_id = match event.code {
-            KeyCode::Left => max(0, self.device_id - 1),
-            KeyCode::Right => min(REGISTERED_DEVICES - 1, self.device_id + 1),
-            _ => self.device_id,
-        };
+        match event.code {
+            KeyCode::Left => self.show_dev_id = max(0, self.show_dev_id - 1),
+            KeyCode::Right => self.show_dev_id = min(REGISTERED_DEVICES - 1, self.show_dev_id + 1),
+            _ => match self.show_dev_id {
+                0 => self.uart.handle_key_event(event),
+                1 => self.gpout.handle_key_event(event),
+                _ => (),
+            }
+        }
     }
 
     pub fn set_selected(&mut self, selected: bool) {
