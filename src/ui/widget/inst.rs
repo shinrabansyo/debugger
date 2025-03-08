@@ -45,9 +45,11 @@ impl WidgetState for InstState {
         emu
     }
 
-    fn draw(&self, _: &Rect, emu: &EmuState) -> Inst {
+    fn draw(&self, area: &Rect, emu: &EmuState) -> Inst {
+        let max_lines = area.height as i32;
+
         let mut lines = vec![];
-        for row in 0..24 {
+        for row in 0..max_lines {
             let mut line = vec![];
 
             // 表示対象命令のアドレスを計算

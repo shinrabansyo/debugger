@@ -46,9 +46,11 @@ impl WidgetState for MemState {
         emu
     }
 
-    fn draw(&self, _: &Rect, emu: &EmuState) -> Mem {
+    fn draw(&self, area: &Rect, emu: &EmuState) -> Mem {
+        let max_lines = area.height as i32;
+
         let mut lines = vec![];
-        for row in 0..20 {
+        for row in 0..max_lines {
             let mut line = vec![];
 
             // 行アドレス
