@@ -5,10 +5,17 @@
 - [helloworld](examples/helloworld)
 - [fizzbuzz](examples/fizzbuzz/)
 
+## Command
+
+### CLI
+
 ```
-$ cargo run -- --inst examples/helloworld/helloworld.asm
-or
-$ cargo run -- --format assembly --inst examples/helloworld/helloworld.asm
-or
-$ cargo run -- --format bytechar --inst examples/helloworld/imem.hex --data examples/helloworld/dmem.hex
+$ cargo run --bin sb_dbg_cli -- --inst examples/helloworld/helloworld.asm
+Hello world!
+```
+
+### TUI
+
+```
+$ cargo run --bin sb_dbg_tui -- --inst examples/helloworld/helloworld.asm
 ```
