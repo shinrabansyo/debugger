@@ -9,7 +9,7 @@ use ratatui::text::{Text, Line, Span};
 use sb_disasm::disassemble;
 use sb_emu::State as EmuState;
 
-use crate::ui::widget::Widget;
+use crate::ui::widget::{Widget, WidgetState};
 
 pub struct Inst {
     selected: bool,
@@ -32,22 +32,16 @@ impl ratatui::widgets::Widget for Inst {
     }
 }
 
+#[derive(Default)]
 pub struct InstState {
     selected: bool,
     offset: i32,
 }
 
-impl Default for InstState {
-    fn default() -> Self {
-        InstState {
-            selected: false,
-            offset: 0,
-        }
-    }
-}
+impl WidgetState for InstState {
+    type Widget = Inst;
 
-impl InstState {
-    pub fn gen_widget(&self, emu: &EmuState) -> Inst {
+    fn draw(&self, emu: &EmuState) -> Inst {
         let mut lines = vec![];
         for row in 0..24 {
             let mut line = vec![];
@@ -91,7 +85,7 @@ impl InstState {
         }
     }
 
-    pub fn handle_key_event(&mut self, event: KeyEvent) {
+    fn handle_key_event(&mut self, event: KeyEvent) {
         self.offset = match event.code {
             KeyCode::Up => self.offset - 6,
             KeyCode::Down => self.offset + 6,
@@ -99,7 +93,7 @@ impl InstState {
         };
     }
 
-    pub fn set_selected(&mut self, selected: bool) {
+    fn set_selected(&mut self, selected: bool) {
         self.selected = selected;
     }
 }

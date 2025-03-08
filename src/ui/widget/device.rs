@@ -13,7 +13,7 @@ use ratatui::text::{Line, Text};
 
 use sb_emu::State as EmuState;
 
-use crate::ui::widget::Widget;
+use crate::ui::widget::{Widget, WidgetState};
 use uart::Uart;
 use gpout::GPOut;
 
@@ -39,6 +39,7 @@ impl ratatui::widgets::Widget for Device {
     }
 }
 
+#[derive(Default)]
 pub struct DeviceState {
     selected: bool,
     show_dev_id: u32,
@@ -46,19 +47,10 @@ pub struct DeviceState {
     gpout: GPOut,
 }
 
-impl Default for DeviceState {
-    fn default() -> Self {
-        DeviceState {
-            selected: false,
-            show_dev_id: 0,
-            uart: Uart::default(),
-            gpout: GPOut::default(),
-        }
-    }
-}
+impl WidgetState for DeviceState {
+    type Widget = Device;
 
-impl DeviceState {
-    pub fn gen_widget(&self, emu: &EmuState) -> Device {
+    fn draw(&self, emu: &EmuState) -> Device {
         let mut device = match self.show_dev_id {
             0 => self.uart.gen_widget(emu),
             1 => self.gpout.gen_widget(emu),
@@ -68,7 +60,7 @@ impl DeviceState {
         device
     }
 
-    pub fn handle_key_event(&mut self, event: KeyEvent) {
+    fn handle_key_event(&mut self, event: KeyEvent) {
         const REGISTERED_DEVICES: u32 = 2;
 
         match event.code {
@@ -82,7 +74,7 @@ impl DeviceState {
         }
     }
 
-    pub fn set_selected(&mut self, selected: bool) {
+    fn set_selected(&mut self, selected: bool) {
         self.selected = selected;
     }
 }

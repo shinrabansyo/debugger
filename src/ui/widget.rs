@@ -17,7 +17,18 @@ use mem::Mem;
 use help::Help;
 
 pub trait Widget {
-    type State: Default;
+    type State: WidgetState;
+}
+
+pub trait WidgetState
+where
+    Self: Default,
+{
+    type Widget: Widget;
+
+    fn draw(&self, emu: &EmuState) -> Self::Widget;
+    fn handle_key_event(&mut self, event: KeyEvent);
+    fn set_selected(&mut self, selected: bool);
 }
 
 pub struct Widgets {
@@ -34,6 +45,7 @@ pub struct WidgetsManager {
     device_state: <Device as Widget>::State,
     state_state: <Register as Widget>::State,
     mem_state: <Mem as Widget>::State,
+    help_state: <Help as Widget>::State,
 
     // 全体の状態
     cursor: (i32, i32),
@@ -46,17 +58,18 @@ impl WidgetsManager {
             device_state: <Device as Widget>::State::default(),
             state_state: <Register as Widget>::State::default(),
             mem_state: <Mem as Widget>::State::default(),
+            help_state: <Help as Widget>::State::default(),
             cursor: (0, 0),
         }
     }
 
-    pub fn gen_widgets(&self, emu: &EmuState) -> Widgets {
+    pub fn draw(&self, emu: &EmuState) -> Widgets {
         Widgets {
-            inst: self.inst_state.gen_widget(emu),
-            device: self.device_state.gen_widget(emu),
-            state: self.state_state.gen_widget(emu),
-            mem: self.mem_state.gen_widget(emu),
-            help: Help,
+            inst: self.inst_state.draw(emu),
+            device: self.device_state.draw(emu),
+            state: self.state_state.draw(emu),
+            mem: self.mem_state.draw(emu),
+            help: self.help_state.draw(emu),
         }
     }
 

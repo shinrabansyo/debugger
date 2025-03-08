@@ -10,7 +10,7 @@ use ratatui::text::{Line, Text, Span};
 
 use sb_emu::State as EmuState;
 
-use crate::ui::widget::Widget;
+use crate::ui::widget::{Widget, WidgetState};
 
 pub struct Mem {
     selected: bool,
@@ -33,22 +33,16 @@ impl ratatui::widgets::Widget for Mem {
     }
 }
 
+#[derive(Default)]
 pub struct MemState {
     selected: bool,
     offset: i32,
 }
 
-impl Default for MemState {
-    fn default() -> Self {
-        MemState {
-            selected: false,
-            offset: 0,
-        }
-    }
-}
+impl WidgetState for MemState {
+    type Widget = Mem;
 
-impl MemState {
-    pub fn gen_widget(&self, emu: &EmuState) -> Mem {
+    fn draw(&self, emu: &EmuState) -> Mem {
         let mut lines = vec![];
         for row in 0..20 {
             let mut line = vec![];
@@ -79,7 +73,7 @@ impl MemState {
         }
     }
 
-    pub fn handle_key_event(&mut self, event: KeyEvent) {
+    fn handle_key_event(&mut self, event: KeyEvent) {
         self.offset = match event.code {
             KeyCode::Up => max(0, self.offset - 16),
             KeyCode::Down => self.offset + 16,
@@ -87,7 +81,7 @@ impl MemState {
         };
     }
 
-    pub fn set_selected(&mut self, selected: bool) {
+    fn set_selected(&mut self, selected: bool) {
         self.selected = selected;
     }
 }

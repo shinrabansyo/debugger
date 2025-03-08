@@ -58,7 +58,7 @@ impl UI {
 // Rendering
 impl UI {
     fn draw(&mut self, frame: &mut Frame) {
-        let widegts = self.widgets_man.gen_widgets(self.emu.as_ref().unwrap());
+        let widegts = self.widgets_man.draw(self.emu.as_ref().unwrap());
         let layout = self.layout_man.gen(frame);
 
         frame.render_widget(widegts.inst, layout.inst);

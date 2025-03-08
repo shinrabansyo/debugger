@@ -1,15 +1,18 @@
+use crossterm::event::KeyEvent;
 use ratatui::buffer::Buffer;
 use ratatui::layout::Rect;
 use ratatui::widgets::Paragraph;
 use ratatui::style::Stylize;
 use ratatui::text::Line;
 
-use crate::ui::widget::Widget;
+use sb_emu::State as EmuState;
+
+use crate::ui::widget::{Widget, WidgetState};
 
 pub struct Help;
 
 impl Widget for Help {
-    type State = ();
+    type State = HelpState;
 }
 
 impl ratatui::widgets::Widget for Help {
@@ -35,4 +38,19 @@ impl ratatui::widgets::Widget for Help {
 
         Paragraph::new(help_line.centered()).render(area, buf);
     }
+}
+
+#[derive(Default)]
+pub struct HelpState;
+
+impl WidgetState for HelpState {
+    type Widget = Help;
+
+    fn draw(&self, _: &EmuState) -> Help {
+        Help
+    }
+
+    fn handle_key_event(&mut self, _: KeyEvent) {}
+
+    fn set_selected(&mut self, _: bool) {}
 }

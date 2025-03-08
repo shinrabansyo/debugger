@@ -8,7 +8,7 @@ use ratatui::text::{Line, Span, Text};
 
 use sb_emu::State as EmuState;
 
-use crate::ui::widget::Widget;
+use crate::ui::widget::{Widget, WidgetState};
 
 pub struct Register {
     selected: bool,
@@ -31,20 +31,15 @@ impl ratatui::widgets::Widget for Register {
     }
 }
 
+#[derive(Default)]
 pub struct RegisterState {
     selected: bool,
 }
 
-impl Default for RegisterState {
-    fn default() -> Self {
-        RegisterState {
-            selected: false,
-        }
-    }
-}
+impl WidgetState for RegisterState {
+    type Widget = Register;
 
-impl RegisterState {
-    pub fn gen_widget(&self, emu: &EmuState) -> Register {
+    fn draw(&self, emu: &EmuState) -> Register {
         let mut lines = vec![];
 
         // PC 表示
@@ -76,11 +71,11 @@ impl RegisterState {
         }
     }
 
-    pub fn handle_key_event(&mut self, _: KeyEvent) {
+    fn handle_key_event(&mut self, _: KeyEvent) {
         // do nothing
     }
 
-    pub fn set_selected(&mut self, selected: bool) {
+    fn set_selected(&mut self, selected: bool) {
         self.selected = selected;
     }
 }
