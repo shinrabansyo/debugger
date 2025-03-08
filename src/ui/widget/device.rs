@@ -50,6 +50,10 @@ pub struct DeviceState {
 impl WidgetState for DeviceState {
     type Widget = Device;
 
+    fn affect(&self, emu: EmuState) -> EmuState {
+        emu
+    }
+
     fn draw(&self, emu: &EmuState) -> Device {
         let mut device = match self.show_dev_id {
             0 => self.uart.gen_widget(emu),

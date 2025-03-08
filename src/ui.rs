@@ -39,8 +39,12 @@ impl UI {
         while self.running {
             // エミュレータ実行
             if self.remain_exec_cnt > 0 {
+                // 1ステップ実行
                 let emu = self.emu.take().unwrap();
-                let emu = sb_emu::step(emu).unwrap();
+                let emu = self.widgets_man.affect(emu);
+                let emu = sb_emu::step(emu).unwrap(); // (命令実行)
+
+                // 状態更新
                 self.emu = Some(emu);
                 self.remain_exec_cnt -= 1;
             }

@@ -39,6 +39,10 @@ pub struct RegisterState {
 impl WidgetState for RegisterState {
     type Widget = Register;
 
+    fn affect(&self, emu: EmuState) -> EmuState {
+        emu
+    }
+
     fn draw(&self, emu: &EmuState) -> Register {
         let mut lines = vec![];
 

@@ -26,6 +26,7 @@ where
 {
     type Widget: Widget;
 
+    fn affect(&self, emu: EmuState) -> EmuState;
     fn draw(&self, emu: &EmuState) -> Self::Widget;
     fn handle_key_event(&mut self, event: KeyEvent);
     fn set_selected(&mut self, selected: bool);
@@ -61,6 +62,15 @@ impl WidgetsManager {
             help_state: <Help as Widget>::State::default(),
             cursor: (0, 0),
         }
+    }
+
+    pub fn affect(&self, emu: EmuState) -> EmuState {
+        let emu = self.inst_state.affect(emu);
+        let emu = self.device_state.affect(emu);
+        let emu = self.state_state.affect(emu);
+        let emu = self.mem_state.affect(emu);
+        let emu = self.help_state.affect(emu);
+        emu
     }
 
     pub fn draw(&self, emu: &EmuState) -> Widgets {

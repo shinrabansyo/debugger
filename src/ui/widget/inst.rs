@@ -41,6 +41,10 @@ pub struct InstState {
 impl WidgetState for InstState {
     type Widget = Inst;
 
+    fn affect(&self, emu: EmuState) -> EmuState {
+        emu
+    }
+
     fn draw(&self, emu: &EmuState) -> Inst {
         let mut lines = vec![];
         for row in 0..24 {

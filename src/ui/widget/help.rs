@@ -46,6 +46,10 @@ pub struct HelpState;
 impl WidgetState for HelpState {
     type Widget = Help;
 
+    fn affect(&self, emu: EmuState) -> EmuState {
+        emu
+    }
+
     fn draw(&self, _: &EmuState) -> Help {
         Help
     }
