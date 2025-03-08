@@ -8,9 +8,11 @@ mod help;
 use std::cmp::{min, max};
 
 use crossterm::event::{KeyCode, KeyEvent};
+use ratatui::layout::Rect;
 
 use sb_emu::State as EmuState;
 
+use crate::ui::layout::Layout;
 use inst::Inst;
 use device::Device;
 use reg::Register;
@@ -29,7 +31,7 @@ where
     type Widget: Widget;
 
     fn affect(&self, emu: EmuState) -> EmuState;
-    fn draw(&self, emu: &EmuState) -> Self::Widget;
+    fn draw(&self, area: &Rect, emu: &EmuState) -> Self::Widget;
     fn handle_key_event(&mut self, event: KeyEvent);
     fn set_selected(&mut self, selected: bool);
 }
@@ -68,14 +70,14 @@ impl WidgetsManager {
         emu
     }
 
-    pub fn draw(&self, emu: &EmuState) -> Widgets {
+    pub fn draw(&self, layout: &Layout, emu: &EmuState) -> Widgets {
         Widgets {
-            inst: self.inst_state.draw(emu),
-            device: self.device_state.draw(emu),
-            state: self.state_state.draw(emu),
-            mem: self.mem_state.draw(emu),
-            mode: self.mode_state.draw(emu),
-            help: self.help_state.draw(emu),
+            inst: self.inst_state.draw(&layout.inst, emu),
+            device: self.device_state.draw(&layout.device, emu),
+            state: self.state_state.draw(&layout.state, emu),
+            mem: self.mem_state.draw(&layout.memory, emu),
+            mode: self.mode_state.draw(&layout.mode, emu),
+            help: self.help_state.draw(&layout.help, emu),
         }
     }
 

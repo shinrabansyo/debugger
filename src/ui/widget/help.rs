@@ -55,7 +55,7 @@ impl WidgetState for HelpState {
         emu
     }
 
-    fn draw(&self, _: &EmuState) -> Help {
+    fn draw(&self,_: &Rect, _: &EmuState) -> Help {
         Help
     }
 

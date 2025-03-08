@@ -45,7 +45,7 @@ impl WidgetState for InstState {
         emu
     }
 
-    fn draw(&self, emu: &EmuState) -> Inst {
+    fn draw(&self, _: &Rect, emu: &EmuState) -> Inst {
         let mut lines = vec![];
         for row in 0..24 {
             let mut line = vec![];

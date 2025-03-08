@@ -43,7 +43,7 @@ impl WidgetState for RegisterState {
         emu
     }
 
-    fn draw(&self, emu: &EmuState) -> Register {
+    fn draw(&self, _: &Rect, emu: &EmuState) -> Register {
         let mut lines = vec![];
 
         // PC 表示

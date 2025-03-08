@@ -47,7 +47,7 @@ impl WidgetState for ModeState {
         emu
     }
 
-    fn draw(&self, _: &EmuState) -> Mode {
+    fn draw(&self, _: &Rect, _: &EmuState) -> Mode {
         Mode {
             input_mode: self.input_mode,
         }

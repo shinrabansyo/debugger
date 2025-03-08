@@ -54,7 +54,7 @@ impl WidgetState for DeviceState {
         emu
     }
 
-    fn draw(&self, emu: &EmuState) -> Device {
+    fn draw(&self, _: &Rect, emu: &EmuState) -> Device {
         let mut device = match self.show_dev_id {
             0 => self.uart.gen_widget(emu),
             1 => self.gpout.gen_widget(emu),
