@@ -1,0 +1,10 @@
+[package]
+name = "sb_dbg_utils"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+anyhow = { workspace = true }
+thiserror = { workspace = true }
+bpaf = { version = "0.9.15", features = ["derive"] }
+sb_asm = { package = "sb_asm", git = "https://github.com/shinrabansyo/assembler", rev = "16955a950b30a2c879f4acd7dff661db6d2bf741" }
