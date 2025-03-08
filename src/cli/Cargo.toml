@@ -6,3 +6,5 @@ edition = "2021"
 [dependencies]
 anyhow = { workspace = true }
 thiserror = { workspace = true }
+sb_emu = { workspace = true }
+sb_dbg_utils = { workspace = true }
