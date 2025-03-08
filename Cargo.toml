@@ -16,3 +16,6 @@ members = [
 [workspace.dependencies]
 anyhow = "1.0.93"
 thiserror = "2.0.3"
+sb_emu = { path = "./emulator" }
+sb_disasm = { path = "./disassembler" }
+sb_dbg_utils = { path = "./src/utils" }

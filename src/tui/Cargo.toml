@@ -8,6 +8,6 @@ anyhow = { workspace = true }
 thiserror = { workspace = true }
 ratatui = "0.29.0"
 crossterm = "0.28.1"
-sb_emu = { path = "../../emulator" }
-sb_disasm = { path = "../../disassembler" }
-sb_dbg_utils = { path = "../utils" }
+sb_emu = { workspace = true }
+sb_disasm = { workspace = true }
+sb_dbg_utils = { workspace = true }

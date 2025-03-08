@@ -397,6 +397,7 @@ name = "sb_dbg_cli"
 version = "0.1.0"
 dependencies = [
  "anyhow",
+ "sb_emu",
  "thiserror",
 ]
 
