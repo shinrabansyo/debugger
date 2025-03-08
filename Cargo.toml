@@ -1,27 +1,13 @@
-[package]
-name = "sb_dbg_tui"
-edition = "2021"
-version.workspace = true
-
-[dependencies]
-anyhow = { workspace = true }
-thiserror = { workspace = true }
-ratatui = "0.29.0"
-crossterm = "0.28.1"
-bpaf = { version = "0.9.15", features = ["derive"] }
-sb_emu = { path = "./emulator" }
-sb_disasm = { path = "./disassembler" }
-sb_asm = { package = "sb_asm", git = "https://github.com/shinrabansyo/assembler", rev = "16955a950b30a2c879f4acd7dff661db6d2bf741" }
-
 [workspace]
 resolver = "2"
 members = [
+    # lib (public)
     "./disassembler",
     "./emulator",
-]
 
-[workspace.package]
-version = "0.1.3"
+    # bin
+    "./src/tui",
+]
 
 [workspace.dependencies]
 anyhow = "1.0.93"
