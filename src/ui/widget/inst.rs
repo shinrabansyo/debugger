@@ -1,3 +1,5 @@
+use std::cmp::max;
+
 use crossterm::event::{KeyCode, KeyEvent};
 use ratatui::buffer::Buffer;
 use ratatui::layout::Rect;
@@ -67,17 +69,21 @@ impl WidgetState for InstState {
                 Style::new().fg(Color::Yellow),
             ));
 
+            // 出力幅調整用スペースの準備
+            let padding_size = max(0, area.width as i32 - 12 - 32 - 16) as usize;
+            let padding = " ".repeat(padding_size);
+
             // 命令
             let raw_inst = emu.imem.read::<6>(addr).unwrap();
             let assembly = disassemble(raw_inst);
             if addr == emu.pc as usize {
                 line.push(Span::styled(
-                    format!("{:32} 0x{:012x}", assembly, raw_inst),
+                    format!("{:32}{}0x{:012x}", assembly, padding, raw_inst),
                     Style::new().fg(Color::Red).underlined().bold(),
                 ));
             } else {
                 line.push(Span::styled(
-                    format!("{:32} 0x{:012x}", assembly, raw_inst),
+                    format!("{:32}{}0x{:012x}", assembly, padding, raw_inst),
                     Style::new().fg(Color::White),
                 ));
             }
