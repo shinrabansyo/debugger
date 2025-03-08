@@ -18,6 +18,11 @@ impl Widget for Help {
 impl ratatui::widgets::Widget for Help {
     fn render(self, area: Rect, buf: &mut Buffer) {
         let help_line = Line::from(vec![
+            " Input Mode ".into(),
+            "<i>".blue().bold(),
+            " Move Mode ".into(),
+            "<Esc> ".blue().bold(),
+            "|".into(),
             " Up ".into(),
             "<k>".blue().bold(),
             " Down ".into(),
@@ -36,7 +41,7 @@ impl ratatui::widgets::Widget for Help {
             "<q> ".blue().bold(),
         ]);
 
-        Paragraph::new(help_line.centered()).render(area, buf);
+        Paragraph::new(help_line.right_aligned()).render(area, buf);
     }
 }
 

@@ -7,6 +7,7 @@ pub struct Layout {
     pub device: Rect,
     pub state: Rect,
     pub memory: Rect,
+    pub mode: Rect,
     pub help: Rect,
 }
 
@@ -58,12 +59,21 @@ impl LayoutManager {
             ])
             .split(upper_layout[1]);
 
+        let under_layout = RataLayout::default()
+            .direction(Direction::Horizontal)
+            .constraints(vec![
+                Constraint::Percentage(10),
+                Constraint::Percentage(90),
+            ])
+            .split(outer_layout[1]);
+
         Layout {
             inst: left_layout[0],
             device: left_layout[1],
             state: right_layout[0],
             memory: right_layout[1],
-            help: outer_layout[1],
+            mode: under_layout[0],
+            help: under_layout[1],
         }
     }
 }

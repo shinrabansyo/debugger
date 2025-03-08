@@ -2,6 +2,7 @@ mod inst;
 mod device;
 mod reg;
 mod mem;
+mod mode;
 mod help;
 
 use std::cmp::{min, max};
@@ -14,6 +15,7 @@ use inst::Inst;
 use device::Device;
 use reg::Register;
 use mem::Mem;
+use mode::Mode;
 use help::Help;
 
 pub trait Widget {
@@ -37,33 +39,26 @@ pub struct Widgets {
     pub device: Device,
     pub state: Register,
     pub mem: Mem,
+    pub mode: Mode,
     pub help: Help,
 }
 
+#[derive(Default)]
 pub struct WidgetsManager {
     // 各 Widget の状態
     inst_state: <Inst as Widget>::State,
     device_state: <Device as Widget>::State,
     state_state: <Register as Widget>::State,
     mem_state: <Mem as Widget>::State,
+    mode_state: <Mode as Widget>::State,
     help_state: <Help as Widget>::State,
 
     // 全体の状態
     cursor: (i32, i32),
+    input_mode: bool,
 }
 
 impl WidgetsManager {
-    pub fn new() -> Self {
-        WidgetsManager {
-            inst_state: <Inst as Widget>::State::default(),
-            device_state: <Device as Widget>::State::default(),
-            state_state: <Register as Widget>::State::default(),
-            mem_state: <Mem as Widget>::State::default(),
-            help_state: <Help as Widget>::State::default(),
-            cursor: (0, 0),
-        }
-    }
-
     pub fn affect(&self, emu: EmuState) -> EmuState {
         let emu = self.inst_state.affect(emu);
         let emu = self.device_state.affect(emu);
@@ -79,24 +74,37 @@ impl WidgetsManager {
             device: self.device_state.draw(emu),
             state: self.state_state.draw(emu),
             mem: self.mem_state.draw(emu),
+            mode: self.mode_state.draw(emu),
             help: self.help_state.draw(emu),
         }
     }
 
     pub fn handle_key_event(&mut self, event: KeyEvent) {
-        match event.code {
-            KeyCode::Char('h') => self.cursor.0 = max(0, self.cursor.0 - 1),
-            KeyCode::Char('l') => self.cursor.0 = min(1, self.cursor.0 + 1),
-            KeyCode::Char('k') => self.cursor.1 = max(0, self.cursor.1 - 1),
-            KeyCode::Char('j') => self.cursor.1 = min(1, self.cursor.1 + 1),
-            _ => {
-                match self.cursor {
+        if self.input_mode {
+            match event.code {
+                KeyCode::Esc => {
+                    self.input_mode = false;
+                    self.mode_state.handle_key_event(event);
+                }
+                _ => match self.cursor {
                     (0, 0) => self.inst_state.handle_key_event(event),
                     (0, 1) => self.device_state.handle_key_event(event),
                     (1, 0) => self.state_state.handle_key_event(event),
                     (1, 1) => self.mem_state.handle_key_event(event),
                     _ => {}
+                },
+            }
+        } else {
+            match event.code {
+                KeyCode::Char('i') => {
+                    self.input_mode = true;
+                    self.mode_state.handle_key_event(event);
                 }
+                KeyCode::Char('h') => self.cursor.0 = max(0, self.cursor.0 - 1),
+                KeyCode::Char('l') => self.cursor.0 = min(1, self.cursor.0 + 1),
+                KeyCode::Char('k') => self.cursor.1 = max(0, self.cursor.1 - 1),
+                KeyCode::Char('j') => self.cursor.1 = min(1, self.cursor.1 + 1),
+                _ => {}
             }
         }
 

@@ -28,7 +28,7 @@ impl UI {
     pub fn new(emu: EmuState) -> Self {
         UI {
             layout_man: LayoutManager::default(),
-            widgets_man: WidgetsManager::new(),
+            widgets_man: WidgetsManager::default(),
             running: true,
             emu: Some(emu),
             remain_exec_cnt: 0,
@@ -69,6 +69,7 @@ impl UI {
         frame.render_widget(widegts.device, layout.device);
         frame.render_widget(widegts.state, layout.state);
         frame.render_widget(widegts.mem, layout.memory);
+        frame.render_widget(widegts.mode, layout.mode);
         frame.render_widget(widegts.help, layout.help);
     }
 }
