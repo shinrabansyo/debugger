@@ -6,6 +6,7 @@ members = [
     "./emulator",
 
     # bin
+    "./src/cli",
     "./src/tui",
 ]
 
