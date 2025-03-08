@@ -38,6 +38,6 @@ impl FromStr for FileFormat {
     }
 }
 
-pub fn parse_args() -> Options {
+pub fn parse() -> Options {
     options().run()
 }

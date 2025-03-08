@@ -4,7 +4,6 @@ use std::io::{BufReader, Read};
 
 use sb_asm::assemble;
 
-
 pub fn load_assembly(path: &Path) -> anyhow::Result<(Vec<u8>, Vec<u8>)> {
     let asm = read_file(path)?;
     let (dmem, imem) = assemble(&asm)?;

@@ -5,6 +5,9 @@ members = [
     "./disassembler",
     "./emulator",
 
+    # lib (private)
+    "./src/utils",
+
     # bin
     "./src/cli",
     "./src/tui",

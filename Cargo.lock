@@ -405,12 +405,21 @@ name = "sb_dbg_tui"
 version = "0.1.3"
 dependencies = [
  "anyhow",
- "bpaf",
  "crossterm",
  "ratatui",
- "sb_asm",
+ "sb_dbg_utils",
  "sb_disasm",
  "sb_emu",
+ "thiserror",
+]
+
+[[package]]
+name = "sb_dbg_utils"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "bpaf",
+ "sb_asm",
  "thiserror",
 ]
 
