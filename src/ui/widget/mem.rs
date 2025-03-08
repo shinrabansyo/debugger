@@ -70,6 +70,26 @@ impl WidgetState for MemState {
                 ));
             }
 
+            // 出力幅調整
+            let padding_size = max(0, area.width as i32 - 10 - 47 - 20) as usize;
+            let padding = " ".repeat(padding_size);
+            line.push(Span::from(padding));
+
+            // ASCII 表示
+            for col in 0..16 {
+                let addr = row_addr + col;
+                let byte = emu.dmem.read_byte(addr).unwrap();
+                let c = if byte.is_ascii_alphanumeric() {
+                    byte as char
+                } else {
+                    '.'
+                };
+                line.push(Span::styled(
+                    format!("{}", c),
+                    Style::new().fg(Color::White)
+                ));
+            }
+
             lines.push(Line::from(line));
         }
 
