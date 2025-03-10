@@ -13,6 +13,7 @@ pub fn run(pc: u32, dmem: &[u8], imem: &[u8]) -> anyhow::Result<()> {
     let emu = EmuState::new(pc, &dmem, &imem);
 
     let workspace_0 = WorkspaceBuilder::default()
+        .name("Workspace 0")
         .widget((0, 0), Box::new(InstState::default()))
         .widget((0, 1), Box::new(DeviceState::default()))
         .widget((1, 0), Box::new(RegisterState::default()))

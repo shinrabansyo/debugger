@@ -62,8 +62,8 @@ impl LayoutManager {
         let under_layout = RataLayout::default()
             .direction(Direction::Horizontal)
             .constraints(vec![
-                Constraint::Percentage(10),
-                Constraint::Percentage(90),
+                Constraint::Percentage(20),
+                Constraint::Percentage(80),
             ])
             .split(outer_layout[1]);
 

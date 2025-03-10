@@ -14,18 +14,28 @@ use emb_help::HelpState;
 
 #[derive(Default)]
 pub struct WorkspaceBuilder {
+    name: Option<String>,
     states: Vec<((i8, i8), Box<dyn WidgetState>)>,
 }
 
 impl WorkspaceBuilder {
+    pub fn name(mut self, name: impl Into<String>) -> WorkspaceBuilder {
+        self.name = Some(name.into());
+        self
+    }
+
     pub fn widget(mut self, pos: (i8, i8), state: Box<dyn WidgetState>) -> WorkspaceBuilder {
         self.states.push((pos, state));
         self
     }
 
     pub fn build(self) -> Workspace {
+        let mut mode_state = ModeState::default();
+        mode_state.set_workspace_name(self.name.unwrap_or("Workspace".to_string()));
+
         Workspace {
             states: self.states,
+            mode_state: mode_state,
             ..Default::default()
         }
     }
@@ -67,7 +77,7 @@ impl Workspace {
             match event.code {
                 KeyCode::Esc => {
                     self.input_mode = false;
-                    self.mode_state.handle_key_event(event);
+                    self.mode_state.set_input_mode(false);
                 }
                 _ => {
                     for (pos, state) in &mut self.states {
@@ -82,7 +92,7 @@ impl Workspace {
             match event.code {
                 KeyCode::Char('i') => {
                     self.input_mode = true;
-                    self.mode_state.handle_key_event(event);
+                    self.mode_state.set_input_mode(true);
                 }
                 KeyCode::Char('h') => self.cursor.0 = max(0, self.cursor.0 - 1),
                 KeyCode::Char('l') => self.cursor.0 = min(1, self.cursor.0 + 1),
