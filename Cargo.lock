@@ -409,6 +409,7 @@ dependencies = [
  "anyhow",
  "ratatui",
  "sb_dbg_tui_engine",
+ "sb_dbg_tui_widget_device_display",
  "sb_dbg_tui_widget_device_gpout",
  "sb_dbg_tui_widget_device_uart",
  "sb_dbg_tui_widget_inst",
@@ -428,6 +429,18 @@ dependencies = [
  "crossterm",
  "ratatui",
  "sb_disasm",
+ "sb_emu",
+ "thiserror",
+]
+
+[[package]]
+name = "sb_dbg_tui_widget_device_display"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "crossterm",
+ "ratatui",
+ "sb_dbg_tui_engine",
  "sb_emu",
  "thiserror",
 ]
