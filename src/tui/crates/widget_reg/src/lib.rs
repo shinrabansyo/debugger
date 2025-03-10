@@ -4,13 +4,13 @@ use ratatui::text::{Line, Span, Text};
 
 use sb_emu::State as EmuState;
 
-use sb_dbg_tui_engine::widget::{Widget, WidgetState};
+use sb_dbg_tui_engine::widget::{Widget, WidgetView};
 
 #[derive(Default)]
-pub struct RegisterState;
+pub struct Register;
 
-impl WidgetState for RegisterState {
-    fn draw(&self, _: &Rect, emu: &EmuState) -> Widget {
+impl Widget for Register {
+    fn draw(&self, _: &Rect, emu: &EmuState) -> WidgetView {
         let mut lines = vec![];
 
         // PC 表示
@@ -36,6 +36,6 @@ impl WidgetState for RegisterState {
             lines.push(Line::from(reg_items));
         }
 
-        Widget::default().title(" Register ").body(Text::from(lines))
+        WidgetView::default().title(" Register ").body(Text::from(lines))
     }
 }

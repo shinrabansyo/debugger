@@ -8,14 +8,14 @@ use crossterm::event::{KeyCode, KeyEvent};
 use sb_emu::State as EmuState;
 
 use crate::layout::Layout;
-use crate::widget::{Widget, WidgetState};
-use emb_mode::ModeState;
-use emb_help::HelpState;
+use crate::widget::{Widget, WidgetView};
+use emb_mode::Mode;
+use emb_help::Help;
 
 #[derive(Default)]
 pub struct WorkspaceBuilder {
     name: Option<String>,
-    states: Vec<((i8, i8), Box<dyn WidgetState>)>,
+    widgets: Vec<((i8, i8), Box<dyn Widget>)>,
 }
 
 impl WorkspaceBuilder {
@@ -24,18 +24,18 @@ impl WorkspaceBuilder {
         self
     }
 
-    pub fn widget(mut self, pos: (i8, i8), state: Box<dyn WidgetState>) -> WorkspaceBuilder {
-        self.states.push((pos, state));
+    pub fn widget(mut self, pos: (i8, i8), state: Box<dyn Widget>) -> WorkspaceBuilder {
+        self.widgets.push((pos, state));
         self
     }
 
     pub fn build(self) -> Workspace {
-        let mut mode_state = ModeState::default();
-        mode_state.set_workspace_name(self.name.unwrap_or("Workspace".to_string()));
+        let mut mode_widget = Mode::default();
+        mode_widget.set_workspace_name(self.name.unwrap_or("Workspace".to_string()));
 
         Workspace {
-            states: self.states,
-            mode_state: mode_state,
+            widgets: self.widgets,
+            mode_widget,
             ..Default::default()
         }
     }
@@ -44,11 +44,11 @@ impl WorkspaceBuilder {
 #[derive(Default)]
 pub struct Workspace {
     // ユーザ指定ウィジェット
-    states: Vec<((i8, i8), Box<dyn WidgetState>)>,
+    widgets: Vec<((i8, i8), Box<dyn Widget>)>,
 
     // 固定で持つウィジェット
-    mode_state: ModeState,
-    help_state: HelpState,
+    mode_widget: Mode,
+    help_widget: Help,
 
     // 全体の状態
     cursor: (i8, i8),
@@ -57,18 +57,18 @@ pub struct Workspace {
 
 impl Workspace {
     pub fn affect(&self, mut emu: EmuState) -> EmuState {
-        for (_, state) in &self.states {
+        for (_, state) in &self.widgets {
             emu = state.affect(emu);
         }
         emu
     }
 
-    pub gen fn draw(&self, layout: &Layout, emu: &EmuState) -> Widget {
-        for (pos, state) in &self.states {
+    pub gen fn draw(&self, layout: &Layout, emu: &EmuState) -> WidgetView {
+        for (pos, state) in &self.widgets {
             yield state.draw(&layout.inst, emu).selected(pos == &self.cursor);
         }
-        yield self.mode_state.draw(&layout.mode, emu);
-        yield self.help_state.draw(&layout.help, emu);
+        yield self.mode_widget.draw(&layout.mode, emu);
+        yield self.help_widget.draw(&layout.help, emu);
         ()
     }
 
@@ -77,10 +77,10 @@ impl Workspace {
             match event.code {
                 KeyCode::Esc => {
                     self.input_mode = false;
-                    self.mode_state.set_input_mode(false);
+                    self.mode_widget.set_input_mode(false);
                 }
                 _ => {
-                    for (pos, state) in &mut self.states {
+                    for (pos, state) in &mut self.widgets {
                         if pos == &self.cursor {
                             state.handle_key_event(event);
                             break;
@@ -92,7 +92,7 @@ impl Workspace {
             match event.code {
                 KeyCode::Char('i') => {
                     self.input_mode = true;
-                    self.mode_state.set_input_mode(true);
+                    self.mode_widget.set_input_mode(true);
                 }
                 KeyCode::Char('h') => self.cursor.0 = max(0, self.cursor.0 - 1),
                 KeyCode::Char('l') => self.cursor.0 = min(1, self.cursor.0 + 1),

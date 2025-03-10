@@ -7,20 +7,20 @@ use crossterm::event::{KeyCode, KeyEvent};
 use ratatui::layout::Rect;
 
 use sb_emu::State as EmuState;
-use sb_dbg_tui_engine::widget::{Widget, WidgetState};
+use sb_dbg_tui_engine::widget::{Widget, WidgetView};
 
 use uart::Uart;
 use gpout::GPOut;
 
 #[derive(Default)]
-pub struct DeviceState {
+pub struct Device {
     show_dev_id: u32,
     uart: Uart,
     gpout: GPOut,
 }
 
-impl WidgetState for DeviceState {
-    fn draw(&self, area: &Rect, emu: &EmuState) -> Widget {
+impl Widget for Device {
+    fn draw(&self, area: &Rect, emu: &EmuState) -> WidgetView {
         match self.show_dev_id {
             0 => self.uart.draw(area, emu),
             1 => self.gpout.draw(emu),

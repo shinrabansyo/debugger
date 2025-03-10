@@ -8,15 +8,15 @@ use ratatui::text::{Text, Line, Span};
 use sb_disasm::disassemble;
 use sb_emu::State as EmuState;
 
-use sb_dbg_tui_engine::widget::{Widget, WidgetState};
+use sb_dbg_tui_engine::widget::{Widget, WidgetView};
 
 #[derive(Default)]
-pub struct InstState {
+pub struct Inst {
     offset: i32,
 }
 
-impl WidgetState for InstState {
-    fn draw(&self, area: &Rect, emu: &EmuState) -> Widget {
+impl Widget for Inst {
+    fn draw(&self, area: &Rect, emu: &EmuState) -> WidgetView {
         let max_lines = area.height as i32;
 
         let mut lines = vec![];
@@ -60,7 +60,7 @@ impl WidgetState for InstState {
             lines.push(Line::from(line));
         }
 
-        Widget::default().title(" Instructions ").body(Text::from(lines))
+        WidgetView::default().title(" Instructions ").body(Text::from(lines))
     }
 
     fn handle_key_event(&mut self, event: KeyEvent) {

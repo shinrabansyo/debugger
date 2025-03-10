@@ -4,16 +4,16 @@ use ratatui::text::Line;
 
 use sb_emu::State as EmuState;
 
-use crate::widget::{Widget, WidgetState};
+use crate::widget::{Widget, WidgetView};
 
 #[derive(Default)]
-pub struct ModeState {
+pub struct Mode {
     workspace_name: String,
     input_mode: bool,
 }
 
-impl WidgetState for ModeState {
-    fn draw(&self, _: &Rect, _: &EmuState) -> Widget {
+impl Widget for Mode {
+    fn draw(&self, _: &Rect, _: &EmuState) -> WidgetView {
         let mode_line = if self.input_mode {
             Line::from(vec![
                 format!("{} / ", self.workspace_name).into(),
@@ -26,11 +26,11 @@ impl WidgetState for ModeState {
             ])
         };
 
-        Widget::default().body(mode_line)
+        WidgetView::default().body(mode_line)
     }
 }
 
-impl ModeState {
+impl Mode {
     pub fn set_workspace_name(&mut self, name: String) {
         self.workspace_name = name;
     }

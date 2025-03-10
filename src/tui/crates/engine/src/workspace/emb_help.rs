@@ -4,13 +4,13 @@ use ratatui::text::Line;
 
 use sb_emu::State as EmuState;
 
-use crate::widget::{Widget, WidgetState};
+use crate::widget::{Widget, WidgetView};
 
 #[derive(Default)]
-pub struct HelpState;
+pub struct Help;
 
-impl WidgetState for HelpState {
-    fn draw(&self,_: &Rect, _: &EmuState) -> Widget {
+impl Widget for Help {
+    fn draw(&self,_: &Rect, _: &EmuState) -> WidgetView {
         let help_line = Line::from(vec![
             " Input Mode ".into(),
             "<i>".blue().bold(),
@@ -35,6 +35,6 @@ impl WidgetState for HelpState {
             "<q> ".blue().bold(),
         ]);
 
-        Widget::default().body(help_line.right_aligned())
+        WidgetView::default().body(help_line.right_aligned())
     }
 }
