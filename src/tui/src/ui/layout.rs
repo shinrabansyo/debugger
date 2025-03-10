@@ -15,7 +15,7 @@ pub struct Layout {
 pub struct LayoutManager;
 
 impl LayoutManager {
-    pub fn gen(&self, frame: &Frame) -> Layout {
+    pub fn r#gen(&self, frame: &Frame) -> Layout {
         // +------------------------------+
         // |              |               |
         // |              |     State     |

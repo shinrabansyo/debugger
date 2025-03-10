@@ -18,10 +18,7 @@ impl Uart {
         let view_begin_idx = max(0, (uart_lines.len() as i32) - (area.height as i32) + 2);
         let uart_output = uart_lines[view_begin_idx as usize..].join("\n");
 
-        Widget::default()
-            .selected(false)
-            .title(" Device 0: UART ")
-            .body(Text::raw(uart_output))
+        Widget::default().title(" Device 0: UART ").body(Text::raw(uart_output))
     }
 
     pub fn handle_key_event(&mut self, _: KeyEvent) {}

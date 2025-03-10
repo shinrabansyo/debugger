@@ -14,7 +14,6 @@ use gpout::GPOut;
 
 #[derive(Default)]
 pub struct DeviceState {
-    selected: bool,
     show_dev_id: u32,
     uart: Uart,
     gpout: GPOut,
@@ -41,9 +40,5 @@ impl WidgetState for DeviceState {
                 _ => (),
             }
         }
-    }
-
-    fn set_selected(&mut self, selected: bool) {
-        self.selected = selected;
     }
 }

@@ -11,7 +11,6 @@ use crate::ui::widget::{Widget, WidgetState};
 
 #[derive(Default)]
 pub struct MemState {
-    selected: bool,
     offset: i32,
 }
 
@@ -63,10 +62,7 @@ impl WidgetState for MemState {
             lines.push(Line::from(line));
         }
 
-        Widget::default()
-            .selected(self.selected)
-            .title(" Memory ")
-            .body(Text::from(lines))
+        Widget::default().title(" Memory ").body(Text::from(lines))
     }
 
     fn handle_key_event(&mut self, event: KeyEvent) {
@@ -75,9 +71,5 @@ impl WidgetState for MemState {
             KeyCode::Down => self.offset + 16,
             _ => self.offset,
         };
-    }
-
-    fn set_selected(&mut self, selected: bool) {
-        self.selected = selected;
     }
 }

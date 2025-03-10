@@ -1,5 +1,6 @@
-mod widget;
 mod layout;
+mod widget;
+mod workspace;
 
 use std::time::Duration;
 
@@ -9,13 +10,15 @@ use ratatui::{DefaultTerminal, Frame};
 
 use sb_emu::State as EmuState;
 
-use widget::WidgetsManager;
+use widget::WidgetState;
 use layout::LayoutManager;
+use workspace::Workspace;
 
 pub struct UI {
     // 各 Manager の状態
     layout_man: LayoutManager,
-    widgets_man: WidgetsManager,
+    // widgets_man: WidgetsManager,
+    workspace: Workspace,
 
     // 全体の状態
     running: bool,
@@ -26,9 +29,17 @@ pub struct UI {
 // Main
 impl UI {
     pub fn new(emu: EmuState) -> Self {
+        let widgets: [((i8, i8), Box<dyn WidgetState>); 4] = [
+            ((0, 0), Box::new(widget::inst::InstState::default())),
+            ((0, 1), Box::new(widget::device::DeviceState::default())),
+            ((1, 0), Box::new(widget::reg::RegisterState::default())),
+            ((1, 1), Box::new(widget::mem::MemState::default())),
+        ];
+
         UI {
             layout_man: LayoutManager::default(),
-            widgets_man: WidgetsManager::default(),
+            // widgets_man: WidgetsManager::default(),
+            workspace: Workspace::from(widgets),
             running: true,
             emu: Some(emu),
             remain_exec_cnt: 0,
@@ -41,7 +52,7 @@ impl UI {
             if self.remain_exec_cnt > 0 {
                 // 1ステップ実行
                 let emu = self.emu.take().unwrap();
-                let emu = self.widgets_man.affect(emu);
+                let emu = self.workspace.affect(emu);
                 let emu = sb_emu::step(emu).unwrap(); // (命令実行)
 
                 // 状態更新
@@ -62,15 +73,8 @@ impl UI {
 // Rendering
 impl UI {
     fn draw(&mut self, frame: &mut Frame) {
-        let layout = self.layout_man.gen(frame);
-        let widgets = self.widgets_man.draw(&layout, self.emu.as_ref().unwrap());
-
-        // frame.render_widget(widegts.inst, layout.inst);
-        // frame.render_widget(widegts.device, layout.device);
-        // frame.render_widget(widegts.state, layout.state);
-        // frame.render_widget(widegts.mem, layout.memory);
-        // frame.render_widget(widegts.mode, layout.mode);
-        // frame.render_widget(widegts.help, layout.help);
+        let layout = self.layout_man.r#gen(frame);
+        let widgets = self.workspace.draw(&layout, self.emu.as_ref().unwrap());
 
         let mut a = widgets.into_iter();
 
@@ -104,7 +108,7 @@ impl UI {
                 self.remain_exec_cnt = 0;
             },
             KeyCode::Char('q') => self.running = false,
-            _ => self.widgets_man.handle_key_event(event),
+            _ => self.workspace.handle_key_event(event),
         }
     }
 }

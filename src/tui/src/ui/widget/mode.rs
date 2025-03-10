@@ -36,6 +36,4 @@ impl WidgetState for ModeState {
             _ => self.input_mode,
         }
     }
-
-    fn set_selected(&mut self, _: bool) {}
 }

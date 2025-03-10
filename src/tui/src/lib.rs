@@ -1,3 +1,5 @@
+#![feature(gen_blocks)]
+
 mod ui;
 
 use sb_emu::State as EmuState;

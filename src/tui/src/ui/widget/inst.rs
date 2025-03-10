@@ -12,7 +12,6 @@ use crate::ui::widget::{Widget, WidgetState};
 
 #[derive(Default)]
 pub struct InstState {
-    selected: bool,
     offset: i32,
 }
 
@@ -61,10 +60,7 @@ impl WidgetState for InstState {
             lines.push(Line::from(line));
         }
 
-        Widget::default()
-            .selected(self.selected)
-            .title(" Instructions ")
-            .body(Text::from(lines))
+        Widget::default().title(" Instructions ").body(Text::from(lines))
     }
 
     fn handle_key_event(&mut self, event: KeyEvent) {
@@ -73,9 +69,5 @@ impl WidgetState for InstState {
             KeyCode::Down => self.offset + 6,
             _ => self.offset,
         };
-    }
-
-    fn set_selected(&mut self, selected: bool) {
-        self.selected = selected;
     }
 }

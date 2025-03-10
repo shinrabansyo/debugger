@@ -1,4 +1,3 @@
-use crossterm::event::KeyEvent;
 use ratatui::layout::Rect;
 use ratatui::style::Stylize;
 use ratatui::text::Line;
@@ -38,8 +37,4 @@ impl WidgetState for HelpState {
 
         Widget::default().body(help_line.right_aligned())
     }
-
-    fn handle_key_event(&mut self, _: KeyEvent) {}
-
-    fn set_selected(&mut self, _: bool) {}
 }
