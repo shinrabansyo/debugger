@@ -10,9 +10,8 @@ use ratatui::{DefaultTerminal, Frame};
 
 use sb_emu::State as EmuState;
 
-use widget::WidgetState;
 use layout::LayoutManager;
-use workspace::Workspace;
+use workspace::{Workspace, WorkspaceBuilder};
 
 pub struct UI {
     // 各 Manager の状態
@@ -29,17 +28,16 @@ pub struct UI {
 // Main
 impl UI {
     pub fn new(emu: EmuState) -> Self {
-        let widgets: [((i8, i8), Box<dyn WidgetState>); 4] = [
-            ((0, 0), Box::new(widget::inst::InstState::default())),
-            ((0, 1), Box::new(widget::device::DeviceState::default())),
-            ((1, 0), Box::new(widget::reg::RegisterState::default())),
-            ((1, 1), Box::new(widget::mem::MemState::default())),
-        ];
+        let workspace = WorkspaceBuilder::default()
+            .widget((0, 0), Box::new(widget::inst::InstState::default()))
+            .widget((0, 1), Box::new(widget::device::DeviceState::default()))
+            .widget((1, 0), Box::new(widget::reg::RegisterState::default()))
+            .widget((1, 1), Box::new(widget::mem::MemState::default()))
+            .build();
 
         UI {
             layout_man: LayoutManager::default(),
-            // widgets_man: WidgetsManager::default(),
-            workspace: Workspace::from(widgets),
+            workspace,
             running: true,
             emu: Some(emu),
             remain_exec_cnt: 0,

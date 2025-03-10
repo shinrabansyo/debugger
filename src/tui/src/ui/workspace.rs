@@ -10,6 +10,25 @@ use crate::ui::widget::help::HelpState;
 use crate::ui::widget::mode::ModeState;
 
 #[derive(Default)]
+pub struct WorkspaceBuilder {
+    states: Vec<((i8, i8), Box<dyn WidgetState>)>,
+}
+
+impl WorkspaceBuilder {
+    pub fn widget(mut self, pos: (i8, i8), state: Box<dyn WidgetState>) -> WorkspaceBuilder {
+        self.states.push((pos, state));
+        self
+    }
+
+    pub fn build(self) -> Workspace {
+        Workspace {
+            states: self.states,
+            ..Default::default()
+        }
+    }
+}
+
+#[derive(Default)]
 pub struct Workspace {
     // ユーザ指定ウィジェット
     states: Vec<((i8, i8), Box<dyn WidgetState>)>,
@@ -21,15 +40,6 @@ pub struct Workspace {
     // 全体の状態
     cursor: (i8, i8),
     input_mode: bool,
-}
-
-impl<const N: usize> From<[((i8, i8), Box<dyn WidgetState>); N]> for Workspace {
-    fn from(states: [((i8, i8), Box<dyn WidgetState>); N]) -> Self {
-        Workspace {
-            states: states.into(),
-            ..Default::default()
-        }
-    }
 }
 
 impl Workspace {

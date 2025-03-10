@@ -30,21 +30,17 @@ impl ratatui::widgets::Widget for Widget {
 }
 
 impl Widget {
-    pub fn selected(self, selected: bool) -> Widget {
-        Widget {
-            selected,
-            ..self
-        }
+    pub fn selected(mut self, selected: bool) -> Widget {
+        self.selected = selected;
+        self
     }
 
-    pub fn title(self, title: impl Into<String>) -> Widget {
-        Widget {
-            title: Some(title.into()),
-            ..self
-        }
+    pub fn title(mut self, title: impl Into<String>) -> Widget {
+        self.title = Some(title.into());
+        self
     }
 
-    pub fn body(self, body: impl ratatui::widgets::Widget + 'static) -> Widget {
+    pub fn body(mut self, body: impl ratatui::widgets::Widget + 'static) -> Widget {
         fn make_outer(area: Rect, buf: &mut Buffer, selected: bool, title: Option<String>) -> Rect {
             if let Some(title) = title {
                 let title = Line::from(title).bold().centered();
@@ -60,16 +56,12 @@ impl Widget {
             }
         }
 
-        let constructor =
+        self.constructor = Some(Box::new(
             move |area: Rect, buf: &mut Buffer, selected: bool, title: Option<String>| {
                 let area = make_outer(area, buf, selected, title);
                 body.render(area, buf);
-            };
-
-        Widget {
-            constructor: Some(Box::new(constructor)),
-            ..self
-        }
+            }));
+        self
     }
 }
 
