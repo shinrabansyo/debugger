@@ -1,3 +1,6 @@
+mod emb_mode;
+mod emb_help;
+
 use std::cmp::{min, max};
 
 use crossterm::event::{KeyCode, KeyEvent};
@@ -6,8 +9,8 @@ use sb_emu::State as EmuState;
 
 use crate::layout::Layout;
 use crate::widget::{Widget, WidgetState};
-use crate::widget::help::HelpState;
-use crate::widget::mode::ModeState;
+use emb_mode::ModeState;
+use emb_help::HelpState;
 
 #[derive(Default)]
 pub struct WorkspaceBuilder {

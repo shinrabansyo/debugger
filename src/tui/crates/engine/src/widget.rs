@@ -1,6 +1,3 @@
-pub(crate) mod mode;
-pub(crate) mod help;
-
 use crossterm::event::KeyEvent;
 use ratatui::buffer::Buffer;
 use ratatui::layout::Rect;
