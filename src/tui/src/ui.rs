@@ -1,6 +1,6 @@
 mod layout;
-mod widget;
-mod workspace;
+pub mod widget;
+pub mod workspace;
 
 use std::time::Duration;
 
@@ -11,15 +11,18 @@ use ratatui::{DefaultTerminal, Frame};
 use sb_emu::State as EmuState;
 
 use layout::LayoutManager;
-use workspace::{Workspace, WorkspaceBuilder};
+use workspace::Workspace;
 
 pub struct UI {
     // 各 Manager の状態
     layout_man: LayoutManager,
     // widgets_man: WidgetsManager,
-    workspace: Workspace,
 
-    // 全体の状態
+    // ワークスペース
+    workspace_id: usize,
+    workspaces: Vec<Workspace>,
+
+    // エミュレータの状態
     running: bool,
     emu: Option<EmuState>,
     remain_exec_cnt: u32,
@@ -27,17 +30,11 @@ pub struct UI {
 
 // Main
 impl UI {
-    pub fn new(emu: EmuState) -> Self {
-        let workspace = WorkspaceBuilder::default()
-            .widget((0, 0), Box::new(widget::inst::InstState::default()))
-            .widget((0, 1), Box::new(widget::device::DeviceState::default()))
-            .widget((1, 0), Box::new(widget::reg::RegisterState::default()))
-            .widget((1, 1), Box::new(widget::mem::MemState::default()))
-            .build();
-
+    pub fn new<const N: usize>(emu: EmuState, workspaces: [Workspace; N]) -> Self {
         UI {
             layout_man: LayoutManager::default(),
-            workspace,
+            workspace_id: 0,
+            workspaces: workspaces.into_iter().collect::<Vec<_>>(),
             running: true,
             emu: Some(emu),
             remain_exec_cnt: 0,
@@ -50,7 +47,7 @@ impl UI {
             if self.remain_exec_cnt > 0 {
                 // 1ステップ実行
                 let emu = self.emu.take().unwrap();
-                let emu = self.workspace.affect(emu);
+                let emu = self.workspaces[self.workspace_id].affect(emu);
                 let emu = sb_emu::step(emu).unwrap(); // (命令実行)
 
                 // 状態更新
@@ -72,7 +69,7 @@ impl UI {
 impl UI {
     fn draw(&mut self, frame: &mut Frame) {
         let layout = self.layout_man.r#gen(frame);
-        let widgets = self.workspace.draw(&layout, self.emu.as_ref().unwrap());
+        let widgets = self.workspaces[self.workspace_id].draw(&layout, self.emu.as_ref().unwrap());
 
         let mut a = widgets.into_iter();
 
@@ -106,7 +103,7 @@ impl UI {
                 self.remain_exec_cnt = 0;
             },
             KeyCode::Char('q') => self.running = false,
-            _ => self.workspace.handle_key_event(event),
+            _ => self.workspaces[self.workspace_id].handle_key_event(event),
         }
     }
 }
