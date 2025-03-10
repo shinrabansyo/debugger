@@ -15,7 +15,7 @@ pub struct Layout {
 pub struct LayoutManager;
 
 impl LayoutManager {
-    pub fn gen(&self, frame: &Frame) -> Layout {
+    pub fn r#gen(&self, frame: &Frame) -> Layout {
         // +------------------------------+
         // |              |               |
         // |              |     State     |
@@ -62,8 +62,8 @@ impl LayoutManager {
         let under_layout = RataLayout::default()
             .direction(Direction::Horizontal)
             .constraints(vec![
-                Constraint::Percentage(10),
-                Constraint::Percentage(90),
+                Constraint::Percentage(20),
+                Constraint::Percentage(80),
             ])
             .split(outer_layout[1]);
 

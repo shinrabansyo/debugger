@@ -1,6 +1,10 @@
-mod widget;
-mod layout;
+#![feature(gen_blocks)]
 
+mod layout;
+pub mod widget;
+pub mod workspace;
+
+use std::cmp::min;
 use std::time::Duration;
 
 use crossterm::event::{KeyEvent, KeyCode};
@@ -9,15 +13,19 @@ use ratatui::{DefaultTerminal, Frame};
 
 use sb_emu::State as EmuState;
 
-use widget::WidgetsManager;
 use layout::LayoutManager;
+use workspace::Workspace;
 
 pub struct UI {
     // 各 Manager の状態
     layout_man: LayoutManager,
-    widgets_man: WidgetsManager,
+    // widgets_man: WidgetsManager,
 
-    // 全体の状態
+    // ワークスペース
+    workspace_id: usize,
+    workspaces: Vec<Workspace>,
+
+    // エミュレータの状態
     running: bool,
     emu: Option<EmuState>,
     remain_exec_cnt: u32,
@@ -25,10 +33,11 @@ pub struct UI {
 
 // Main
 impl UI {
-    pub fn new(emu: EmuState) -> Self {
+    pub fn new<const N: usize>(emu: EmuState, workspaces: [Workspace; N]) -> Self {
         UI {
             layout_man: LayoutManager::default(),
-            widgets_man: WidgetsManager::default(),
+            workspace_id: 0,
+            workspaces: workspaces.into_iter().collect::<Vec<_>>(),
             running: true,
             emu: Some(emu),
             remain_exec_cnt: 0,
@@ -41,7 +50,7 @@ impl UI {
             if self.remain_exec_cnt > 0 {
                 // 1ステップ実行
                 let emu = self.emu.take().unwrap();
-                let emu = self.widgets_man.affect(emu);
+                let emu = self.workspaces[self.workspace_id].affect(emu);
                 let emu = sb_emu::step(emu).unwrap(); // (命令実行)
 
                 // 状態更新
@@ -62,15 +71,17 @@ impl UI {
 // Rendering
 impl UI {
     fn draw(&mut self, frame: &mut Frame) {
-        let layout = self.layout_man.gen(frame);
-        let widegts = self.widgets_man.draw(&layout, self.emu.as_ref().unwrap());
+        let layout = self.layout_man.r#gen(frame);
+        let widgets = self.workspaces[self.workspace_id].draw(&layout, self.emu.as_ref().unwrap());
 
-        frame.render_widget(widegts.inst, layout.inst);
-        frame.render_widget(widegts.device, layout.device);
-        frame.render_widget(widegts.state, layout.state);
-        frame.render_widget(widegts.mem, layout.memory);
-        frame.render_widget(widegts.mode, layout.mode);
-        frame.render_widget(widegts.help, layout.help);
+        let mut a = widgets.into_iter();
+
+        frame.render_widget(a.next().unwrap(), layout.inst);
+        frame.render_widget(a.next().unwrap(), layout.device);
+        frame.render_widget(a.next().unwrap(), layout.state);
+        frame.render_widget(a.next().unwrap(), layout.memory);
+        frame.render_widget(a.next().unwrap(), layout.mode);
+        frame.render_widget(a.next().unwrap(), layout.help);
     }
 }
 
@@ -88,14 +99,26 @@ impl UI {
 
     fn handle_key_event(&mut self, event: KeyEvent) {
         match event.code {
+            // エミュレータ制御
             KeyCode::Enter => self.remain_exec_cnt = 1,
             KeyCode::Char(' ') => if self.remain_exec_cnt == 0 {
                 self.remain_exec_cnt = u32::MAX;
             } else {
                 self.remain_exec_cnt = 0;
             },
+
+            // ワークスペース切り替え
+            KeyCode::Char(c) if c.is_digit(10) => {
+                let num = c.to_digit(10).unwrap();
+                let num = if num == 0 { 9 } else { num - 1 };
+                self.workspace_id = min(num as usize, self.workspaces.len()-1);
+            }
+
+            // 終了
             KeyCode::Char('q') => self.running = false,
-            _ => self.widgets_man.handle_key_event(event),
+
+            // 各ウィジェットでの処理
+            _ => self.workspaces[self.workspace_id].handle_key_event(event),
         }
     }
 }

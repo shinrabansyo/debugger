@@ -1,13 +1,18 @@
 [package]
 name = "sb_dbg_tui"
 version = "0.1.3"
-edition = "2021"
+edition = "2024"
 
 [dependencies]
 anyhow = { workspace = true }
 thiserror = { workspace = true }
 ratatui = "0.29.0"
-crossterm = "0.28.1"
 sb_emu = { workspace = true }
 sb_disasm = { workspace = true }
 sb_dbg_utils = { workspace = true }
+sb_dbg_tui_engine = { path = "./crates/engine" }
+sb_dbg_tui_widget_device_gpout = { path = "./crates/widget_device_gpout" }
+sb_dbg_tui_widget_device_uart = { path = "./crates/widget_device_uart" }
+sb_dbg_tui_widget_inst = { path = "./crates/widget_inst" }
+sb_dbg_tui_widget_mem = { path = "./crates/widget_mem" }
+sb_dbg_tui_widget_reg = { path = "./crates/widget_reg" }

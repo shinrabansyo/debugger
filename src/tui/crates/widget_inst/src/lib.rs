@@ -1,53 +1,22 @@
 use std::cmp::max;
 
 use crossterm::event::{KeyCode, KeyEvent};
-use ratatui::buffer::Buffer;
 use ratatui::layout::Rect;
-use ratatui::widgets::{Block, Paragraph};
-use ratatui::symbols::border;
 use ratatui::style::{Color, Style, Stylize};
 use ratatui::text::{Text, Line, Span};
 
 use sb_disasm::disassemble;
 use sb_emu::State as EmuState;
 
-use crate::ui::widget::{Widget, WidgetState};
-
-pub struct Inst {
-    selected: bool,
-    text: Text<'static>,
-}
-
-impl Widget for Inst {
-    type State = InstState;
-}
-
-impl ratatui::widgets::Widget for Inst {
-    fn render(self, area: Rect, buf: &mut Buffer) {
-        let block = Block::bordered()
-                .title(Line::from(" Instructions ".bold()).centered())
-                .border_set(if self.selected { border::THICK } else { border::ROUNDED });
-
-        Paragraph::new(self.text)
-            .block(block)
-            .render(area, buf);
-    }
-}
+use sb_dbg_tui_engine::widget::{Widget, WidgetView};
 
 #[derive(Default)]
-pub struct InstState {
-    selected: bool,
+pub struct Inst {
     offset: i32,
 }
 
-impl WidgetState for InstState {
-    type Widget = Inst;
-
-    fn affect(&self, emu: EmuState) -> EmuState {
-        emu
-    }
-
-    fn draw(&self, area: &Rect, emu: &EmuState) -> Inst {
+impl Widget for Inst {
+    fn draw(&self, area: &Rect, emu: &EmuState) -> WidgetView {
         let max_lines = area.height as i32;
 
         let mut lines = vec![];
@@ -91,10 +60,7 @@ impl WidgetState for InstState {
             lines.push(Line::from(line));
         }
 
-        Inst {
-            selected: self.selected,
-            text: Text::from(lines),
-        }
+        WidgetView::default().title(" Instructions ").body(Text::from(lines))
     }
 
     fn handle_key_event(&mut self, event: KeyEvent) {
@@ -103,9 +69,5 @@ impl WidgetState for InstState {
             KeyCode::Down => self.offset + 6,
             _ => self.offset,
         };
-    }
-
-    fn set_selected(&mut self, selected: bool) {
-        self.selected = selected;
     }
 }
