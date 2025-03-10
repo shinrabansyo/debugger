@@ -7,12 +7,12 @@ use sb_emu::State as EmuState;
 use crate::widget::{Widget, WidgetView};
 
 #[derive(Default)]
-pub struct Mode {
+pub struct Status {
     workspace_name: String,
     input_mode: bool,
 }
 
-impl Widget for Mode {
+impl Widget for Status {
     fn draw(&self, _: &Rect, _: &EmuState) -> WidgetView {
         let mode_line = if self.input_mode {
             Line::from(vec![
@@ -30,7 +30,7 @@ impl Widget for Mode {
     }
 }
 
-impl Mode {
+impl Status {
     pub fn set_workspace_name(&mut self, name: String) {
         self.workspace_name = name;
     }

@@ -1,4 +1,4 @@
-mod emb_mode;
+mod emb_status;
 mod emb_help;
 
 use std::cmp::{min, max};
@@ -9,7 +9,7 @@ use sb_emu::State as EmuState;
 
 use crate::layout::Layout;
 use crate::widget::{Widget, WidgetView};
-use emb_mode::Mode;
+use emb_status::Status;
 use emb_help::Help;
 
 #[derive(Default)]
@@ -30,12 +30,12 @@ impl WorkspaceBuilder {
     }
 
     pub fn build(self) -> Workspace {
-        let mut mode_widget = Mode::default();
-        mode_widget.set_workspace_name(self.name.unwrap_or("Workspace".to_string()));
+        let mut stat_widget = Status::default();
+        stat_widget.set_workspace_name(self.name.unwrap_or("Workspace".to_string()));
 
         Workspace {
             widgets: self.widgets,
-            mode_widget,
+            stat_widget,
             ..Default::default()
         }
     }
@@ -47,7 +47,7 @@ pub struct Workspace {
     widgets: Vec<((i8, i8), Box<dyn Widget>)>,
 
     // 固定で持つウィジェット
-    mode_widget: Mode,
+    stat_widget: Status,
     help_widget: Help,
 
     // 全体の状態
@@ -67,7 +67,7 @@ impl Workspace {
         for (pos, state) in &self.widgets {
             yield state.draw(&layout.inst, emu).selected(pos == &self.cursor);
         }
-        yield self.mode_widget.draw(&layout.mode, emu);
+        yield self.stat_widget.draw(&layout.mode, emu);
         yield self.help_widget.draw(&layout.help, emu);
         ()
     }
@@ -77,7 +77,7 @@ impl Workspace {
             match event.code {
                 KeyCode::Esc => {
                     self.input_mode = false;
-                    self.mode_widget.set_input_mode(false);
+                    self.stat_widget.set_input_mode(false);
                 }
                 _ => {
                     for (pos, state) in &mut self.widgets {
@@ -92,7 +92,7 @@ impl Workspace {
             match event.code {
                 KeyCode::Char('i') => {
                     self.input_mode = true;
-                    self.mode_widget.set_input_mode(true);
+                    self.stat_widget.set_input_mode(true);
                 }
                 KeyCode::Char('h') => self.cursor.0 = max(0, self.cursor.0 - 1),
                 KeyCode::Char('l') => self.cursor.0 = min(1, self.cursor.0 + 1),
