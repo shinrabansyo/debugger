@@ -1,9 +1,5 @@
-pub mod inst;
-pub mod device;
-pub mod reg;
-pub mod mem;
-pub mod mode;
-pub mod help;
+pub(crate) mod mode;
+pub(crate) mod help;
 
 use crossterm::event::KeyEvent;
 use ratatui::buffer::Buffer;

@@ -7,8 +7,8 @@ use crossterm::event::{KeyCode, KeyEvent};
 use ratatui::layout::Rect;
 
 use sb_emu::State as EmuState;
+use sb_dbg_tui_engine::widget::{Widget, WidgetState};
 
-use crate::ui::widget::{Widget, WidgetState};
 use uart::Uart;
 use gpout::GPOut;
 

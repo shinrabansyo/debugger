@@ -1,3 +1,5 @@
+#![feature(gen_blocks)]
+
 mod layout;
 pub mod widget;
 pub mod workspace;

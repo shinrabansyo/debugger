@@ -8,7 +8,7 @@ use ratatui::text::{Text, Line, Span};
 use sb_disasm::disassemble;
 use sb_emu::State as EmuState;
 
-use crate::ui::widget::{Widget, WidgetState};
+use sb_dbg_tui_engine::widget::{Widget, WidgetState};
 
 #[derive(Default)]
 pub struct InstState {

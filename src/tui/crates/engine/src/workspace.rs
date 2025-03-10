@@ -4,10 +4,10 @@ use crossterm::event::{KeyCode, KeyEvent};
 
 use sb_emu::State as EmuState;
 
-use crate::ui::layout::Layout;
-use crate::ui::widget::{Widget, WidgetState};
-use crate::ui::widget::help::HelpState;
-use crate::ui::widget::mode::ModeState;
+use crate::layout::Layout;
+use crate::widget::{Widget, WidgetState};
+use crate::widget::help::HelpState;
+use crate::widget::mode::ModeState;
 
 #[derive(Default)]
 pub struct WorkspaceBuilder {

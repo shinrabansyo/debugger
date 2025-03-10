@@ -7,7 +7,11 @@ edition = "2024"
 anyhow = { workspace = true }
 thiserror = { workspace = true }
 ratatui = "0.29.0"
-crossterm = "0.28.1"
 sb_emu = { workspace = true }
 sb_disasm = { workspace = true }
 sb_dbg_utils = { workspace = true }
+sb_dbg_tui_engine = { path = "./crates/engine" }
+sb_dbg_tui_widget_device = { path = "./crates/widget_device" }
+sb_dbg_tui_widget_inst = { path = "./crates/widget_inst" }
+sb_dbg_tui_widget_mem = { path = "./crates/widget_mem" }
+sb_dbg_tui_widget_reg = { path = "./crates/widget_reg" }

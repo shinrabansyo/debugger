@@ -6,7 +6,7 @@ use crossterm::event::KeyEvent;
 
 use sb_emu::State as EmuState;
 
-use crate::ui::widget::Widget;
+use sb_dbg_tui_engine::widget::Widget;
 
 #[derive(Default)]
 pub struct Uart;

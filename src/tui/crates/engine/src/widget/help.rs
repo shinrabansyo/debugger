@@ -4,7 +4,7 @@ use ratatui::text::Line;
 
 use sb_emu::State as EmuState;
 
-use crate::ui::widget::{Widget, WidgetState};
+use crate::widget::{Widget, WidgetState};
 
 #[derive(Default)]
 pub struct HelpState;
