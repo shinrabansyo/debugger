@@ -1,7 +1,5 @@
 use crossterm::event::KeyEvent;
-use ratatui::buffer::Buffer;
 use ratatui::layout::Rect;
-use ratatui::widgets::Paragraph;
 use ratatui::style::Stylize;
 use ratatui::text::Line;
 
@@ -9,14 +7,11 @@ use sb_emu::State as EmuState;
 
 use crate::ui::widget::{Widget, WidgetState};
 
-pub struct Help;
+#[derive(Default)]
+pub struct HelpState;
 
-impl Widget for Help {
-    type State = HelpState;
-}
-
-impl ratatui::widgets::Widget for Help {
-    fn render(self, area: Rect, buf: &mut Buffer) {
+impl WidgetState for HelpState {
+    fn draw(&self,_: &Rect, _: &EmuState) -> Widget {
         let help_line = Line::from(vec![
             " Input Mode ".into(),
             "<i>".blue().bold(),
@@ -41,22 +36,7 @@ impl ratatui::widgets::Widget for Help {
             "<q> ".blue().bold(),
         ]);
 
-        Paragraph::new(help_line.right_aligned()).render(area, buf);
-    }
-}
-
-#[derive(Default)]
-pub struct HelpState;
-
-impl WidgetState for HelpState {
-    type Widget = Help;
-
-    fn affect(&self, emu: EmuState) -> EmuState {
-        emu
-    }
-
-    fn draw(&self,_: &Rect, _: &EmuState) -> Help {
-        Help
+        Widget::default().body(help_line.right_aligned())
     }
 
     fn handle_key_event(&mut self, _: KeyEvent) {}

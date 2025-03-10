@@ -1,35 +1,11 @@
 use crossterm::event::KeyEvent;
-use ratatui::buffer::Buffer;
 use ratatui::layout::Rect;
-use ratatui::widgets::{Block, Paragraph};
-use ratatui::symbols::border;
-use ratatui::style::{Color, Style, Stylize};
+use ratatui::style::{Color, Style};
 use ratatui::text::{Line, Span, Text};
 
 use sb_emu::State as EmuState;
 
 use crate::ui::widget::{Widget, WidgetState};
-
-pub struct Register {
-    selected: bool,
-    text: Text<'static>,
-}
-
-impl Widget for Register {
-    type State = RegisterState;
-}
-
-impl ratatui::widgets::Widget for Register {
-    fn render(self, area: Rect, buf: &mut Buffer) {
-        let block = Block::bordered()
-                .title(Line::from(" Register ".bold()).centered())
-                .border_set(if self.selected { border::THICK } else { border::ROUNDED });
-
-        Paragraph::new(self.text)
-            .block(block)
-            .render(area, buf);
-    }
-}
 
 #[derive(Default)]
 pub struct RegisterState {
@@ -37,13 +13,7 @@ pub struct RegisterState {
 }
 
 impl WidgetState for RegisterState {
-    type Widget = Register;
-
-    fn affect(&self, emu: EmuState) -> EmuState {
-        emu
-    }
-
-    fn draw(&self, _: &Rect, emu: &EmuState) -> Register {
+    fn draw(&self, _: &Rect, emu: &EmuState) -> Widget {
         let mut lines = vec![];
 
         // PC 表示
@@ -69,10 +39,10 @@ impl WidgetState for RegisterState {
             lines.push(Line::from(reg_items));
         }
 
-        Register {
-            selected: self.selected,
-            text: Text::from(lines),
-        }
+        Widget::default()
+            .selected(self.selected)
+            .title(" Register ")
+            .body(Text::from(lines))
     }
 
     fn handle_key_event(&mut self, _: KeyEvent) {

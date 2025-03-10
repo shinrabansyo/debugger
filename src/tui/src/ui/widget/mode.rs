@@ -1,7 +1,5 @@
 use crossterm::event::{KeyCode, KeyEvent};
-use ratatui::buffer::Buffer;
 use ratatui::layout::Rect;
-use ratatui::widgets::Paragraph;
 use ratatui::style::Stylize;
 use ratatui::text::Line;
 
@@ -9,16 +7,13 @@ use sb_emu::State as EmuState;
 
 use crate::ui::widget::{Widget, WidgetState};
 
-pub struct Mode {
+#[derive(Default)]
+pub struct ModeState {
     input_mode: bool,
 }
 
-impl Widget for Mode {
-    type State = ModeState;
-}
-
-impl ratatui::widgets::Widget for Mode {
-    fn render(self, area: Rect, buf: &mut Buffer) {
+impl WidgetState for ModeState {
+    fn draw(&self, _: &Rect, _: &EmuState) -> Widget {
         let mode_line = if self.input_mode {
             Line::from(vec![
                 " Mode: ".into(),
@@ -31,26 +26,7 @@ impl ratatui::widgets::Widget for Mode {
             ])
         };
 
-        Paragraph::new(mode_line.left_aligned()).render(area, buf);
-    }
-}
-
-#[derive(Default)]
-pub struct ModeState {
-    input_mode: bool,
-}
-
-impl WidgetState for ModeState {
-    type Widget = Mode;
-
-    fn affect(&self, emu: EmuState) -> EmuState {
-        emu
-    }
-
-    fn draw(&self, _: &Rect, _: &EmuState) -> Mode {
-        Mode {
-            input_mode: self.input_mode,
-        }
+        Widget::default().body(mode_line)
     }
 
     fn handle_key_event(&mut self, event: KeyEvent) {

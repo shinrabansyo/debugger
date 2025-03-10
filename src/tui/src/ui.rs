@@ -63,14 +63,23 @@ impl UI {
 impl UI {
     fn draw(&mut self, frame: &mut Frame) {
         let layout = self.layout_man.gen(frame);
-        let widegts = self.widgets_man.draw(&layout, self.emu.as_ref().unwrap());
+        let widgets = self.widgets_man.draw(&layout, self.emu.as_ref().unwrap());
 
-        frame.render_widget(widegts.inst, layout.inst);
-        frame.render_widget(widegts.device, layout.device);
-        frame.render_widget(widegts.state, layout.state);
-        frame.render_widget(widegts.mem, layout.memory);
-        frame.render_widget(widegts.mode, layout.mode);
-        frame.render_widget(widegts.help, layout.help);
+        // frame.render_widget(widegts.inst, layout.inst);
+        // frame.render_widget(widegts.device, layout.device);
+        // frame.render_widget(widegts.state, layout.state);
+        // frame.render_widget(widegts.mem, layout.memory);
+        // frame.render_widget(widegts.mode, layout.mode);
+        // frame.render_widget(widegts.help, layout.help);
+
+        let mut a = widgets.into_iter();
+
+        frame.render_widget(a.next().unwrap(), layout.inst);
+        frame.render_widget(a.next().unwrap(), layout.device);
+        frame.render_widget(a.next().unwrap(), layout.state);
+        frame.render_widget(a.next().unwrap(), layout.memory);
+        frame.render_widget(a.next().unwrap(), layout.mode);
+        frame.render_widget(a.next().unwrap(), layout.help);
     }
 }
 

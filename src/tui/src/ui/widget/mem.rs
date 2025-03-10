@@ -1,37 +1,13 @@
 use std::cmp::max;
 
 use crossterm::event::{KeyCode, KeyEvent};
-use ratatui::buffer::Buffer;
 use ratatui::layout::Rect;
-use ratatui::widgets::{Block, Paragraph};
-use ratatui::symbols::border;
-use ratatui::style::{Color, Style, Stylize};
+use ratatui::style::{Color, Style};
 use ratatui::text::{Line, Text, Span};
 
 use sb_emu::State as EmuState;
 
 use crate::ui::widget::{Widget, WidgetState};
-
-pub struct Mem {
-    selected: bool,
-    text: Text<'static>,
-}
-
-impl Widget for Mem {
-    type State = MemState;
-}
-
-impl ratatui::widgets::Widget for Mem {
-    fn render(self, area: Rect, buf: &mut Buffer) {
-        let block = Block::bordered()
-                .title(Line::from(" Memory ".bold()).centered())
-                .border_set(if self.selected { border::THICK } else { border::ROUNDED });
-
-        Paragraph::new(self.text)
-            .block(block)
-            .render(area, buf);
-    }
-}
 
 #[derive(Default)]
 pub struct MemState {
@@ -40,13 +16,7 @@ pub struct MemState {
 }
 
 impl WidgetState for MemState {
-    type Widget = Mem;
-
-    fn affect(&self, emu: EmuState) -> EmuState {
-        emu
-    }
-
-    fn draw(&self, area: &Rect, emu: &EmuState) -> Mem {
+    fn draw(&self, area: &Rect, emu: &EmuState) -> Widget {
         let max_lines = area.height as i32;
 
         let mut lines = vec![];
@@ -93,10 +63,10 @@ impl WidgetState for MemState {
             lines.push(Line::from(line));
         }
 
-        Mem {
-            selected: self.selected,
-            text: Text::from(lines),
-        }
+        Widget::default()
+            .selected(self.selected)
+            .title(" Memory ")
+            .body(Text::from(lines))
     }
 
     fn handle_key_event(&mut self, event: KeyEvent) {

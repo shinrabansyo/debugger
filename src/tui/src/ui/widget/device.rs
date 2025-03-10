@@ -4,40 +4,13 @@ mod gpout;
 use std::cmp::{min, max};
 
 use crossterm::event::{KeyCode, KeyEvent};
-use ratatui::buffer::Buffer;
 use ratatui::layout::Rect;
-use ratatui::widgets::{Block, Paragraph};
-use ratatui::symbols::border;
-use ratatui::style::Stylize;
-use ratatui::text::{Line, Text};
 
 use sb_emu::State as EmuState;
 
 use crate::ui::widget::{Widget, WidgetState};
 use uart::Uart;
 use gpout::GPOut;
-
-pub struct Device {
-    selected: bool,
-    title: Line<'static>,
-    content: Text<'static>,
-}
-
-impl Widget for Device {
-    type State = DeviceState;
-}
-
-impl ratatui::widgets::Widget for Device {
-    fn render(self, area: Rect, buf: &mut Buffer) {
-        let block = Block::bordered()
-                .title(self.title.bold().centered())
-                .border_set(if self.selected { border::THICK } else { border::ROUNDED });
-
-        Paragraph::new(self.content)
-            .block(block)
-            .render(area, buf);
-    }
-}
 
 #[derive(Default)]
 pub struct DeviceState {
@@ -48,20 +21,12 @@ pub struct DeviceState {
 }
 
 impl WidgetState for DeviceState {
-    type Widget = Device;
-
-    fn affect(&self, emu: EmuState) -> EmuState {
-        emu
-    }
-
-    fn draw(&self, area: &Rect, emu: &EmuState) -> Device {
-        let mut device = match self.show_dev_id {
-            0 => self.uart.gen_widget(area, emu),
-            1 => self.gpout.gen_widget(emu),
+    fn draw(&self, area: &Rect, emu: &EmuState) -> Widget {
+        match self.show_dev_id {
+            0 => self.uart.draw(area, emu),
+            1 => self.gpout.draw(emu),
             _ => unreachable!(),
-        };
-        device.selected = self.selected;
-        device
+        }
     }
 
     fn handle_key_event(&mut self, event: KeyEvent) {

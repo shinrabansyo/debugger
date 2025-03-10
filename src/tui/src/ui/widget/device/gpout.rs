@@ -1,20 +1,19 @@
-use ratatui::text::{Line, Text};
+use ratatui::text::Text;
 use crossterm::event::KeyEvent;
 
 use sb_emu::State as EmuState;
 
-use super::Device;
+use crate::ui::widget::Widget;
 
 #[derive(Default)]
 pub struct GPOut;
 
 impl GPOut {
-    pub fn gen_widget(&self, emu: &EmuState) -> Device {
-        Device {
-            selected: false,
-            title: Line::raw(" Device 1: GPIO (Out) "),
-            content: Text::raw(emu.devices.get_stat(4).unwrap()),
-        }
+    pub fn draw(&self, emu: &EmuState) -> Widget {
+        Widget::default()
+            .selected(false)
+            .title(" Device 1: GPIO (Out) ")
+            .body(Text::raw(emu.devices.get_stat(4).unwrap()))
     }
 
     pub fn handle_key_event(&mut self, _: KeyEvent) {}
