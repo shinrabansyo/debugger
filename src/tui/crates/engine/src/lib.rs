@@ -4,6 +4,7 @@ mod layout;
 pub mod widget;
 pub mod workspace;
 
+use std::cmp::min;
 use std::time::Duration;
 
 use crossterm::event::{KeyEvent, KeyCode};
@@ -98,13 +99,25 @@ impl UI {
 
     fn handle_key_event(&mut self, event: KeyEvent) {
         match event.code {
+            // エミュレータ制御
             KeyCode::Enter => self.remain_exec_cnt = 1,
             KeyCode::Char(' ') => if self.remain_exec_cnt == 0 {
                 self.remain_exec_cnt = u32::MAX;
             } else {
                 self.remain_exec_cnt = 0;
             },
+
+            // ワークスペース切り替え
+            KeyCode::Char(c) if c.is_digit(10) => {
+                let num = c.to_digit(10).unwrap();
+                let num = if num == 0 { 9 } else { num - 1 };
+                self.workspace_id = min(num as usize, self.workspaces.len()-1);
+            }
+
+            // 終了
             KeyCode::Char('q') => self.running = false,
+
+            // 各ウィジェットでの処理
             _ => self.workspaces[self.workspace_id].handle_key_event(event),
         }
     }
