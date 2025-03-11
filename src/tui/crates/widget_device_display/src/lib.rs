@@ -1,5 +1,5 @@
 use std::cell::RefCell;
-use std::cmp::max;
+use std::cmp::{min, max};
 
 use crossterm::event::{KeyEvent, KeyCode};
 use image::{DynamicImage, ImageReader};
@@ -11,7 +11,7 @@ use ratatui_image::{Image, Resize};
 use sb_emu::State as EmuState;
 use sb_dbg_tui_engine::widget::{Widget, WidgetView};
 
-pub struct Display<const W: usize, const H: usize> {
+pub struct Display<const W: u32, const H: u32> {
     // 表示画像
     image_src: DynamicImage,
     image_protocol: RefCell<Protocol>,
@@ -21,7 +21,7 @@ pub struct Display<const W: usize, const H: usize> {
     y: u32,
 }
 
-impl<const W: usize, const H: usize> Default for Display<W, H> {
+impl<const W: u32, const H: u32> Default for Display<W, H> {
     fn default() -> Display<W, H> {
         // 表示対象画像
         let image_src = ImageReader::open("logo.jpg").unwrap().decode().unwrap();
@@ -48,7 +48,7 @@ impl<const W: usize, const H: usize> Default for Display<W, H> {
     }
 }
 
-impl<const W: usize, const H: usize> Widget for Display<W, H> {
+impl<const W: u32, const H: u32> Widget for Display<W, H> {
     fn draw(&self, _: &Rect, _: &EmuState) -> WidgetView {
         // self.image の可変借用を取り，ライフタイムの解釈を変更して十分長くする
         //   ->  WidgetView の生成から描画 (=破棄) までの短い期間の参照であれば問題ない
@@ -71,7 +71,7 @@ impl<const W: usize, const H: usize> Widget for Display<W, H> {
                 self.update_view();
             }
             KeyCode::Down => {
-                self.y = self.y + 10;
+                self.y = min(H, self.y + 10);
                 self.update_view();
             }
             KeyCode::Left => {
@@ -79,7 +79,7 @@ impl<const W: usize, const H: usize> Widget for Display<W, H> {
                 self.update_view();
             }
             KeyCode::Right => {
-                self.x = self.x + 10;
+                self.x = min(W, self.x + 10);
                 self.update_view();
             }
             _ => {}
@@ -87,7 +87,7 @@ impl<const W: usize, const H: usize> Widget for Display<W, H> {
     }
 }
 
-impl<const W: usize, const H: usize> Display<W, H> {
+impl<const W: u32, const H: u32> Display<W, H> {
     fn update_view(&mut self) {
         let new_x = self.x;
         let new_y = self.y;
