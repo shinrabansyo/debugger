@@ -22,7 +22,7 @@ impl State {
             regs: Registers::new(),
             dmem: Memory::from(dmem),
             imem: Memory::from(imem),
-            devices: DeviceMap::new(),
+            devices: DeviceMap::default(),
         }
     }
 }
