@@ -11,6 +11,7 @@ sb_emu = { workspace = true }
 sb_disasm = { workspace = true }
 sb_dbg_utils = { workspace = true }
 sb_dbg_tui_engine = { path = "./crates/engine" }
+sb_dbg_tui_widget_device_display = { path = "./crates/widget_device_display" }
 sb_dbg_tui_widget_device_gpout = { path = "./crates/widget_device_gpout" }
 sb_dbg_tui_widget_device_uart = { path = "./crates/widget_device_uart" }
 sb_dbg_tui_widget_inst = { path = "./crates/widget_inst" }

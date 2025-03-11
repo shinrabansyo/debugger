@@ -74,14 +74,15 @@ impl UI {
         let layout = self.layout_man.r#gen(frame);
         let widgets = self.workspaces[self.workspace_id].draw(&layout, self.emu.as_ref().unwrap());
 
+        /* ==== TODO ==== */
         let mut a = widgets.into_iter();
-
         frame.render_widget(a.next().unwrap(), layout.inst);
         frame.render_widget(a.next().unwrap(), layout.device);
         frame.render_widget(a.next().unwrap(), layout.state);
         frame.render_widget(a.next().unwrap(), layout.memory);
         frame.render_widget(a.next().unwrap(), layout.mode);
         frame.render_widget(a.next().unwrap(), layout.help);
+        /* ==== TODO ==== */
     }
 }
 
