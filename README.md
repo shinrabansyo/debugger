@@ -4,6 +4,7 @@
 
 - [helloworld](examples/helloworld)
 - [fizzbuzz](examples/fizzbuzz/)
+- [ichimatsu](examples/ichimatsu/)
 
 ## Command
 
