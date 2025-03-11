@@ -64,11 +64,16 @@ impl Workspace {
     }
 
     pub gen fn draw(&self, layout: &Layout, emu: &EmuState) -> WidgetView {
-        for (pos, state) in &self.widgets {
-            yield state.draw(&layout.inst, emu).selected(pos == &self.cursor);
-        }
+        /* ==== TODO ==== */
+        yield self.widgets[0].1.draw(&layout.inst, emu).selected(self.widgets[0].0 == self.cursor);
+        yield self.widgets[1].1.draw(&layout.device, emu).selected(self.widgets[1].0 == self.cursor);
+        yield self.widgets[2].1.draw(&layout.state, emu).selected(self.widgets[2].0 == self.cursor);
+        yield self.widgets[3].1.draw(&layout.memory, emu).selected(self.widgets[3].0 == self.cursor);
+        /* ==== TODO ==== */
+
         yield self.stat_widget.draw(&layout.mode, emu);
         yield self.help_widget.draw(&layout.help, emu);
+
         ()
     }
 
