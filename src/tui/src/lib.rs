@@ -32,7 +32,7 @@ pub fn run(pc: u32, dmem: &[u8], imem: &[u8]) -> anyhow::Result<()> {
         WorkspaceBuilder::default()
             .name("Workspace 2")
             .widget((0, 0), Box::new(Inst::default()))
-            .widget((0, 1), Box::new(Display::default()))
+            .widget((0, 1), Box::new(Display::<128, 128>::default()))
             .widget((1, 0), Box::new(Register::default()))
             .widget((1, 1), Box::new(Mem::default()))
             .build(),
