@@ -15,8 +15,10 @@ impl Device for Uart {
         self.out.push(c as char);
         Ok(())
     }
+}
 
-    fn get_stat(&self, _: usize) -> anyhow::Result<String> {
-        Ok(self.out.clone())
+impl Uart {
+    pub fn get_stat(&self) -> &str {
+        &self.out
     }
 }

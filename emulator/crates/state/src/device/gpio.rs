@@ -1,5 +1,3 @@
-use std::fmt::Write;
-
 use super::Device;
 
 #[derive(Debug, Clone, Default)]
@@ -16,19 +14,10 @@ impl Device for Gpio {
         self.state = (data & 0xff) as u8;
         Ok(())
     }
+}
 
-    fn get_stat(&self, _: usize) -> anyhow::Result<String> {
-        let mut line_1 = String::new();
-        let mut line_2 = String::new();
-        for idx in 0..8 {
-            let pin = 7 - idx;
-            write!(line_1, " [{}] ", pin)?;
-            if self.state & (1 << pin) != 0 {
-                write!(line_2, "  O  ")?;
-            } else {
-                write!(line_2, "  _  ")?;
-            }
-        }
-        Ok(format!("{}\n{}", line_1, line_2))
+impl Gpio {
+    pub fn get_stat(&self) -> u8 {
+        self.state
     }
 }

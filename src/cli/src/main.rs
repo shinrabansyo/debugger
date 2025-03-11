@@ -15,7 +15,7 @@ fn update_stdout(emu: &EmuState) {
     static mut OUTPUT_POS: usize = 0;
 
     let bef_output_pos = unsafe { OUTPUT_POS };
-    let uart_output = emu.devices.get_stat(0).unwrap();
+    let uart_output = emu.devices.get_uart_stat();
     if uart_output.len() > bef_output_pos {
         print!("{}", &uart_output[bef_output_pos..]);
         unsafe { OUTPUT_POS = uart_output.len() };
