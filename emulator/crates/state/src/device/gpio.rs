@@ -1,27 +1,23 @@
 use std::fmt::Write;
 
-#[derive(Debug, Clone)]
+use super::Device;
+
+#[derive(Debug, Clone, Default)]
 pub struct Gpio {
     state: u8,
 }
 
-impl Gpio {
-    pub fn new() -> Gpio {
-        Gpio {
-            state: 0,
-        }
-    }
-
-    pub fn read(&self, _: usize) -> anyhow::Result<u32> {
+impl Device for Gpio {
+    fn read(&self, _: usize) -> anyhow::Result<u32> {
         Ok(self.state as u32)
     }
 
-    pub fn write(&mut self, _: usize, data: u32) -> anyhow::Result<()> {
+    fn write(&mut self, _: usize, data: u32) -> anyhow::Result<()> {
         self.state = (data & 0xff) as u8;
         Ok(())
     }
 
-    pub fn get_stat(&self, _: usize) -> anyhow::Result<String> {
+    fn get_stat(&self, _: usize) -> anyhow::Result<String> {
         let mut line_1 = String::new();
         let mut line_2 = String::new();
         for idx in 0..8 {
