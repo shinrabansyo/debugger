@@ -13,14 +13,9 @@ use ratatui::{DefaultTerminal, Frame};
 
 use sb_emu::Emulator;
 
-use layout::LayoutManager;
 use workspace::Workspace;
 
 pub struct UI {
-    // 各 Manager の状態
-    layout_man: LayoutManager,
-    // widgets_man: WidgetsManager,
-
     // ワークスペース
     workspace_id: usize,
     workspaces: Vec<Workspace>,
@@ -35,7 +30,6 @@ pub struct UI {
 impl UI {
     pub fn new<const N: usize>(emu: Emulator, workspaces: [Workspace; N]) -> Self {
         UI {
-            layout_man: LayoutManager::default(),
             workspace_id: 0,
             workspaces: workspaces.into_iter().collect::<Vec<_>>(),
             running: true,
@@ -66,11 +60,7 @@ impl UI {
 // Rendering
 impl UI {
     fn draw(&mut self, frame: &mut Frame) {
-        self.workspaces[self.workspace_id].draw(
-            frame,
-            &self.layout_man.r#gen(frame),
-            &self.emu,
-        );
+        self.workspaces[self.workspace_id].draw(frame, &self.emu);
     }
 }
 

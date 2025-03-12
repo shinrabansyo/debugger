@@ -25,24 +25,24 @@ pub fn run(pc: u32, dmem: &[u8], imem: &[u8]) -> anyhow::Result<()> {
     let workspaces = [
         WorkspaceBuilder::default()
             .name("Workspace 0")
-            .widget((0, 0), &inst_widget)
-            .widget((0, 1), &uart_widget)
-            .widget((1, 0), &reg_widget)
-            .widget((1, 1), &mem_widget)
-            .build(),
-        WorkspaceBuilder::default()
-            .name("Workspace 1")
-            .widget((0, 0), &inst_widget)
-            .widget((0, 1), &gpout_widget)
-            .widget((1, 0), &reg_widget)
-            .widget((1, 1), &mem_widget)
-            .build(),
-        WorkspaceBuilder::default()
-            .name("Workspace 2")
-            .widget((0, 0), &inst_widget)
-            .widget((0, 1), &display_widget)
-            .widget((1, 0), &reg_widget)
-            .widget((1, 1), &mem_widget)
+            .layout(|l| {
+                l.split_h(100, |l| {
+                    l.put(35, &inst_widget);
+                    l.split_v(65, |l| {
+                        l.split_h(50, |l| {
+                            l.split_v(60, |l| {
+                                l.put(60, &mem_widget);
+                                l.put(40, &reg_widget);
+                            });
+                            l.split_v(40, |l| {
+                                l.put(50, &gpout_widget);
+                                l.put(50, &uart_widget);
+                            });
+                        });
+                        l.put(50, &display_widget);
+                    });
+                });
+            })
             .build(),
     ];
 
