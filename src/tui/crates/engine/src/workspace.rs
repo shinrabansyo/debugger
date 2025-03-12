@@ -6,11 +6,12 @@ use std::cmp::{min, max};
 use std::rc::Rc;
 
 use crossterm::event::{KeyCode, KeyEvent};
+use ratatui::Frame;
 
 use sb_emu::State as EmuState;
 
 use crate::layout::Layout;
-use crate::widget::{Widget, WidgetView};
+use crate::widget::Widget;
 use emb_status::Status;
 use emb_help::Help;
 
@@ -65,29 +66,30 @@ impl Workspace {
         emu
     }
 
-    pub fn draw(&self, layout: &Layout, emu: &EmuState) -> Vec<WidgetView> {
+    pub fn draw(&self, frame: &mut Frame, layout: &Layout, emu: &EmuState) {
         /* ==== TODO ==== */
         let widget = self.widgets[0].1.borrow();
         let view_inst = widget.draw(&layout.inst, emu).selected(self.widgets[0].0 == self.cursor);
+        frame.render_widget(view_inst, layout.inst);
 
         let widget = self.widgets[1].1.borrow();
         let view_device = widget.draw(&layout.device, emu).selected(self.widgets[1].0 == self.cursor);
+        frame.render_widget(view_device, layout.device);
 
         let widget = self.widgets[2].1.borrow();
         let view_state = widget.draw(&layout.state, emu).selected(self.widgets[2].0 == self.cursor);
+        frame.render_widget(view_state, layout.state);
 
         let widget = self.widgets[3].1.borrow();
         let view_memory = widget.draw(&layout.memory, emu).selected(self.widgets[3].0 == self.cursor);
+        frame.render_widget(view_memory, layout.memory);
         /* ==== TODO ==== */
 
-        vec![
-            view_inst,
-            view_device,
-            view_state,
-            view_memory,
-            self.stat_widget.draw(&layout.mode, emu),
-            self.help_widget.draw(&layout.help, emu),
-        ]
+        let view_stat = self.stat_widget.draw(&layout.mode, emu).selected(self.cursor == (-1, -1));
+        frame.render_widget(view_stat, layout.mode);
+
+        let view_help = self.help_widget.draw(&layout.help, emu).selected(self.cursor == (-1, -1));
+        frame.render_widget(view_help, layout.help);
     }
 
     pub fn handle_key_event(&mut self, event: KeyEvent) {
