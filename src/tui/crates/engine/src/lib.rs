@@ -11,7 +11,7 @@ use crossterm::event::{KeyEvent, KeyCode};
 use crossterm::event;
 use ratatui::{DefaultTerminal, Frame};
 
-use sb_emu::State as EmuState;
+use sb_emu::Emulator;
 
 use layout::LayoutManager;
 use workspace::Workspace;
@@ -27,19 +27,19 @@ pub struct UI {
 
     // エミュレータの状態
     running: bool,
-    emu: Option<EmuState>,
+    emu: Emulator,
     remain_exec_cnt: u32,
 }
 
 // Main
 impl UI {
-    pub fn new<const N: usize>(emu: EmuState, workspaces: [Workspace; N]) -> Self {
+    pub fn new<const N: usize>(emu: Emulator, workspaces: [Workspace; N]) -> Self {
         UI {
             layout_man: LayoutManager::default(),
             workspace_id: 0,
             workspaces: workspaces.into_iter().collect::<Vec<_>>(),
             running: true,
-            emu: Some(emu),
+            emu,
             remain_exec_cnt: 0,
         }
     }
@@ -48,13 +48,8 @@ impl UI {
         while self.running {
             // エミュレータ実行
             if self.remain_exec_cnt > 0 {
-                // 1ステップ実行
-                let emu = self.emu.take().unwrap();
-                let emu = self.workspaces[self.workspace_id].affect(emu);
-                let emu = sb_emu::step(emu).unwrap(); // (命令実行)
-
-                // 状態更新
-                self.emu = Some(emu);
+                self.emu.step()?;
+                self.workspaces[self.workspace_id].on_emu_updating(&mut self.emu);
                 self.remain_exec_cnt -= 1;
             }
 
@@ -74,7 +69,7 @@ impl UI {
         self.workspaces[self.workspace_id].draw(
             frame,
             &self.layout_man.r#gen(frame),
-            self.emu.as_ref().unwrap()
+            &self.emu,
         );
     }
 }
@@ -112,7 +107,7 @@ impl UI {
             KeyCode::Char('q') => self.running = false,
 
             // 各ウィジェットでの処理
-            _ => self.workspaces[self.workspace_id].handle_key_event(event),
+            _ => self.workspaces[self.workspace_id].on_key_pressed(event),
         }
     }
 }

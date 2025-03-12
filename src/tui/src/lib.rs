@@ -1,6 +1,6 @@
 #![feature(gen_blocks)]
 
-use sb_emu::State as EmuState;
+use sb_emu::Emulator;
 
 use sb_dbg_tui_engine::widget::Widget;
 use sb_dbg_tui_engine::workspace::WorkspaceBuilder;
@@ -13,7 +13,7 @@ use sb_dbg_tui_widget_reg::Register;
 use sb_dbg_tui_widget_mem::Mem;
 
 pub fn run(pc: u32, dmem: &[u8], imem: &[u8]) -> anyhow::Result<()> {
-    let emu = EmuState::new(pc, &dmem, &imem);
+    let emu = Emulator::new(pc, &dmem, &imem);
 
     let inst_widget = Inst::new();
     let reg_widget = Register::new();

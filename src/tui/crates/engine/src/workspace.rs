@@ -8,7 +8,7 @@ use std::rc::Rc;
 use crossterm::event::{KeyCode, KeyEvent};
 use ratatui::Frame;
 
-use sb_emu::State as EmuState;
+use sb_emu::Emulator;
 
 use crate::layout::Layout;
 use crate::widget::Widget;
@@ -59,14 +59,7 @@ pub struct Workspace {
 }
 
 impl Workspace {
-    pub fn affect(&self, mut emu: EmuState) -> EmuState {
-        for (_, widget) in &self.widgets {
-            emu = widget.borrow_mut().on_emu_updated(emu);
-        }
-        emu
-    }
-
-    pub fn draw(&self, frame: &mut Frame, layout: &Layout, emu: &EmuState) {
+    pub fn draw(&self, frame: &mut Frame, layout: &Layout, emu: &Emulator) {
         /* ==== TODO ==== */
         let widget = self.widgets[0].1.borrow();
         let view_inst = widget.draw(&layout.inst, emu).selected(self.widgets[0].0 == self.cursor);
@@ -92,7 +85,13 @@ impl Workspace {
         frame.render_widget(view_help, layout.help);
     }
 
-    pub fn handle_key_event(&mut self, event: KeyEvent) {
+    pub fn on_emu_updating(&self, emu: &mut Emulator) {
+        for (_, widget) in &self.widgets {
+            widget.borrow_mut().on_emu_updating(emu);
+        }
+    }
+
+    pub fn on_key_pressed(&mut self, event: KeyEvent) {
         if self.input_mode {
             match event.code {
                 KeyCode::Esc => {

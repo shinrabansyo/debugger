@@ -2,7 +2,7 @@ use ratatui::layout::Rect;
 use ratatui::style::Stylize;
 use ratatui::text::Line;
 
-use sb_emu::State as EmuState;
+use sb_emu::Emulator;
 
 use crate::widget::{Widget, WidgetView};
 
@@ -13,7 +13,7 @@ pub struct Status {
 }
 
 impl Widget for Status {
-    fn draw(&self, _: &Rect, _: &EmuState) -> WidgetView {
+    fn draw(&self, _: &Rect, _: &Emulator) -> WidgetView {
         let mode_line = if self.input_mode {
             Line::from(vec![
                 format!("{} / ", self.workspace_name).into(),

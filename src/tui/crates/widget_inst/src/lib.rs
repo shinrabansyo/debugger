@@ -6,7 +6,7 @@ use ratatui::style::{Color, Style, Stylize};
 use ratatui::text::{Text, Line, Span};
 
 use sb_disasm::disassemble;
-use sb_emu::State as EmuState;
+use sb_emu::Emulator;
 
 use sb_dbg_tui_engine::widget::{Widget, WidgetView};
 
@@ -16,7 +16,7 @@ pub struct Inst {
 }
 
 impl Widget for Inst {
-    fn draw(&self, area: &Rect, emu: &EmuState) -> WidgetView {
+    fn draw(&self, area: &Rect, emu: &Emulator) -> WidgetView {
         let max_lines = area.height as i32;
 
         let mut lines = vec![];

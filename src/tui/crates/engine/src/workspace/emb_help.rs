@@ -2,7 +2,7 @@ use ratatui::layout::Rect;
 use ratatui::style::Stylize;
 use ratatui::text::Line;
 
-use sb_emu::State as EmuState;
+use sb_emu::Emulator;
 
 use crate::widget::{Widget, WidgetView};
 
@@ -10,7 +10,7 @@ use crate::widget::{Widget, WidgetView};
 pub struct Help;
 
 impl Widget for Help {
-    fn draw(&self,_: &Rect, _: &EmuState) -> WidgetView {
+    fn draw(&self,_: &Rect, _: &Emulator) -> WidgetView {
         let help_line = Line::from(vec![
             " Input Mode ".into(),
             "<i>".blue().bold(),

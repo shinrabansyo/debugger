@@ -5,7 +5,7 @@ use ratatui::layout::Rect;
 use ratatui::style::{Color, Style};
 use ratatui::text::{Line, Text, Span};
 
-use sb_emu::State as EmuState;
+use sb_emu::Emulator;
 
 use sb_dbg_tui_engine::widget::{Widget, WidgetView};
 
@@ -15,7 +15,7 @@ pub struct Mem {
 }
 
 impl Widget for Mem {
-    fn draw(&self, area: &Rect, emu: &EmuState) -> WidgetView {
+    fn draw(&self, area: &Rect, emu: &Emulator) -> WidgetView {
         let max_lines = area.height as i32;
 
         let mut lines = vec![];
