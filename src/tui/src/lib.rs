@@ -1,5 +1,3 @@
-#![feature(gen_blocks)]
-
 use sb_emu::Emulator;
 
 use sb_dbg_tui_engine::widget::Widget;
