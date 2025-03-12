@@ -46,8 +46,5 @@ pub fn run(pc: u32, dmem: &[u8], imem: &[u8]) -> anyhow::Result<()> {
             .build(),
     ];
 
-    UI::new(emu, workspaces).run(&mut ratatui::init())?;
-    ratatui::restore();
-
-    Ok(())
+    UI::start(emu, workspaces)
 }
