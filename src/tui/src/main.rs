@@ -16,8 +16,23 @@ fn main() -> anyhow::Result<()> {
     let display_widget = Display::<128, 128>::new();
 
     let workspaces = [
+        /* Main View
+        +------------+---------------------+
+        |            |            |  GPIO  |
+        |            |   Memory   +--------|
+        |            |            |        |
+        |            +------------+  UART  |
+        |            |  Register  |        |
+        |            +------------+--------|
+        |    Inst    |                     |
+        |            |                     |
+        |            |       Display       |
+        |            |                     |
+        |            |                     |
+        +------------+---------------------+
+        */
         WorkspaceBuilder::default()
-            .name("Workspace 0")
+            .name("Main View")
             .layout(|l| {
                 l.split_h(100, |l| {
                     l.put(35, &inst_widget);
@@ -28,8 +43,8 @@ fn main() -> anyhow::Result<()> {
                                 l.put(40, &reg_widget);
                             });
                             l.split_v(40, |l| {
-                                l.put(50, &gpout_widget);
-                                l.put(50, &uart_widget);
+                                l.put(30, &gpout_widget);
+                                l.put(70, &uart_widget);
                             });
                         });
                         l.put(50, &display_widget);
