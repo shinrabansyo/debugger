@@ -21,11 +21,11 @@ pub trait Widget {
         Rc::new(RefCell::new(Self::default()))
     }
 
-    fn affect(&self, emu: EmuState) -> EmuState {
+    fn on_emu_updated(&mut self, emu: EmuState) -> EmuState {
         emu
     }
 
-    fn handle_key_event(&mut self, _: KeyEvent) {
+    fn on_key_pressed(&mut self, _: KeyEvent) {
         // default: do nothing
     }
 }

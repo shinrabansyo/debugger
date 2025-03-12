@@ -65,7 +65,7 @@ impl Widget for Mem {
         WidgetView::default().title(" Memory ").body(Text::from(lines))
     }
 
-    fn handle_key_event(&mut self, event: KeyEvent) {
+    fn on_key_pressed(&mut self, event: KeyEvent) {
         self.offset = match event.code {
             KeyCode::Up => max(0, self.offset - 16),
             KeyCode::Down => self.offset + 16,

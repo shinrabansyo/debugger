@@ -63,7 +63,7 @@ impl Widget for Inst {
         WidgetView::default().title(" Instructions ").body(Text::from(lines))
     }
 
-    fn handle_key_event(&mut self, event: KeyEvent) {
+    fn on_key_pressed(&mut self, event: KeyEvent) {
         self.offset = match event.code {
             KeyCode::Up => self.offset - 6,
             KeyCode::Down => self.offset + 6,

@@ -68,7 +68,7 @@ impl<const W: u32, const H: u32> Widget for Display<W, H> {
             .body(image)
     }
 
-    fn handle_key_event(&mut self, event: KeyEvent) {
+    fn on_key_pressed(&mut self, event: KeyEvent) {
         match event.code {
             KeyCode::Up => {
                 self.y = max(self.y as i32 - 10, 0) as u32;

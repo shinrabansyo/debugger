@@ -61,7 +61,7 @@ pub struct Workspace {
 impl Workspace {
     pub fn affect(&self, mut emu: EmuState) -> EmuState {
         for (_, widget) in &self.widgets {
-            emu = widget.borrow_mut().affect(emu);
+            emu = widget.borrow_mut().on_emu_updated(emu);
         }
         emu
     }
@@ -102,7 +102,7 @@ impl Workspace {
                 _ => {
                     for (pos, widget) in &mut self.widgets {
                         if pos == &self.cursor {
-                            widget.borrow_mut().handle_key_event(event);
+                            widget.borrow_mut().on_key_pressed(event);
                             break;
                         }
                     }
