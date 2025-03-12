@@ -1,7 +1,9 @@
 mod emb_status;
 mod emb_help;
 
+use std::cell::RefCell;
 use std::cmp::{min, max};
+use std::rc::Rc;
 
 use crossterm::event::{KeyCode, KeyEvent};
 
@@ -15,7 +17,7 @@ use emb_help::Help;
 #[derive(Default)]
 pub struct WorkspaceBuilder {
     name: Option<String>,
-    widgets: Vec<((i8, i8), Box<dyn Widget>)>,
+    widgets: Vec<((i8, i8), Rc<RefCell<dyn Widget>>)>,
 }
 
 impl WorkspaceBuilder {
@@ -24,8 +26,8 @@ impl WorkspaceBuilder {
         self
     }
 
-    pub fn widget(mut self, pos: (i8, i8), state: Box<dyn Widget>) -> WorkspaceBuilder {
-        self.widgets.push((pos, state));
+    pub fn widget(mut self, pos: (i8, i8), state: &Rc<RefCell<dyn Widget>>) -> WorkspaceBuilder {
+        self.widgets.push((pos, Rc::clone(state)));
         self
     }
 
@@ -44,7 +46,7 @@ impl WorkspaceBuilder {
 #[derive(Default)]
 pub struct Workspace {
     // ユーザ指定ウィジェット
-    widgets: Vec<((i8, i8), Box<dyn Widget>)>,
+    widgets: Vec<((i8, i8), Rc<RefCell<dyn Widget>>)>,
 
     // 固定で持つウィジェット
     stat_widget: Status,
@@ -57,24 +59,35 @@ pub struct Workspace {
 
 impl Workspace {
     pub fn affect(&self, mut emu: EmuState) -> EmuState {
-        for (_, state) in &self.widgets {
-            emu = state.affect(emu);
+        for (_, widget) in &self.widgets {
+            emu = widget.borrow_mut().affect(emu);
         }
         emu
     }
 
-    pub gen fn draw(&self, layout: &Layout, emu: &EmuState) -> WidgetView {
+    pub fn draw(&self, layout: &Layout, emu: &EmuState) -> Vec<WidgetView> {
         /* ==== TODO ==== */
-        yield self.widgets[0].1.draw(&layout.inst, emu).selected(self.widgets[0].0 == self.cursor);
-        yield self.widgets[1].1.draw(&layout.device, emu).selected(self.widgets[1].0 == self.cursor);
-        yield self.widgets[2].1.draw(&layout.state, emu).selected(self.widgets[2].0 == self.cursor);
-        yield self.widgets[3].1.draw(&layout.memory, emu).selected(self.widgets[3].0 == self.cursor);
+        let widget = self.widgets[0].1.borrow();
+        let view_inst = widget.draw(&layout.inst, emu).selected(self.widgets[0].0 == self.cursor);
+
+        let widget = self.widgets[1].1.borrow();
+        let view_device = widget.draw(&layout.device, emu).selected(self.widgets[1].0 == self.cursor);
+
+        let widget = self.widgets[2].1.borrow();
+        let view_state = widget.draw(&layout.state, emu).selected(self.widgets[2].0 == self.cursor);
+
+        let widget = self.widgets[3].1.borrow();
+        let view_memory = widget.draw(&layout.memory, emu).selected(self.widgets[3].0 == self.cursor);
         /* ==== TODO ==== */
 
-        yield self.stat_widget.draw(&layout.mode, emu);
-        yield self.help_widget.draw(&layout.help, emu);
-
-        ()
+        vec![
+            view_inst,
+            view_device,
+            view_state,
+            view_memory,
+            self.stat_widget.draw(&layout.mode, emu),
+            self.help_widget.draw(&layout.help, emu),
+        ]
     }
 
     pub fn handle_key_event(&mut self, event: KeyEvent) {
@@ -85,9 +98,9 @@ impl Workspace {
                     self.stat_widget.set_input_mode(false);
                 }
                 _ => {
-                    for (pos, state) in &mut self.widgets {
+                    for (pos, widget) in &mut self.widgets {
                         if pos == &self.cursor {
-                            state.handle_key_event(event);
+                            widget.borrow_mut().handle_key_event(event);
                             break;
                         }
                     }
