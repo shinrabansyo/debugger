@@ -2,7 +2,7 @@ use ratatui::layout::Rect;
 use ratatui::style::{Color, Style};
 use ratatui::text::{Line, Span, Text};
 
-use sb_emu::State as EmuState;
+use sb_emu::Emulator;
 
 use sb_dbg_tui_engine::widget::{Widget, WidgetView};
 
@@ -10,7 +10,7 @@ use sb_dbg_tui_engine::widget::{Widget, WidgetView};
 pub struct Register;
 
 impl Widget for Register {
-    fn draw(&self, _: &Rect, emu: &EmuState) -> WidgetView {
+    fn draw(&self, _: &Rect, emu: &Emulator) -> WidgetView {
         let mut lines = vec![];
 
         // PC 表示

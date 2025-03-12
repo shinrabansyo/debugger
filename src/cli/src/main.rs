@@ -1,17 +1,16 @@
-use sb_emu::step;
-use sb_emu::State as EmuState;
+use sb_emu::Emulator;
 use sb_dbg_utils::setup_from_args;
 
 fn main() -> anyhow::Result<()> {
     let (pc, dmem, imem) = setup_from_args()?;
-    let mut emu = EmuState::new(pc, &dmem, &imem);
+    let mut emu = Emulator::new(pc, &dmem, &imem);
     loop {
-        emu = step(emu)?;
+        emu.step()?;
         update_stdout(&emu);
     }
 }
 
-fn update_stdout(emu: &EmuState) {
+fn update_stdout(emu: &Emulator) {
     static mut OUTPUT_POS: usize = 0;
 
     let bef_output_pos = unsafe { OUTPUT_POS };

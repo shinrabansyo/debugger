@@ -2,9 +2,9 @@ mod reg;
 mod mem;
 mod device;
 
-use reg::Registers;
-use mem::Memory;
-use device::DeviceMap;
+pub use reg::Registers;
+pub use mem::Memory;
+pub use device::DeviceMap;
 
 #[derive(Debug, Clone)]
 pub struct State {

@@ -6,7 +6,7 @@ use ratatui::style::{Color, Style, Stylize};
 use ratatui::text::{Text, Line, Span};
 
 use sb_disasm::disassemble;
-use sb_emu::State as EmuState;
+use sb_emu::Emulator;
 
 use sb_dbg_tui_engine::widget::{Widget, WidgetView};
 
@@ -16,7 +16,7 @@ pub struct Inst {
 }
 
 impl Widget for Inst {
-    fn draw(&self, area: &Rect, emu: &EmuState) -> WidgetView {
+    fn draw(&self, area: &Rect, emu: &Emulator) -> WidgetView {
         let max_lines = area.height as i32;
 
         let mut lines = vec![];
@@ -63,7 +63,7 @@ impl Widget for Inst {
         WidgetView::default().title(" Instructions ").body(Text::from(lines))
     }
 
-    fn handle_key_event(&mut self, event: KeyEvent) {
+    fn on_key_pressed(&mut self, event: KeyEvent) {
         self.offset = match event.code {
             KeyCode::Up => self.offset - 6,
             KeyCode::Down => self.offset + 6,

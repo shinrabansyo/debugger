@@ -1,21 +1,25 @@
 mod emb_status;
 mod emb_help;
 
+use std::cell::RefCell;
 use std::cmp::{min, max};
+use std::rc::Rc;
 
 use crossterm::event::{KeyCode, KeyEvent};
+use ratatui::Frame;
 
-use sb_emu::State as EmuState;
+use sb_emu::Emulator;
 
-use crate::layout::Layout;
-use crate::widget::{Widget, WidgetView};
+use crate::layout::{Layout, LayoutBuilder};
+use crate::widget::Widget;
 use emb_status::Status;
 use emb_help::Help;
 
 #[derive(Default)]
 pub struct WorkspaceBuilder {
     name: Option<String>,
-    widgets: Vec<((i8, i8), Box<dyn Widget>)>,
+    layout: Option<Layout>,
+    stat_widget: Option<Rc<RefCell<Status>>>,
 }
 
 impl WorkspaceBuilder {
@@ -24,31 +28,44 @@ impl WorkspaceBuilder {
         self
     }
 
-    pub fn widget(mut self, pos: (i8, i8), state: Box<dyn Widget>) -> WorkspaceBuilder {
-        self.widgets.push((pos, state));
+    pub fn layout<F>(mut self, layout_fn: F) -> Self
+    where
+        F: FnOnce(&mut LayoutBuilder),
+    {
+        self.stat_widget = Some(Rc::new(RefCell::new(Status::default())));
+
+        let mut layout_builder = LayoutBuilder::new();
+        layout_builder.split_v(100, |l| {
+            layout_fn(l);
+            l.split_h(1, |l| {
+                l.put(20, &Status::upcast(self.stat_widget.as_ref().unwrap()));
+                l.put(80, &Help::new());
+            });
+        });
+
+        self.layout = Some(layout_builder.build());
         self
     }
 
     pub fn build(self) -> Workspace {
-        let mut stat_widget = Status::default();
-        stat_widget.set_workspace_name(self.name.unwrap_or("Workspace".to_string()));
+        let stat_widget = self.stat_widget.unwrap();
+        stat_widget.borrow_mut().set_workspace_name(self.name.unwrap());
 
         Workspace {
-            widgets: self.widgets,
+            layout: self.layout.unwrap(),
             stat_widget,
-            ..Default::default()
+            cursor: (0, 0),
+            input_mode: false,
         }
     }
 }
 
-#[derive(Default)]
 pub struct Workspace {
-    // ユーザ指定ウィジェット
-    widgets: Vec<((i8, i8), Box<dyn Widget>)>,
+    // UI 配置
+    layout: Layout,
 
     // 固定で持つウィジェット
-    stat_widget: Status,
-    help_widget: Help,
+    stat_widget: Rc<RefCell<Status>>,
 
     // 全体の状態
     cursor: (i8, i8),
@@ -56,48 +73,40 @@ pub struct Workspace {
 }
 
 impl Workspace {
-    pub fn affect(&self, mut emu: EmuState) -> EmuState {
-        for (_, state) in &self.widgets {
-            emu = state.affect(emu);
+    pub fn draw(&self, frame: &mut Frame, emu: &Emulator) {
+        for (_, layout, widget) in self.layout.mapping(frame.area()) {
+            let view = widget.borrow().draw(&layout, emu);
+            frame.render_widget(view, layout);
         }
-        emu
     }
 
-    pub gen fn draw(&self, layout: &Layout, emu: &EmuState) -> WidgetView {
-        /* ==== TODO ==== */
-        yield self.widgets[0].1.draw(&layout.inst, emu).selected(self.widgets[0].0 == self.cursor);
-        yield self.widgets[1].1.draw(&layout.device, emu).selected(self.widgets[1].0 == self.cursor);
-        yield self.widgets[2].1.draw(&layout.state, emu).selected(self.widgets[2].0 == self.cursor);
-        yield self.widgets[3].1.draw(&layout.memory, emu).selected(self.widgets[3].0 == self.cursor);
-        /* ==== TODO ==== */
-
-        yield self.stat_widget.draw(&layout.mode, emu);
-        yield self.help_widget.draw(&layout.help, emu);
-
-        ()
+    pub fn on_emu_updating(&self, emu: &mut Emulator) {
+        for (_, widget) in self.layout.widgets.iter() {
+            widget.borrow_mut().on_emu_updating(emu);
+        }
     }
 
-    pub fn handle_key_event(&mut self, event: KeyEvent) {
+    pub fn on_key_pressed(&mut self, event: KeyEvent) {
         if self.input_mode {
             match event.code {
                 KeyCode::Esc => {
                     self.input_mode = false;
-                    self.stat_widget.set_input_mode(false);
+                    self.stat_widget.borrow_mut().set_input_mode(false);
                 }
                 _ => {
-                    for (pos, state) in &mut self.widgets {
-                        if pos == &self.cursor {
-                            state.handle_key_event(event);
-                            break;
-                        }
-                    }
+                    // for (pos, widget) in &mut self.widgets {
+                    //     if pos == &self.cursor {
+                    //         widget.borrow_mut().on_key_pressed(event);
+                    //         break;
+                    //     }
+                    // }
                 }
             }
         } else {
             match event.code {
                 KeyCode::Char('i') => {
                     self.input_mode = true;
-                    self.stat_widget.set_input_mode(true);
+                    self.stat_widget.borrow_mut().set_input_mode(true);
                 }
                 KeyCode::Char('h') => self.cursor.0 = max(0, self.cursor.0 - 1),
                 KeyCode::Char('l') => self.cursor.0 = min(1, self.cursor.0 + 1),

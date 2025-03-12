@@ -8,12 +8,12 @@ use ratatui_image::picker::Picker;
 use ratatui_image::protocol::Protocol;
 use ratatui_image::{Image, Resize};
 
-use sb_emu::State as EmuState;
+use sb_emu::Emulator;
 use sb_dbg_tui_engine::widget::{Widget, WidgetView};
 
 pub struct Display<const W: u32, const H: u32> {
     // 表示画像
-    image_src: RefCell<DynamicImage>,
+    image_src: DynamicImage,
     image_protocol: RefCell<Protocol>,
 
     // 領域
@@ -26,15 +26,15 @@ impl<const W: u32, const H: u32> Default for Display<W, H> {
         // ratatui 表示用プロトコル準備 (仮)
         let image_protocol = new_picker()
             .new_protocol(
-                DynamicImage::new_rgb8(0, 0),
-                Rect::new(0, 0, 0, 0),
+                DynamicImage::new_rgb8(1, 1),
+                Rect::new(0, 0, 1, 1),
                 Resize::Crop(None)
             )
             .unwrap();
 
         // ウィジェット生成 & 画像表示位置の調整
         let display_widget = Display {
-            image_src: RefCell::new(DynamicImage::new_rgb8(0, 0)),
+            image_src: DynamicImage::new_rgb8(1, 1),
             image_protocol: RefCell::new(image_protocol),
             x: 0,
             y: 0,
@@ -46,14 +46,7 @@ impl<const W: u32, const H: u32> Default for Display<W, H> {
 }
 
 impl<const W: u32, const H: u32> Widget for Display<W, H> {
-    fn draw(&self, _: &Rect, emu: &EmuState) -> WidgetView {
-        // 表示更新
-        let (_, image_src) = emu.devices.get_display_stat();
-        if *self.image_src.borrow() != image_src {
-            *self.image_src.borrow_mut() = image_src;
-            self.update_view();
-        }
-
+    fn draw(&self, _: &Rect, _: &Emulator) -> WidgetView {
         // self.image の可変借用を取り，ライフタイムの解釈を変更して十分長くする
         //   ->  WidgetView の生成から描画 (=破棄) までの短い期間の参照であれば問題ない
         let mut image_ref = self.image_protocol.borrow_mut();
@@ -68,7 +61,15 @@ impl<const W: u32, const H: u32> Widget for Display<W, H> {
             .body(image)
     }
 
-    fn handle_key_event(&mut self, event: KeyEvent) {
+    fn on_emu_updating(&mut self, emu: &mut Emulator) {
+        let (_, image_src) = emu.devices.get_display_stat();
+        if self.image_src != image_src {
+            self.image_src = image_src;
+            self.update_view();
+        }
+    }
+
+    fn on_key_pressed(&mut self, event: KeyEvent) {
         match event.code {
             KeyCode::Up => {
                 self.y = max(self.y as i32 - 10, 0) as u32;
@@ -93,7 +94,7 @@ impl<const W: u32, const H: u32> Widget for Display<W, H> {
 
 impl<const W: u32, const H: u32> Display<W, H> {
     fn update_view(&self) {
-        let image_src = self.image_src.borrow();
+        let image_src = &self.image_src;
 
         let new_x = self.x;
         let new_y = self.y;

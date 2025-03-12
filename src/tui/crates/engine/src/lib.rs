@@ -9,85 +9,57 @@ use std::time::Duration;
 
 use crossterm::event::{KeyEvent, KeyCode};
 use crossterm::event;
-use ratatui::{DefaultTerminal, Frame};
+use ratatui::DefaultTerminal;
 
-use sb_emu::State as EmuState;
+use sb_emu::Emulator;
 
-use layout::LayoutManager;
 use workspace::Workspace;
 
 pub struct UI {
-    // 各 Manager の状態
-    layout_man: LayoutManager,
-    // widgets_man: WidgetsManager,
-
     // ワークスペース
     workspace_id: usize,
     workspaces: Vec<Workspace>,
 
     // エミュレータの状態
     running: bool,
-    emu: Option<EmuState>,
+    emu: Emulator,
     remain_exec_cnt: u32,
 }
 
-// Main
 impl UI {
-    pub fn new<const N: usize>(emu: EmuState, workspaces: [Workspace; N]) -> Self {
-        UI {
-            layout_man: LayoutManager::default(),
+    pub fn start<const N: usize>(emu: Emulator, workspaces: [Workspace; N]) -> anyhow::Result<()> {
+        let mut ui = UI {
             workspace_id: 0,
             workspaces: workspaces.into_iter().collect::<Vec<_>>(),
             running: true,
-            emu: Some(emu),
+            emu,
             remain_exec_cnt: 0,
-        }
+        };
+        ui.run(&mut ratatui::init())?;
+        ratatui::restore();
+        Ok(())
     }
 
-    pub fn run(&mut self, terminal: &mut DefaultTerminal) -> anyhow::Result<()> {
+    fn run(&mut self, terminal: &mut DefaultTerminal) -> anyhow::Result<()> {
         while self.running {
             // エミュレータ実行
             if self.remain_exec_cnt > 0 {
-                // 1ステップ実行
-                let emu = self.emu.take().unwrap();
-                let emu = self.workspaces[self.workspace_id].affect(emu);
-                let emu = sb_emu::step(emu).unwrap(); // (命令実行)
-
-                // 状態更新
-                self.emu = Some(emu);
+                self.emu.step()?;
+                self.workspaces[self.workspace_id].on_emu_updating(&mut self.emu);
                 self.remain_exec_cnt -= 1;
             }
 
             // 描画
-            terminal.draw(|frame| self.draw(frame))?;
+            terminal.draw(|frame| {
+                self.workspaces[self.workspace_id].draw(frame, &self.emu);
+            })?;
 
             // イベント処理
             self.handle_events()?;
         }
         Ok(())
     }
-}
 
-// Rendering
-impl UI {
-    fn draw(&mut self, frame: &mut Frame) {
-        let layout = self.layout_man.r#gen(frame);
-        let widgets = self.workspaces[self.workspace_id].draw(&layout, self.emu.as_ref().unwrap());
-
-        /* ==== TODO ==== */
-        let mut a = widgets.into_iter();
-        frame.render_widget(a.next().unwrap(), layout.inst);
-        frame.render_widget(a.next().unwrap(), layout.device);
-        frame.render_widget(a.next().unwrap(), layout.state);
-        frame.render_widget(a.next().unwrap(), layout.memory);
-        frame.render_widget(a.next().unwrap(), layout.mode);
-        frame.render_widget(a.next().unwrap(), layout.help);
-        /* ==== TODO ==== */
-    }
-}
-
-// Event Handling
-impl UI {
     fn handle_events(&mut self) -> anyhow::Result<()> {
         if event::poll(Duration::from_millis(10))? {
             match event::read()? {
@@ -119,7 +91,7 @@ impl UI {
             KeyCode::Char('q') => self.running = false,
 
             // 各ウィジェットでの処理
-            _ => self.workspaces[self.workspace_id].handle_key_event(event),
+            _ => self.workspaces[self.workspace_id].on_key_pressed(event),
         }
     }
 }

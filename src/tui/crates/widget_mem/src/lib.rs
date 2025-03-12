@@ -5,7 +5,7 @@ use ratatui::layout::Rect;
 use ratatui::style::{Color, Style};
 use ratatui::text::{Line, Text, Span};
 
-use sb_emu::State as EmuState;
+use sb_emu::Emulator;
 
 use sb_dbg_tui_engine::widget::{Widget, WidgetView};
 
@@ -15,7 +15,7 @@ pub struct Mem {
 }
 
 impl Widget for Mem {
-    fn draw(&self, area: &Rect, emu: &EmuState) -> WidgetView {
+    fn draw(&self, area: &Rect, emu: &Emulator) -> WidgetView {
         let max_lines = area.height as i32;
 
         let mut lines = vec![];
@@ -65,7 +65,7 @@ impl Widget for Mem {
         WidgetView::default().title(" Memory ").body(Text::from(lines))
     }
 
-    fn handle_key_event(&mut self, event: KeyEvent) {
+    fn on_key_pressed(&mut self, event: KeyEvent) {
         self.offset = match event.code {
             KeyCode::Up => max(0, self.offset - 16),
             KeyCode::Down => self.offset + 16,
