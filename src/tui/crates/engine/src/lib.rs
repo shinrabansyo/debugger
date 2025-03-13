@@ -100,7 +100,7 @@ impl UI {
 
         // コマンドライン描画
         let history = self.history.join("\n") + "\n";
-        let history = history + format!("> {}", self.command).as_str();
+        let history = history + format!("> {}_", self.command).as_str();
         let command_line = WidgetView::default()
             .title(" Command Line ")
             .body(Text::from(history))
