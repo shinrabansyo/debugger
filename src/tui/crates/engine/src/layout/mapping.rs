@@ -3,9 +3,9 @@ use std::collections::HashMap;
 use ratatui::layout::{Constraint, Direction, Rect};
 use ratatui::layout::Layout as RataLayout;
 
-use super::tree::raw::LayoutTree;
+use super::tree::wrapped::{LayoutTree, RcLayoutTree};
 
-pub(crate) fn mapping(tree: &LayoutTree, target: Rect) -> HashMap<u8, Rect> {
+pub(crate) fn mapping(tree: &RcLayoutTree, target: Rect) -> HashMap<u8, Rect> {
     let mut driver = MappingDriver::default();
     driver.mapping(tree, target);
     driver.result
@@ -17,12 +17,12 @@ struct MappingDriver {
 }
 
 impl MappingDriver {
-    fn mapping(&mut self, node: &LayoutTree, target: Rect) {
-        match node {
+    fn mapping(&mut self, node: &RcLayoutTree, target: Rect) {
+        match &(*node.borrow()) {
             LayoutTree::Vertical { children, .. } => {
                 let constraints = children
                     .iter()
-                    .map(|child| Constraint::Percentage(child.size()))
+                    .map(|child| Constraint::Percentage(child.borrow().size()))
                     .collect::<Vec<_>>();
                 let layout = RataLayout::default()
                     .direction(Direction::Vertical)
@@ -35,7 +35,7 @@ impl MappingDriver {
             LayoutTree::Horizontal { children, .. } => {
                 let constraints = children
                     .iter()
-                    .map(|child| Constraint::Percentage(child.size()))
+                    .map(|child| Constraint::Percentage(child.borrow().size()))
                     .collect::<Vec<_>>();
                 let layout = RataLayout::default()
                     .direction(Direction::Horizontal)
@@ -52,34 +52,36 @@ impl MappingDriver {
     }
 }
 
-
 #[cfg(test)]
 mod tests {
     use ratatui::layout::Rect;
 
-    use super::{mapping, LayoutTree};
+    use crate::layout::tree::raw::LayoutTree as RawLayoutTree;
+    use crate::layout::tree::wrapped::LayoutTree;
+    use super::mapping;
 
     #[test]
     fn mapping_1() {
-        let tree = LayoutTree::Horizontal {
+        let tree = RawLayoutTree::Horizontal {
             size: 100,
             children: vec![
-                LayoutTree::Vertical {
+                RawLayoutTree::Vertical {
                     size: 50,
                     children: vec![
-                        LayoutTree::Widget { id: 1, size: 50 },
-                        LayoutTree::Widget { id: 2, size: 50 },
+                        RawLayoutTree::Widget { id: 1, size: 50 },
+                        RawLayoutTree::Widget { id: 2, size: 50 },
                     ],
                 },
-                LayoutTree::Vertical {
+                RawLayoutTree::Vertical {
                     size: 50,
                     children: vec![
-                        LayoutTree::Widget { id: 3, size: 50 },
-                        LayoutTree::Widget { id: 4, size: 50 },
+                        RawLayoutTree::Widget { id: 3, size: 50 },
+                        RawLayoutTree::Widget { id: 4, size: 50 },
                     ],
                 },
             ],
         };
+        let tree = LayoutTree::wrap(tree);
 
         let target = Rect { x: 0, y: 0, width: 100, height: 100 };
         let layout = mapping(&tree, target);
@@ -92,31 +94,32 @@ mod tests {
 
     #[test]
     fn mapping_2() {
-        let tree = LayoutTree::Horizontal {
+        let tree = RawLayoutTree::Horizontal {
             size: 100,
             children: vec![
-                LayoutTree::Vertical {
+                RawLayoutTree::Vertical {
                     size: 50,
                     children: vec![
-                        LayoutTree::Widget { id: 1, size: 50 },
-                        LayoutTree::Widget { id: 2, size: 50 },
+                        RawLayoutTree::Widget { id: 1, size: 50 },
+                        RawLayoutTree::Widget { id: 2, size: 50 },
                     ],
                 },
-                LayoutTree::Vertical {
+                RawLayoutTree::Vertical {
                     size: 50,
                     children: vec![
-                        LayoutTree::Horizontal {
+                        RawLayoutTree::Horizontal {
                             size: 50,
                             children: vec![
-                                LayoutTree::Widget { id: 3, size: 50 },
-                                LayoutTree::Widget { id: 4, size: 50 },
+                                RawLayoutTree::Widget { id: 3, size: 50 },
+                                RawLayoutTree::Widget { id: 4, size: 50 },
                             ],
                         },
-                        LayoutTree::Widget { id: 5, size: 50 },
+                        RawLayoutTree::Widget { id: 5, size: 50 },
                     ],
                 },
             ],
         };
+        let tree = LayoutTree::wrap(tree);
 
         let target = Rect { x: 0, y: 0, width: 100, height: 100 };
         let layout = mapping(&tree, target);
@@ -130,7 +133,8 @@ mod tests {
 
     #[test]
     fn mapping_3() {
-        let tree = LayoutTree::Widget { id: 1, size: 100 };
+        let tree = RawLayoutTree::Widget { id: 1, size: 100 };
+        let tree = LayoutTree::wrap(tree);
 
         let target = Rect { x: 0, y: 0, width: 100, height: 100 };
         let layout = mapping(&tree, target);
@@ -140,27 +144,27 @@ mod tests {
 
     #[test]
     fn mapping_4() {
-        let tree = LayoutTree::Horizontal {
+        let tree = RawLayoutTree::Horizontal {
             size: 100,
             children: vec![
-                LayoutTree::Widget { id: 1, size: 50 },
-                LayoutTree::Horizontal {
+                RawLayoutTree::Widget { id: 1, size: 50 },
+                RawLayoutTree::Horizontal {
                     size: 50,
                     children: vec![
-                        LayoutTree::Widget { id: 2, size: 50 },
-                        LayoutTree::Horizontal {
+                        RawLayoutTree::Widget { id: 2, size: 50 },
+                        RawLayoutTree::Horizontal {
                             size: 50,
                             children: vec![
-                                LayoutTree::Widget { id: 3, size: 50 },
-                                LayoutTree::Horizontal {
+                                RawLayoutTree::Widget { id: 3, size: 50 },
+                                RawLayoutTree::Horizontal {
                                     size: 50,
                                     children: vec![
-                                        LayoutTree::Widget { id: 4, size: 50 },
-                                        LayoutTree::Horizontal {
+                                        RawLayoutTree::Widget { id: 4, size: 50 },
+                                        RawLayoutTree::Horizontal {
                                             size: 50,
                                             children: vec![
-                                                LayoutTree::Widget { id: 5, size: 50 },
-                                                LayoutTree::Widget { id: 6, size: 50 },
+                                                RawLayoutTree::Widget { id: 5, size: 50 },
+                                                RawLayoutTree::Widget { id: 6, size: 50 },
                                             ],
                                         }
                                     ]
@@ -171,6 +175,7 @@ mod tests {
                 },
             ],
         };
+        let tree = LayoutTree::wrap(tree);
 
         let target = Rect { x: 0, y: 0, width: 100, height: 100 };
         let layout = mapping(&tree, target);

@@ -13,13 +13,3 @@ pub(crate) enum LayoutTree {
         size: u16,
     },
 }
-
-impl LayoutTree {
-    pub(crate) fn size(&self) -> u16 {
-        match self {
-            LayoutTree::Horizontal { size, .. } => *size,
-            LayoutTree::Vertical { size, .. } => *size,
-            LayoutTree::Widget { size, .. } => *size,
-        }
-    }
-}

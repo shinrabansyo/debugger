@@ -12,10 +12,10 @@ pub(crate) use build::LayoutBuilder;
 
 use crate::widget::Widget;
 use mapping::mapping;
-use tree::raw::LayoutTree;
+use tree::wrapped::{LayoutTree, RcLayoutTree};
 
 pub struct Layout {
-    tree: LayoutTree,
+    tree: RcLayoutTree,
 }
 
 impl Layout {
@@ -25,7 +25,10 @@ impl Layout {
     {
         let mut builder = LayoutBuilder::new();
         build_fn(&mut builder);
+
         let (widgets, tree) = builder.build();
+        let tree = LayoutTree::wrap(tree);
+
         (widgets, Layout { tree })
     }
 
