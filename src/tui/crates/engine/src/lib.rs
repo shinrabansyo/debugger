@@ -140,7 +140,10 @@ impl UI {
             },
 
             // コマンドモード制御
-            KeyCode::Char('c') => self.command_mode = true,
+            KeyCode::Char('c') => {
+                self.command_mode = true;
+                self.remain_exec_cnt = 0;
+            }
 
             // ワークスペース切り替え
             KeyCode::Char(c) if c.is_digit(10) => {
