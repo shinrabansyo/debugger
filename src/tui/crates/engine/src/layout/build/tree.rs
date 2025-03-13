@@ -1,5 +1,5 @@
 #[derive(Debug, PartialEq, Eq)]
-pub(crate) enum LayoutTree {
+pub enum LayoutTree {
     Horizontal {
         size: u16,
         children: Vec<LayoutTree>,

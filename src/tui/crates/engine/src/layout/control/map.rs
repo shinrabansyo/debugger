@@ -5,7 +5,7 @@ use ratatui::layout::Layout as RataLayout;
 
 use super::tree::{LayoutTree, RcLayoutTree};
 
-pub(crate) fn map(tree: &RcLayoutTree, target: Rect) -> HashMap<u8, Rect> {
+pub fn map(tree: &RcLayoutTree, target: Rect) -> HashMap<u8, Rect> {
     let mut driver = MappingDriver::default();
     driver.mapping(tree, target);
     driver.result

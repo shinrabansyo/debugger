@@ -2,6 +2,6 @@ mod map;
 mod select;
 mod tree;
 
-pub(crate) use tree::{LayoutTree, RcLayoutTree};
-pub(crate) use select::{select, Direction};
-pub(crate) use map::map;
+pub use tree::{LayoutTree, RcLayoutTree};
+pub use select::{select, Direction};
+pub use map::map;

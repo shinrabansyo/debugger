@@ -3,14 +3,14 @@ use std::rc::Rc;
 use super::tree::{LayoutTree, RcLayoutTree};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub(crate) enum Direction {
+pub enum Direction {
     Up,
     Down,
     Left,
     Right,
 }
 
-pub(crate) fn select(node: &RcLayoutTree, direction: Direction) -> Option<RcLayoutTree> {
+pub fn select(node: &RcLayoutTree, direction: Direction) -> Option<RcLayoutTree> {
     select_to_upper(node, direction)
 }
 

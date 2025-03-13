@@ -3,10 +3,10 @@ use std::rc::Rc;
 
 use crate::layout::build::tree::LayoutTree as RawLayoutTree;
 
-pub(crate) type RcLayoutTree = Rc<RefCell<LayoutTree>>;
+pub type RcLayoutTree = Rc<RefCell<LayoutTree>>;
 
 #[derive(Debug, PartialEq, Eq)]
-pub(crate) enum LayoutTree {
+pub enum LayoutTree {
     Horizontal {
         size: u16,
         parent: Option<Rc<RefCell<LayoutTree>>>,
@@ -25,7 +25,7 @@ pub(crate) enum LayoutTree {
 }
 
 impl LayoutTree {
-    pub(crate) fn wrap(node: RawLayoutTree) -> RcLayoutTree {
+    pub fn wrap(node: RawLayoutTree) -> RcLayoutTree {
         match node {
             RawLayoutTree::Horizontal { size, children } => {
                 // ノード準備 (仮)
@@ -94,7 +94,7 @@ impl LayoutTree {
         }
     }
 
-    pub(crate) fn top_widget(node: &RcLayoutTree) -> RcLayoutTree {
+    pub fn top_widget(node: &RcLayoutTree) -> RcLayoutTree {
         match &(*node.borrow()) {
             LayoutTree::Horizontal { children, .. } => {
                 let child = children.first().unwrap();
@@ -108,7 +108,7 @@ impl LayoutTree {
         }
     }
 
-    pub(crate) fn parent(&self) -> &Option<RcLayoutTree> {
+    pub fn parent(&self) -> &Option<RcLayoutTree> {
         match self {
             LayoutTree::Horizontal { parent, .. } => parent,
             LayoutTree::Vertical { parent, .. } => parent,
@@ -116,7 +116,7 @@ impl LayoutTree {
         }
     }
 
-    pub(crate) fn size(&self) -> u16 {
+    pub fn size(&self) -> u16 {
         match self {
             LayoutTree::Horizontal { size, .. } => *size,
             LayoutTree::Vertical { size, .. } => *size,
