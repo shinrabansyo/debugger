@@ -1,9 +1,11 @@
+pub(crate) mod tree;
+
 use std::cell::RefCell;
 use std::collections::HashMap;
 use std::rc::Rc;
 
 use crate::widget::Widget;
-use super::tree::raw::LayoutTree;
+use tree::LayoutTree;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 enum SplitDirection {

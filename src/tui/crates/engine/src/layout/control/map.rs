@@ -3,9 +3,9 @@ use std::collections::HashMap;
 use ratatui::layout::{Constraint, Direction, Rect};
 use ratatui::layout::Layout as RataLayout;
 
-use super::tree::wrapped::{LayoutTree, RcLayoutTree};
+use super::tree::{LayoutTree, RcLayoutTree};
 
-pub(crate) fn mapping(tree: &RcLayoutTree, target: Rect) -> HashMap<u8, Rect> {
+pub(crate) fn map(tree: &RcLayoutTree, target: Rect) -> HashMap<u8, Rect> {
     let mut driver = MappingDriver::default();
     driver.mapping(tree, target);
     driver.result
@@ -56,12 +56,12 @@ impl MappingDriver {
 mod tests {
     use ratatui::layout::Rect;
 
-    use crate::layout::tree::raw::LayoutTree as RawLayoutTree;
-    use crate::layout::tree::wrapped::LayoutTree;
-    use super::mapping;
+    use crate::layout::build::tree::LayoutTree as RawLayoutTree;
+    use crate::layout::control::tree::LayoutTree;
+    use super::map;
 
     #[test]
-    fn mapping_1() {
+    fn map_1() {
         let tree = RawLayoutTree::Horizontal {
             size: 100,
             children: vec![
@@ -84,7 +84,7 @@ mod tests {
         let tree = LayoutTree::wrap(tree);
 
         let target = Rect { x: 0, y: 0, width: 100, height: 100 };
-        let layout = mapping(&tree, target);
+        let layout = map(&tree, target);
 
         assert_eq!(layout.get(&1), Some(&Rect { x: 0, y: 0, width: 50, height: 50 }));
         assert_eq!(layout.get(&2), Some(&Rect { x: 0, y: 50, width: 50, height: 50 }));
@@ -93,7 +93,7 @@ mod tests {
     }
 
     #[test]
-    fn mapping_2() {
+    fn map_2() {
         let tree = RawLayoutTree::Horizontal {
             size: 100,
             children: vec![
@@ -122,7 +122,7 @@ mod tests {
         let tree = LayoutTree::wrap(tree);
 
         let target = Rect { x: 0, y: 0, width: 100, height: 100 };
-        let layout = mapping(&tree, target);
+        let layout = map(&tree, target);
 
         assert_eq!(layout.get(&1), Some(&Rect { x: 0, y: 0, width: 50, height: 50 }));
         assert_eq!(layout.get(&2), Some(&Rect { x: 0, y: 50, width: 50, height: 50 }));
@@ -132,18 +132,18 @@ mod tests {
     }
 
     #[test]
-    fn mapping_3() {
+    fn map_3() {
         let tree = RawLayoutTree::Widget { id: 1, size: 100 };
         let tree = LayoutTree::wrap(tree);
 
         let target = Rect { x: 0, y: 0, width: 100, height: 100 };
-        let layout = mapping(&tree, target);
+        let layout = map(&tree, target);
 
         assert_eq!(layout.get(&1), Some(&target));
     }
 
     #[test]
-    fn mapping_4() {
+    fn map_4() {
         let tree = RawLayoutTree::Horizontal {
             size: 100,
             children: vec![
@@ -178,7 +178,7 @@ mod tests {
         let tree = LayoutTree::wrap(tree);
 
         let target = Rect { x: 0, y: 0, width: 100, height: 100 };
-        let layout = mapping(&tree, target);
+        let layout = map(&tree, target);
 
         assert_eq!(layout.get(&1), Some(&Rect { x: 0, y: 0, width: 50, height: 100 }));
         assert_eq!(layout.get(&2), Some(&Rect { x: 50, y: 0, width: 25, height: 100 }));

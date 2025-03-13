@@ -11,7 +11,8 @@ use ratatui::Frame;
 
 use sb_emu::Emulator;
 
-use crate::layout::{Layout, LayoutBuilder};
+use crate::layout::build::LayoutBuilder;
+use crate::layout::Layout;
 use crate::widget::Widget;
 use emb_status::Status;
 use emb_help::Help;
@@ -80,7 +81,7 @@ pub struct Workspace {
 
 impl Workspace {
     pub fn draw(&self, frame: &mut Frame, emu: &Emulator) {
-        for (id, area) in self.layout.mapping(frame.area()) {
+        for (id, area) in self.layout.map(frame.area()) {
             let widget = self.widgets.get(&id).unwrap();
             let view = widget.borrow().draw(&area, emu);
             frame.render_widget(view, area);

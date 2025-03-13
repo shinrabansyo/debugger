@@ -1,6 +1,5 @@
-mod build;
-mod mapping;
-mod tree;
+pub(crate) mod build;
+mod control;
 
 use std::cell::RefCell;
 use std::collections::HashMap;
@@ -8,11 +7,9 @@ use std::rc::Rc;
 
 use ratatui::layout::Rect;
 
-pub(crate) use build::LayoutBuilder;
-
 use crate::widget::Widget;
-use mapping::mapping;
-use tree::wrapped::{LayoutTree, RcLayoutTree};
+use build::LayoutBuilder;
+use control::{map, LayoutTree, RcLayoutTree};
 
 pub struct Layout {
     tree: RcLayoutTree,
@@ -32,7 +29,7 @@ impl Layout {
         (widgets, Layout { tree })
     }
 
-    pub fn mapping(&self, target: Rect) -> HashMap<u8, Rect> {
-        mapping(&self.tree, target)
+    pub fn map(&self, target: Rect) -> HashMap<u8, Rect> {
+        map(&self.tree, target)
     }
 }

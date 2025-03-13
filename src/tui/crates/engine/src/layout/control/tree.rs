@@ -1,7 +1,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 
-use super::raw::LayoutTree as RawLayoutTree;
+use crate::layout::build::tree::LayoutTree as RawLayoutTree;
 
 pub(crate) type RcLayoutTree = Rc<RefCell<LayoutTree>>;
 
