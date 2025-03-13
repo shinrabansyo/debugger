@@ -8,7 +8,7 @@ use std::time::Duration;
 
 use crossterm::event::{KeyEvent, KeyCode};
 use crossterm::event;
-use ratatui::DefaultTerminal;
+use ratatui::{DefaultTerminal, Frame};
 
 use sb_emu::Emulator;
 
@@ -34,31 +34,47 @@ impl UI {
             emu,
             remain_exec_cnt: 0,
         };
-        ui.run(&mut ratatui::init())?;
+
+        let mut terminal = ratatui::init();
+        while ui.running {
+            ui.emulate()?;
+            ui.draw(&mut terminal)?;
+            ui.handle_events()?;
+        }
         ratatui::restore();
+
         Ok(())
     }
+}
 
-    fn run(&mut self, terminal: &mut DefaultTerminal) -> anyhow::Result<()> {
-        while self.running {
-            // エミュレータ実行
-            if self.remain_exec_cnt > 0 {
-                self.emu.step()?;
-                self.workspaces[self.workspace_id].on_emu_updating(&mut self.emu);
-                self.remain_exec_cnt -= 1;
-            }
-
-            // 描画
-            terminal.draw(|frame| {
-                self.workspaces[self.workspace_id].draw(frame, &self.emu);
-            })?;
-
-            // イベント処理
-            self.handle_events()?;
+// Emulation
+impl UI {
+    fn emulate(&mut self) -> anyhow::Result<()> {
+        if self.remain_exec_cnt > 0 {
+            self.emu.step()?;
+            self.workspaces[self.workspace_id].on_emu_updating(&mut self.emu);
+            self.remain_exec_cnt -= 1;
         }
         Ok(())
     }
+}
 
+// Rendering
+impl UI {
+    fn draw(&mut self, terminal: &mut DefaultTerminal) -> anyhow::Result<()> {
+        terminal.draw(|frame| {
+            self.draw_workspace(frame);
+        })?;
+        Ok(())
+    }
+
+    fn draw_workspace(&mut self, frame: &mut Frame) {
+        self.workspaces[self.workspace_id].draw(frame, &self.emu);
+    }
+}
+
+// Event Handling
+impl UI {
     fn handle_events(&mut self) -> anyhow::Result<()> {
         if event::poll(Duration::from_millis(10))? {
             match event::read()? {
