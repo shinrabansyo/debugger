@@ -104,29 +104,25 @@ impl LayoutBuilder {
         self.widgets.insert(self.issued_id, Rc::clone(widget));
     }
 
-    pub fn build(mut self) -> Layout {
-        Layout {
-            tree: self.nodes_stack.pop().unwrap(),
-            widgets: self.widgets,
-        }
+    pub fn build(mut self) -> (HashMap<u8, Rc<RefCell<dyn Widget>>>, Layout) {
+        (self.widgets, Layout { tree: self.nodes_stack.pop().unwrap() })
     }
 }
 
 pub struct Layout {
     tree: LayoutTree,
-    pub(crate) widgets: HashMap<u8, Rc<RefCell<dyn Widget>>>,
 }
 
 impl Layout {
-    pub fn mapping(&self, target: Rect) -> Vec<(u8, Rect, Rc<RefCell<dyn Widget>>)> {
-        let mut result = vec![];
+    pub fn mapping(&self, target: Rect) -> HashMap<u8, Rect> {
+        let mut result = HashMap::new();
         self.mapping_inner(&mut result, &self.tree, target);
         result
     }
 
     fn mapping_inner(
         &self,
-        result: &mut Vec<(u8, Rect, Rc<RefCell<dyn Widget>>)>,
+        result: &mut HashMap<u8, Rect>,
         node: &LayoutTree,
         target: Rect
     ) {
@@ -157,12 +153,8 @@ impl Layout {
                     self.mapping_inner(result, child, *area);
                 }
             }
-            LayoutTree::Widget { id, .. }=> {
-                result.push((
-                    *id,
-                    target,
-                    Rc::clone(self.widgets.get(id).unwrap())
-                ))
+            LayoutTree::Widget { id, .. } => {
+                result.insert(*id, target);
             }
         }
     }
@@ -200,12 +192,13 @@ mod tests {
         });
 
         let target = Rect { x: 0, y: 0, width: 100, height: 100 };
-        let layout = builder.build().mapping(target);
+        let (_, layout) = builder.build();
+        let layout = layout.mapping(target);
 
-        assert_eq!(layout[0].1, Rect { x: 0, y: 0, width: 50, height: 50 });
-        assert_eq!(layout[1].1, Rect { x: 0, y: 50, width: 50, height: 50 });
-        assert_eq!(layout[2].1, Rect { x: 50, y: 0, width: 50, height: 50 });
-        assert_eq!(layout[3].1, Rect { x: 50, y: 50, width: 50, height: 50 });
+        assert_eq!(layout.get(&1), Some(&Rect { x: 0, y: 0, width: 50, height: 50 }));
+        assert_eq!(layout.get(&2), Some(&Rect { x: 0, y: 50, width: 50, height: 50 }));
+        assert_eq!(layout.get(&3), Some(&Rect { x: 50, y: 0, width: 50, height: 50 }));
+        assert_eq!(layout.get(&4), Some(&Rect { x: 50, y: 50, width: 50, height: 50 }));
     }
 
     #[test]
@@ -226,13 +219,14 @@ mod tests {
         });
 
         let target = Rect { x: 0, y: 0, width: 100, height: 100 };
-        let layout = builder.build().mapping(target);
+        let (_, layout) = builder.build();
+        let layout = layout.mapping(target);
 
-        assert_eq!(layout[0].1, Rect { x: 0, y: 0, width: 50, height: 50 });
-        assert_eq!(layout[1].1, Rect { x: 0, y: 50, width: 50, height: 50 });
-        assert_eq!(layout[2].1, Rect { x: 50, y: 0, width: 25, height: 50 });
-        assert_eq!(layout[3].1, Rect { x: 75, y: 0, width: 25, height: 50 });
-        assert_eq!(layout[4].1, Rect { x: 50, y: 50, width: 50, height: 50 });
+        assert_eq!(layout.get(&1), Some(&Rect { x: 0, y: 0, width: 50, height: 50 }));
+        assert_eq!(layout.get(&2), Some(&Rect { x: 0, y: 50, width: 50, height: 50 }));
+        assert_eq!(layout.get(&3), Some(&Rect { x: 50, y: 0, width: 25, height: 50 }));
+        assert_eq!(layout.get(&4), Some(&Rect { x: 75, y: 0, width: 25, height: 50 }));
+        assert_eq!(layout.get(&5), Some(&Rect { x: 50, y: 50, width: 50, height: 50 }));
     }
 
     #[test]
@@ -241,9 +235,10 @@ mod tests {
         builder.put(100, &TestWidget::<0>::new());
 
         let target = Rect { x: 0, y: 0, width: 100, height: 100 };
-        let layout = builder.build().mapping(target);
+        let (_, layout) = builder.build();
+        let layout = layout.mapping(target);
 
-        assert_eq!(layout[0].1, Rect { x: 0, y: 0, width: 100, height: 100 });
+        assert_eq!(layout.get(&1), Some(&target));
     }
 
     #[test]
@@ -267,13 +262,14 @@ mod tests {
         });
 
         let target = Rect { x: 0, y: 0, width: 100, height: 100 };
-        let layout = builder.build().mapping(target);
+        let (_, layout) = builder.build();
+        let layout = layout.mapping(target);
 
-        assert_eq!(layout[0].1, Rect { x: 0, y: 0, width: 50, height: 100 });
-        assert_eq!(layout[1].1, Rect { x: 50, y: 0, width: 25, height: 100 });
-        assert_eq!(layout[2].1, Rect { x: 75, y: 0, width: 13, height: 100 });
-        assert_eq!(layout[3].1, Rect { x: 88, y: 0, width: 6, height: 100 });
-        assert_eq!(layout[4].1, Rect { x: 94, y: 0, width: 3, height: 100 });
-        assert_eq!(layout[5].1, Rect { x: 97, y: 0, width: 3, height: 100 });
+        assert_eq!(layout.get(&1), Some(&Rect { x: 0, y: 0, width: 50, height: 100 }));
+        assert_eq!(layout.get(&2), Some(&Rect { x: 50, y: 0, width: 25, height: 100 }));
+        assert_eq!(layout.get(&3), Some(&Rect { x: 75, y: 0, width: 13, height: 100 }));
+        assert_eq!(layout.get(&4), Some(&Rect { x: 88, y: 0, width: 6, height: 100 }));
+        assert_eq!(layout.get(&5), Some(&Rect { x: 94, y: 0, width: 3, height: 100 }));
+        assert_eq!(layout.get(&6), Some(&Rect { x: 97, y: 0, width: 3, height: 100 }));
     }
 }

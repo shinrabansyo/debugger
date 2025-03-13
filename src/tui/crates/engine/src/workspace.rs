@@ -3,6 +3,7 @@ mod emb_help;
 
 use std::cell::RefCell;
 use std::cmp::{min, max};
+use std::collections::HashMap;
 use std::rc::Rc;
 
 use crossterm::event::{KeyCode, KeyEvent};
@@ -18,6 +19,7 @@ use emb_help::Help;
 #[derive(Default)]
 pub struct WorkspaceBuilder {
     name: Option<String>,
+    widgets: HashMap<u8, Rc<RefCell<dyn Widget>>>,
     layout: Option<Layout>,
     stat_widget: Option<Rc<RefCell<Status>>>,
 }
@@ -43,7 +45,9 @@ impl WorkspaceBuilder {
             });
         });
 
-        self.layout = Some(layout_builder.build());
+        let (widgets, layout) = layout_builder.build();
+        self.widgets = widgets;
+        self.layout = Some(layout);
         self
     }
 
@@ -52,6 +56,7 @@ impl WorkspaceBuilder {
         stat_widget.borrow_mut().set_workspace_name(self.name.unwrap());
 
         Workspace {
+            widgets: self.widgets,
             layout: self.layout.unwrap(),
             stat_widget,
             cursor: (0, 0),
@@ -62,6 +67,7 @@ impl WorkspaceBuilder {
 
 pub struct Workspace {
     // UI 配置
+    widgets: HashMap<u8, Rc<RefCell<dyn Widget>>>,
     layout: Layout,
 
     // 固定で持つウィジェット
@@ -74,14 +80,15 @@ pub struct Workspace {
 
 impl Workspace {
     pub fn draw(&self, frame: &mut Frame, emu: &Emulator) {
-        for (_, layout, widget) in self.layout.mapping(frame.area()) {
-            let view = widget.borrow().draw(&layout, emu);
-            frame.render_widget(view, layout);
+        for (id, area) in self.layout.mapping(frame.area()) {
+            let widget = self.widgets.get(&id).unwrap();
+            let view = widget.borrow().draw(&area, emu);
+            frame.render_widget(view, area);
         }
     }
 
     pub fn on_emu_updating(&self, emu: &mut Emulator) {
-        for (_, widget) in self.layout.widgets.iter() {
+        for (_, widget) in self.widgets.iter() {
             widget.borrow_mut().on_emu_updating(emu);
         }
     }
