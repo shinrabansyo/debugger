@@ -1,4 +1,4 @@
-pub use sb_dbg_tui_engine::workspace::WorkspaceBuilder;
+pub use sb_dbg_tui_engine::workspace::Workspace;
 pub use sb_dbg_tui_engine::UI;
 
 pub mod widget {
