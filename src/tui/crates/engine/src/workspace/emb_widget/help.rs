@@ -32,7 +32,7 @@ impl Widget for Help {
             " Auto-Exec ".into(),
             "<Space>".blue().bold(),
             " Step ".into(),
-            "<Enter> ".blue().bold(),
+            "<s> ".blue().bold(),
             "|".into(),
             " Quit ".into(),
             "<q> ".blue().bold(),

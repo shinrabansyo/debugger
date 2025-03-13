@@ -132,7 +132,7 @@ impl UI {
     fn handle_key_event_on_normal(&mut self, event: KeyEvent) {
         match event.code {
             // エミュレータ制御
-            KeyCode::Enter => self.remain_exec_cnt = 1,
+            KeyCode::Char('s') => self.remain_exec_cnt = 1,
             KeyCode::Char(' ') => if self.remain_exec_cnt == 0 {
                 self.remain_exec_cnt = u32::MAX;
             } else {
