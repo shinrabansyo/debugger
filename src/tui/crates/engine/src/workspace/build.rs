@@ -2,10 +2,10 @@ use std::cell::RefCell;
 use std::collections::HashMap;
 use std::rc::Rc;
 
-use crate::layout::build::LayoutBuilder;
-use crate::layout::Layout;
 use crate::widget::Widget;
 use super::emb_widget::{Help, Status};
+use super::layout::build::LayoutBuilder;
+use super::layout::Layout;
 use super::Workspace;
 
 #[derive(Default)]

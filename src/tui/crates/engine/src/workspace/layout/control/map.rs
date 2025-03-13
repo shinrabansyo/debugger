@@ -56,8 +56,8 @@ impl MappingDriver {
 mod tests {
     use ratatui::layout::Rect;
 
-    use crate::layout::build::tree::LayoutTree as RawLayoutTree;
-    use crate::layout::control::tree::LayoutTree;
+    use crate::workspace::layout::build::tree::LayoutTree as RawLayoutTree;
+    use crate::workspace::layout::control::tree::LayoutTree;
     use super::map;
 
     #[test]

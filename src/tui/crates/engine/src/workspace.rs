@@ -1,5 +1,6 @@
 mod build;
 mod emb_widget;
+mod layout;
 
 use std::cell::RefCell;
 use std::collections::HashMap;
@@ -10,11 +11,11 @@ use ratatui::Frame;
 
 use sb_emu::Emulator;
 
-use crate::layout::control::Direction;
-use crate::layout::Layout;
 use crate::widget::Widget;
 use build::WorkspaceBuilder;
 use emb_widget::Status;
+use layout::control::Direction;
+use layout::Layout;
 
 pub struct Workspace {
     // UI 配置

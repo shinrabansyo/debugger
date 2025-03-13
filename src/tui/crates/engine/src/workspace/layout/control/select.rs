@@ -97,8 +97,8 @@ fn select_to_lower(node: &RcLayoutTree, direction: Direction) -> Option<RcLayout
 mod tests {
     use std::rc::Rc;
 
-    use crate::layout::build::tree::LayoutTree as RawLayoutTree;
-    use crate::layout::control::tree::{LayoutTree, RcLayoutTree};
+    use crate::workspace::layout::build::tree::LayoutTree as RawLayoutTree;
+    use crate::workspace::layout::control::tree::{LayoutTree, RcLayoutTree};
     use super::{select, Direction};
 
     #[test]
