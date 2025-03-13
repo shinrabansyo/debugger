@@ -133,14 +133,20 @@ impl UI {
         match event.code {
             // エミュレータ制御
             KeyCode::Char('s') => self.remain_exec_cnt = 1,
-            KeyCode::Char(' ') => if self.remain_exec_cnt == 0 {
-                self.remain_exec_cnt = u32::MAX;
-            } else {
-                self.remain_exec_cnt = 0;
-            },
+            KeyCode::Char(' ') => {
+                if self.remain_exec_cnt == 0 {
+                    self.remain_exec_cnt = u32::MAX;
+                } else {
+                    self.remain_exec_cnt = 0;
+                }
+            }
+            KeyCode::Char('c') => {
+                self.remain_exec_cnt = 1;
+                self.debugger.run_until_break().unwrap();
+            }
 
             // コマンドモード制御
-            KeyCode::Char('c') => {
+            KeyCode::Enter => {
                 self.command_mode = true;
                 self.remain_exec_cnt = 0;
             }

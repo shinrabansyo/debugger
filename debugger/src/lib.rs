@@ -25,3 +25,16 @@ impl DerefMut for Debugger {
         &mut self.emu
     }
 }
+
+impl Debugger {
+    pub fn run_until_break(&mut self) -> anyhow::Result<()> {
+        // TODO
+        loop {
+            let inst = self.imem.read::<6>(self.pc as usize)?;
+            if inst == 0x0000_0003 {
+                return Ok(());
+            }
+            self.step()?;
+        }
+    }
+}
