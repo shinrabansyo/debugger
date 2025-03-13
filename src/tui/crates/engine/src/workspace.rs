@@ -30,22 +30,22 @@ impl WorkspaceBuilder {
         self
     }
 
-    pub fn layout<F>(mut self, layout_fn: F) -> Self
+    pub fn layout<F>(mut self, build_fn: F) -> Self
     where
         F: FnOnce(&mut LayoutBuilder),
     {
         self.stat_widget = Some(Rc::new(RefCell::new(Status::default())));
 
-        let mut layout_builder = LayoutBuilder::new();
-        layout_builder.split_v(100, |l| {
-            layout_fn(l);
-            l.split_h(1, |l| {
-                l.put(20, &Status::upcast(self.stat_widget.as_ref().unwrap()));
-                l.put(80, &Help::new());
+        let (widgets, layout) = Layout::build(|l| {
+            l.split_v(100, |l| {
+                build_fn(l);
+                l.split_h(1, |l| {
+                    l.put(20, &Status::upcast(self.stat_widget.as_ref().unwrap()));
+                    l.put(80, &Help::new());
+                });
             });
         });
 
-        let (widgets, layout) = layout_builder.build();
         self.widgets = widgets;
         self.layout = Some(layout);
         self

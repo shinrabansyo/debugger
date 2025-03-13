@@ -4,7 +4,6 @@ use std::rc::Rc;
 
 use crate::widget::Widget;
 use super::tree::raw::LayoutTree;
-use super::Layout;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 enum SplitDirection {
@@ -77,8 +76,8 @@ impl LayoutBuilder {
         self.widgets.insert(self.issued_id, Rc::clone(widget));
     }
 
-    pub fn build(mut self) -> (HashMap<u8, Rc<RefCell<dyn Widget>>>, Layout) {
-        (self.widgets, Layout { tree: self.nodes_stack.pop().unwrap() })
+    pub(crate) fn build(mut self) -> (HashMap<u8, Rc<RefCell<dyn Widget>>>, LayoutTree) {
+        (self.widgets, self.nodes_stack.pop().unwrap())
     }
 }
 
