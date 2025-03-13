@@ -94,6 +94,28 @@ impl LayoutTree {
         }
     }
 
+    pub(crate) fn top_widget(node: &RcLayoutTree) -> RcLayoutTree {
+        match &(*node.borrow()) {
+            LayoutTree::Horizontal { children, .. } => {
+                let child = children.first().unwrap();
+                LayoutTree::top_widget(child)
+            }
+            LayoutTree::Vertical { children, .. } => {
+                let child = children.first().unwrap();
+                LayoutTree::top_widget(child)
+            }
+            LayoutTree::Widget { .. } => Rc::clone(node),
+        }
+    }
+
+    pub(crate) fn parent(&self) -> &Option<RcLayoutTree> {
+        match self {
+            LayoutTree::Horizontal { parent, .. } => parent,
+            LayoutTree::Vertical { parent, .. } => parent,
+            LayoutTree::Widget { parent, .. } => parent,
+        }
+    }
+
     pub(crate) fn size(&self) -> u16 {
         match self {
             LayoutTree::Horizontal { size, .. } => *size,

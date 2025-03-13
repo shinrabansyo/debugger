@@ -2,7 +2,6 @@ mod emb_status;
 mod emb_help;
 
 use std::cell::RefCell;
-use std::cmp::{min, max};
 use std::collections::HashMap;
 use std::rc::Rc;
 
@@ -12,6 +11,7 @@ use ratatui::Frame;
 use sb_emu::Emulator;
 
 use crate::layout::build::LayoutBuilder;
+use crate::layout::control::Direction;
 use crate::layout::Layout;
 use crate::widget::Widget;
 use emb_status::Status;
@@ -60,7 +60,6 @@ impl WorkspaceBuilder {
             widgets: self.widgets,
             layout: self.layout.unwrap(),
             stat_widget,
-            cursor: (0, 0),
             input_mode: false,
         }
     }
@@ -74,16 +73,16 @@ pub struct Workspace {
     // 固定で持つウィジェット
     stat_widget: Rc<RefCell<Status>>,
 
-    // 全体の状態
-    cursor: (i8, i8),
+    // モード
     input_mode: bool,
 }
 
 impl Workspace {
     pub fn draw(&self, frame: &mut Frame, emu: &Emulator) {
+        let cursor = self.layout.get_cursor();
         for (id, area) in self.layout.map(frame.area()) {
             let widget = self.widgets.get(&id).unwrap();
-            let view = widget.borrow().draw(&area, emu);
+            let view = widget.borrow().draw(&area, emu).selected(cursor == id);
             frame.render_widget(view, area);
         }
     }
@@ -102,12 +101,9 @@ impl Workspace {
                     self.stat_widget.borrow_mut().set_input_mode(false);
                 }
                 _ => {
-                    // for (pos, widget) in &mut self.widgets {
-                    //     if pos == &self.cursor {
-                    //         widget.borrow_mut().on_key_pressed(event);
-                    //         break;
-                    //     }
-                    // }
+                    let cursor = self.layout.get_cursor();
+                    let widget = self.widgets.get(&cursor).unwrap();
+                    widget.borrow_mut().on_key_pressed(event);
                 }
             }
         } else {
@@ -116,10 +112,10 @@ impl Workspace {
                     self.input_mode = true;
                     self.stat_widget.borrow_mut().set_input_mode(true);
                 }
-                KeyCode::Char('h') => self.cursor.0 = max(0, self.cursor.0 - 1),
-                KeyCode::Char('l') => self.cursor.0 = min(1, self.cursor.0 + 1),
-                KeyCode::Char('k') => self.cursor.1 = max(0, self.cursor.1 - 1),
-                KeyCode::Char('j') => self.cursor.1 = min(1, self.cursor.1 + 1),
+                KeyCode::Char('h') => self.layout.move_cursor(Direction::Left),
+                KeyCode::Char('l') => self.layout.move_cursor(Direction::Right),
+                KeyCode::Char('k') => self.layout.move_cursor(Direction::Up),
+                KeyCode::Char('j') => self.layout.move_cursor(Direction::Down),
                 _ => {}
             }
         }
