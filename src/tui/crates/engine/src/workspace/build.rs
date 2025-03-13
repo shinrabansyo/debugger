@@ -51,7 +51,7 @@ impl WorkspaceBuilder {
             widgets: self.widgets,
             layout: self.layout.unwrap(),
             stat_widget,
-            input_mode: false,
+            control_mode: false,
         }
     }
 }

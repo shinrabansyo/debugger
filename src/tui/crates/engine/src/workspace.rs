@@ -26,7 +26,7 @@ pub struct Workspace {
     stat_widget: Rc<RefCell<Status>>,
 
     // モード
-    input_mode: bool,
+    control_mode: bool,
 }
 
 impl Workspace {
@@ -50,11 +50,11 @@ impl Workspace {
     }
 
     pub fn on_key_pressed(&mut self, event: KeyEvent) {
-        if self.input_mode {
+        if self.control_mode {
             match event.code {
                 KeyCode::Esc => {
-                    self.input_mode = false;
-                    self.stat_widget.borrow_mut().set_input_mode(false);
+                    self.control_mode = false;
+                    self.stat_widget.borrow_mut().set_control_mode(false);
                 }
                 _ => {
                     let cursor = self.layout.get_cursor();
@@ -65,8 +65,8 @@ impl Workspace {
         } else {
             match event.code {
                 KeyCode::Char('i') => {
-                    self.input_mode = true;
-                    self.stat_widget.borrow_mut().set_input_mode(true);
+                    self.control_mode = true;
+                    self.stat_widget.borrow_mut().set_control_mode(true);
                 }
                 KeyCode::Char('h') => self.layout.move_cursor(Direction::Left),
                 KeyCode::Char('l') => self.layout.move_cursor(Direction::Right),
