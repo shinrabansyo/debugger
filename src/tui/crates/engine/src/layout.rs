@@ -37,6 +37,15 @@ impl Layout {
         }
     }
 
+    pub fn try_move_cursor(&self, direction: Direction) -> u8 {
+        if let Some(cursor) = select(&self.cursor, direction) {
+            if let LayoutTree::Widget { id, .. } = &(*cursor.borrow()) {
+                return *id;
+            }
+        }
+        self.get_cursor()
+    }
+
     pub fn get_cursor(&self) -> u8 {
         if let LayoutTree::Widget { id, .. } = &(*self.cursor.borrow()) {
             *id

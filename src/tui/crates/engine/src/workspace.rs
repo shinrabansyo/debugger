@@ -115,7 +115,13 @@ impl Workspace {
                 KeyCode::Char('h') => self.layout.move_cursor(Direction::Left),
                 KeyCode::Char('l') => self.layout.move_cursor(Direction::Right),
                 KeyCode::Char('k') => self.layout.move_cursor(Direction::Up),
-                KeyCode::Char('j') => self.layout.move_cursor(Direction::Down),
+                KeyCode::Char('j') => {
+                    // 一番下のライン (Stat や Help) に移動する場合は移動を拒否
+                    let new_cursor = self.layout.try_move_cursor(Direction::Down);
+                    if new_cursor != (self.widgets.len() - 1) as u8 {
+                        self.layout.move_cursor(Direction::Down);
+                    }
+                }
                 _ => {}
             }
         }
