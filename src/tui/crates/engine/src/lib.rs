@@ -163,8 +163,7 @@ impl UI {
             KeyCode::Esc => self.command_mode = false,
 
             // コマンド入力
-            KeyCode::Char(' ') => self.command.push(' '),
-            KeyCode::Char(c) if c.is_alphanumeric() => self.command.push(c),
+            KeyCode::Char(c) if c.is_ascii() => self.command.push(c),
             KeyCode::Backspace if !self.command.is_empty() => { self.command.pop(); },
             KeyCode::Enter => self.command.clear(),
 
