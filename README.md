@@ -5,6 +5,7 @@
 - [helloworld](examples/helloworld)
 - [fizzbuzz](examples/fizzbuzz/)
 - [ichimatsu](examples/ichimatsu/)
+- [seccamp2025_slice](examples/seccamp2025_slide/)
 
 ## Command
 
