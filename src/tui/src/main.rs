@@ -1,7 +1,7 @@
 use sb_emu::Emulator;
 use sb_dbg_tui::prelude::*;
 use sb_dbg_tui::widget::{Inst, Register, Mem, Gpout, Uart, Display};
-use sb_dbg_tui::{UI, WorkspaceBuilder};
+use sb_dbg_tui::{UI, Workspace};
 use sb_dbg_utils::setup_from_args;
 
 fn main() -> anyhow::Result<()> {
@@ -31,7 +31,7 @@ fn main() -> anyhow::Result<()> {
         |            |                     |
         +------------+---------------------+
         */
-        WorkspaceBuilder::default()
+        Workspace::builder()
             .name("Main View")
             .layout(|l| {
                 l.split_h(100, |l| {

@@ -12,15 +12,15 @@ use crate::widget::{Widget, WidgetView};
 #[derive(Default)]
 pub struct Status {
     workspace_name: String,
-    input_mode: bool,
+    control_mode: bool,
 }
 
 impl Widget for Status {
     fn draw(&self, _: &Rect, _: &Emulator) -> WidgetView {
-        let mode_line = if self.input_mode {
+        let mode_line = if self.control_mode {
             Line::from(vec![
                 format!("{} / ", self.workspace_name).into(),
-                "INPUT".red().bold(),
+                "CONTROL".red().bold(),
             ])
         } else {
             Line::from(vec![
@@ -42,7 +42,7 @@ impl Status {
         self.workspace_name = name;
     }
 
-    pub(crate) fn set_input_mode(&mut self, input_mode: bool) {
-        self.input_mode = input_mode;
+    pub(crate) fn set_control_mode(&mut self, enable: bool) {
+        self.control_mode = enable;
     }
 }

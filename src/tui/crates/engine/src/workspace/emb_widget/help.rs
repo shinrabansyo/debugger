@@ -12,7 +12,7 @@ pub struct Help;
 impl Widget for Help {
     fn draw(&self,_: &Rect, _: &Emulator) -> WidgetView {
         let help_line = Line::from(vec![
-            " Input Mode ".into(),
+            " Control Mode ".into(),
             "<i>".blue().bold(),
             " Move Mode ".into(),
             "<Esc> ".blue().bold(),
