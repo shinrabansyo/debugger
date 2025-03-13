@@ -10,8 +10,8 @@ pub use device::DeviceMap;
 pub struct State {
     pub pc: u32,
     pub regs: Registers,
-    pub dmem: Memory<{1024 * 4}>,
-    pub imem: Memory<{1024 * 6}>,
+    pub dmem: Memory<{1 * 1024 * 1024}>,
+    pub imem: Memory<{1 * 1024 * 1024}>,
     pub devices: DeviceMap,
 }
 
