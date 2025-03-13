@@ -9,38 +9,89 @@ pub(crate) type RcLayoutTree = Rc<RefCell<LayoutTree>>;
 pub(crate) enum LayoutTree {
     Horizontal {
         size: u16,
+        parent: Option<Rc<RefCell<LayoutTree>>>,
         children: Vec<Rc<RefCell<LayoutTree>>>,
     },
     Vertical {
         size: u16,
+        parent: Option<Rc<RefCell<LayoutTree>>>,
         children: Vec<Rc<RefCell<LayoutTree>>>,
     },
     Widget {
         id: u8,
         size: u16,
+        parent: Option<Rc<RefCell<LayoutTree>>>,
     },
 }
 
 impl LayoutTree {
-    pub(crate) fn wrap(raw: RawLayoutTree) -> RcLayoutTree {
-        let tree = match raw {
+    pub(crate) fn wrap(node: RawLayoutTree) -> RcLayoutTree {
+        match node {
             RawLayoutTree::Horizontal { size, children } => {
+                // ノード準備 (仮)
+                let node = Rc::new(RefCell::new(LayoutTree::Horizontal {
+                    size,
+                    parent: None,
+                    children: vec![],
+                }));
+
+                // 子ノードセットアップ
                 let children = children
                     .into_iter()
                     .map(LayoutTree::wrap)
-                    .collect();
-                LayoutTree::Horizontal { size, children }
+                    .collect::<Vec<_>>();
+                for child in &children {
+                    child.borrow_mut().set_parent(Rc::clone(&node));
+                }
+
+                // 現ノードに対して子ノードを設定
+                node.borrow_mut().set_children(children);
+
+                node
             }
             RawLayoutTree::Vertical { size, children } => {
+                // ノード準備 (仮)
+                let node = Rc::new(RefCell::new(LayoutTree::Vertical {
+                    size,
+                    parent: None,
+                    children: vec![],
+                }));
+
+                // 子ノードセットアップ
                 let children = children
                     .into_iter()
                     .map(LayoutTree::wrap)
-                    .collect();
-                LayoutTree::Vertical { size, children }
+                    .collect::<Vec<_>>();
+                for child in &children {
+                    child.borrow_mut().set_parent(Rc::clone(&node));
+                }
+
+                // 現ノードに対して子ノードを設定
+                node.borrow_mut().set_children(children);
+
+                node
             }
-            RawLayoutTree::Widget { id, size } => LayoutTree::Widget { id, size },
-        };
-        Rc::new(RefCell::new(tree))
+            RawLayoutTree::Widget { id, size } => {
+                let node = LayoutTree::Widget { id, size, parent: None };
+                Rc::new(RefCell::new(node))
+            }
+        }
+    }
+
+    fn set_parent(&mut self, parent: RcLayoutTree) {
+        match self {
+            LayoutTree::Horizontal { parent: p, .. } => *p = Some(parent),
+            LayoutTree::Vertical { parent: p, .. } => *p = Some(parent),
+            LayoutTree::Widget { parent: p, .. } => *p = Some(parent),
+        }
+    }
+
+    fn set_children(&mut self, children: Vec<RcLayoutTree>) {
+        match self {
+            LayoutTree::Horizontal { children: c, .. } => *c = children,
+            LayoutTree::Vertical { children: c, .. } => *c = children,
+            _ => unreachable!(),
+        }
     }
 
     pub(crate) fn size(&self) -> u16 {
