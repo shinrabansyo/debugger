@@ -90,7 +90,7 @@
         addi r5 = r5, 1
 
         // ループ終了判定
-        addi r8 = r0, 64
+        addi r8 = r0, 128
         beq r0, (r5, r8) -> @loop_h.end.func_main
         beq r0, (r0, r0) -> @loop_h.func_main
 

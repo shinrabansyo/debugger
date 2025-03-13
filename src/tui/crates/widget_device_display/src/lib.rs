@@ -8,7 +8,7 @@ use ratatui_image::picker::Picker;
 use ratatui_image::protocol::Protocol;
 use ratatui_image::{Image, Resize};
 
-use sb_emu::Emulator;
+use sb_dbg::Debugger;
 use sb_dbg_tui_engine::widget::{Widget, WidgetView};
 
 pub struct Display<const W: u32, const H: u32> {
@@ -46,7 +46,7 @@ impl<const W: u32, const H: u32> Default for Display<W, H> {
 }
 
 impl<const W: u32, const H: u32> Widget for Display<W, H> {
-    fn draw(&self, _: &Rect, _: &Emulator) -> WidgetView {
+    fn draw(&self, _: &Rect, _: &Debugger) -> WidgetView {
         // self.image の可変借用を取り，ライフタイムの解釈を変更して十分長くする
         //   ->  WidgetView の生成から描画 (=破棄) までの短い期間の参照であれば問題ない
         let mut image_ref = self.image_protocol.borrow_mut();
@@ -61,8 +61,8 @@ impl<const W: u32, const H: u32> Widget for Display<W, H> {
             .body(image)
     }
 
-    fn on_emu_updating(&mut self, emu: &mut Emulator) {
-        let (_, image_src) = emu.devices.get_display_stat();
+    fn on_debugger_updating(&mut self, debugger: &mut Debugger) {
+        let (_, image_src) = debugger.devices.get_display_stat();
         if self.image_src != image_src {
             self.image_src = image_src;
             self.update_view();

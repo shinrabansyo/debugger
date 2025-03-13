@@ -1,4 +1,5 @@
 use sb_emu::Emulator;
+use sb_dbg::Debugger;
 use sb_dbg_tui::prelude::*;
 use sb_dbg_tui::widget::{Inst, Register, Mem, Gpout, Uart, Display};
 use sb_dbg_tui::{UI, Workspace};
@@ -7,6 +8,7 @@ use sb_dbg_utils::setup_from_args;
 fn main() -> anyhow::Result<()> {
     let (pc, dmem, imem) = setup_from_args()?;
     let emu = Emulator::new(pc, &dmem, &imem);
+    let debugger = Debugger::from(emu);
 
     let inst_widget = Inst::new();
     let reg_widget = Register::new();
@@ -54,5 +56,5 @@ fn main() -> anyhow::Result<()> {
             .build(),
     ];
 
-    UI::start(emu, workspaces)
+    UI::start(debugger, workspaces)
 }

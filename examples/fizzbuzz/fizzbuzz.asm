@@ -19,6 +19,10 @@ $fizzbuzz
         addi r4 = r4, 1
         add r20 = r0, r4
 
+        // 終了判定
+        addi r5 = r0, 100
+        ble r0, (r5, r20) -> @inf_loop.func_main
+
         // 分岐 (÷15)
         add r10 = r0, r20
         addi r5 = r0, 15
@@ -62,6 +66,10 @@ $fizzbuzz
             addi r10 = r0, $fizzbuzz
             beq r1, (r0, r0) -> @func_print_str
             beq r0, (r0, r0) -> @loop.func_main
+
+    // 無限ループ
+    @inf_loop.func_main
+        beq r0, (r0, r0) -> @inf_loop.func_main
 
 @func_print_num
     // フレームポインタの退避

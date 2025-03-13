@@ -9,7 +9,7 @@ use std::rc::Rc;
 use crossterm::event::{KeyCode, KeyEvent};
 use ratatui::Frame;
 
-use sb_emu::Emulator;
+use sb_dbg::Debugger;
 
 use crate::widget::Widget;
 use build::WorkspaceBuilder;
@@ -34,18 +34,18 @@ impl Workspace {
         WorkspaceBuilder::default()
     }
 
-    pub fn draw(&self, frame: &mut Frame, emu: &Emulator) {
+    pub fn draw(&self, frame: &mut Frame, debugger: &Debugger) {
         let cursor = self.layout.get_cursor();
         for (id, area) in self.layout.map(frame.area()) {
             let widget = self.widgets.get(&id).unwrap();
-            let view = widget.borrow().draw(&area, emu).selected(cursor == id);
+            let view = widget.borrow().draw(&area, debugger).selected(cursor == id);
             frame.render_widget(view, area);
         }
     }
 
-    pub fn on_emu_updating(&self, emu: &mut Emulator) {
+    pub fn on_debugger_updating(&self, debugger: &mut Debugger) {
         for (_, widget) in self.widgets.iter() {
-            widget.borrow_mut().on_emu_updating(emu);
+            widget.borrow_mut().on_debugger_updating(debugger);
         }
     }
 

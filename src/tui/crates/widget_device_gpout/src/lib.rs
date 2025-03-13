@@ -3,15 +3,15 @@ use std::fmt::Write;
 use ratatui::layout::Rect;
 use ratatui::text::Text;
 
-use sb_emu::Emulator;
+use sb_dbg::Debugger;
 use sb_dbg_tui_engine::widget::{Widget, WidgetView};
 
 #[derive(Default)]
 pub struct Gpout;
 
 impl Widget for Gpout {
-    fn draw(&self, _: &Rect, emu: &Emulator) -> WidgetView {
-        let gpio_stat= emu.devices.get_gpio_stat();
+    fn draw(&self, _: &Rect, debugger: &Debugger) -> WidgetView {
+        let gpio_stat = debugger.devices.get_gpio_stat();
 
         let mut line_1 = String::new();
         let mut line_2 = String::new();

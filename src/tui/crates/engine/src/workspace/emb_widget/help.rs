@@ -2,7 +2,7 @@ use ratatui::layout::Rect;
 use ratatui::style::Stylize;
 use ratatui::text::Line;
 
-use sb_emu::Emulator;
+use sb_dbg::Debugger;
 
 use crate::widget::{Widget, WidgetView};
 
@@ -10,12 +10,15 @@ use crate::widget::{Widget, WidgetView};
 pub struct Help;
 
 impl Widget for Help {
-    fn draw(&self,_: &Rect, _: &Emulator) -> WidgetView {
+    fn draw(&self,_: &Rect, _: &Debugger) -> WidgetView {
         let help_line = Line::from(vec![
             " Control Mode ".into(),
             "<i>".blue().bold(),
             " Move Mode ".into(),
             "<Esc> ".blue().bold(),
+            "|".into(),
+            " Command ".into(),
+            "<Enter> ".blue().bold(),
             "|".into(),
             " Up ".into(),
             "<k>".blue().bold(),
@@ -29,7 +32,9 @@ impl Widget for Help {
             " Auto-Exec ".into(),
             "<Space>".blue().bold(),
             " Step ".into(),
-            "<Enter> ".blue().bold(),
+            "<s> ".blue().bold(),
+            "Continue ".into(),
+            "<c> ".blue().bold(),
             "|".into(),
             " Quit ".into(),
             "<q> ".blue().bold(),

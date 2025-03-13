@@ -10,5 +10,5 @@ ratatui = "0.29.0"
 ratatui-image = "5.0.0"
 image = "0.25.5"
 crossterm = "0.28.1"
-sb_emu = { workspace = true }
+sb_dbg = { workspace = true }
 sb_dbg_tui_engine = { path = "../engine" }
