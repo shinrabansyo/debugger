@@ -5,7 +5,7 @@ use ratatui::layout::Rect;
 use ratatui::style::{Color, Style};
 use ratatui::text::{Line, Text, Span};
 
-use sb_emu::Emulator;
+use sb_dbg::Debugger;
 
 use sb_dbg_tui_engine::widget::{Widget, WidgetView};
 
@@ -15,7 +15,7 @@ pub struct Mem {
 }
 
 impl Widget for Mem {
-    fn draw(&self, area: &Rect, emu: &Emulator) -> WidgetView {
+    fn draw(&self, area: &Rect, debugger: &Debugger) -> WidgetView {
         let max_lines = area.height as i32;
 
         let mut lines = vec![];
@@ -32,7 +32,7 @@ impl Widget for Mem {
             // バイト列
             for col in 0..16 {
                 let addr = row_addr + col;
-                let byte = emu.dmem.read_byte(addr).unwrap();
+                let byte = debugger.dmem.read_byte(addr).unwrap();
                 line.push(Span::styled(
                     format!(" {:02x}", byte),
                     Style::new().fg(Color::White)
@@ -47,7 +47,7 @@ impl Widget for Mem {
             // ASCII 表示
             for col in 0..16 {
                 let addr = row_addr + col;
-                let byte = emu.dmem.read_byte(addr).unwrap();
+                let byte = debugger.dmem.read_byte(addr).unwrap();
                 let c = if byte.is_ascii_alphanumeric() {
                     byte as char
                 } else {

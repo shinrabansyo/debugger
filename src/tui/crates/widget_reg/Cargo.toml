@@ -8,5 +8,5 @@ anyhow = { workspace = true }
 thiserror = { workspace = true }
 ratatui = "0.29.0"
 crossterm = "0.28.1"
-sb_emu = { workspace = true }
+sb_dbg = { workspace = true }
 sb_dbg_tui_engine = { path = "../engine" }

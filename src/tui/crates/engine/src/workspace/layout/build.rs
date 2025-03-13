@@ -87,15 +87,16 @@ impl LayoutBuilder {
 mod tests {
     use ratatui::layout::Rect;
 
-    use crate::widget::{Widget, WidgetView};
+    use sb_dbg::Debugger;
 
+    use crate::widget::{Widget, WidgetView};
     use super::{LayoutBuilder, LayoutTree};
 
     #[derive(Default)]
     struct TestWidget<const ID: usize>;
 
     impl<const ID: usize> Widget for TestWidget<ID> {
-        fn draw(&self, _: &Rect, _: &crate::Emulator) -> WidgetView {
+        fn draw(&self, _: &Rect, _: &Debugger) -> WidgetView {
             unimplemented!()
         }
     }

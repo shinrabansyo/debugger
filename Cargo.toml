@@ -3,6 +3,7 @@ resolver = "2"
 members = [
     # lib (public)
     "./disassembler",
+    "./debugger",
     "./emulator",
 
     # lib (private)
@@ -17,5 +18,6 @@ members = [
 anyhow = "1.0.93"
 thiserror = "2.0.3"
 sb_emu = { path = "./emulator" }
+sb_dbg = { path = "./debugger" }
 sb_disasm = { path = "./disassembler" }
 sb_dbg_utils = { path = "./src/utils" }

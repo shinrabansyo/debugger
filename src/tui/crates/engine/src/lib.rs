@@ -12,7 +12,7 @@ use ratatui::widgets::Clear;
 use ratatui::text::Text;
 use ratatui::{DefaultTerminal, Frame};
 
-use sb_emu::Emulator;
+use sb_dbg::Debugger;
 
 use widget::WidgetView;
 use workspace::Workspace;
@@ -29,13 +29,13 @@ pub struct UI {
     command: String,
     history: Vec<String>,
 
-    // エミュレータの状態
-    emu: Emulator,
+    // デバッガ
+    debugger: Debugger,
     remain_exec_cnt: u32,
 }
 
 impl UI {
-    pub fn start<const N: usize>(emu: Emulator, workspaces: [Workspace; N]) -> anyhow::Result<()> {
+    pub fn start<const N: usize>(debugger: Debugger, workspaces: [Workspace; N]) -> anyhow::Result<()> {
         let mut ui = UI {
             running: true,
             workspace_id: 0,
@@ -43,13 +43,13 @@ impl UI {
             command_mode: false,
             command: String::new(),
             history: vec!["Welcome!".to_string()],
-            emu,
+            debugger,
             remain_exec_cnt: 0,
         };
 
         let mut terminal = ratatui::init();
         while ui.running {
-            ui.emulate()?;
+            ui.run_debugger()?;
             ui.draw(&mut terminal)?;
             ui.handle_events()?;
         }
@@ -59,12 +59,12 @@ impl UI {
     }
 }
 
-// Emulation
+// Debug
 impl UI {
-    fn emulate(&mut self) -> anyhow::Result<()> {
+    fn run_debugger(&mut self) -> anyhow::Result<()> {
         if self.remain_exec_cnt > 0 {
-            self.emu.step()?;
-            self.workspaces[self.workspace_id].on_emu_updating(&mut self.emu);
+            self.debugger.step()?;
+            self.workspaces[self.workspace_id].on_debugger_updating(&mut self.debugger);
             self.remain_exec_cnt -= 1;
         }
         Ok(())
@@ -84,7 +84,7 @@ impl UI {
     }
 
     fn draw_workspace(&mut self, frame: &mut Frame) {
-        self.workspaces[self.workspace_id].draw(frame, &self.emu);
+        self.workspaces[self.workspace_id].draw(frame, &self.debugger);
     }
 
     fn draw_command_line(&mut self, frame: &mut Frame) {

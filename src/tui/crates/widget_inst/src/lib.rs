@@ -5,8 +5,8 @@ use ratatui::layout::Rect;
 use ratatui::style::{Color, Style, Stylize};
 use ratatui::text::{Text, Line, Span};
 
+use sb_dbg::Debugger;
 use sb_disasm::disassemble;
-use sb_emu::Emulator;
 
 use sb_dbg_tui_engine::widget::{Widget, WidgetView};
 
@@ -16,7 +16,7 @@ pub struct Inst {
 }
 
 impl Widget for Inst {
-    fn draw(&self, area: &Rect, emu: &Emulator) -> WidgetView {
+    fn draw(&self, area: &Rect, debugger: &Debugger) -> WidgetView {
         let max_lines = area.height as i32;
 
         let mut lines = vec![];
@@ -24,7 +24,7 @@ impl Widget for Inst {
             let mut line = vec![];
 
             // 表示対象命令のアドレスを計算
-            let pc = emu.pc as i32;
+            let pc = debugger.pc as i32;
             let addr = self.offset + pc + row * 6;
             if addr < 0 {
                 lines.push(Line::from(line));
@@ -43,9 +43,9 @@ impl Widget for Inst {
             let padding = " ".repeat(padding_size);
 
             // 命令
-            let raw_inst = emu.imem.read::<6>(addr).unwrap();
+            let raw_inst = debugger.imem.read::<6>(addr).unwrap();
             let assembly = disassemble(raw_inst);
-            if addr == emu.pc as usize {
+            if addr == debugger.pc as usize {
                 line.push(Span::styled(
                     format!("{:32}{}0x{:012x}", assembly, padding, raw_inst),
                     Style::new().fg(Color::Red).underlined().bold(),

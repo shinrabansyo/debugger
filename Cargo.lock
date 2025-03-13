@@ -1040,6 +1040,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "sb_dbg"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "sb_emu",
+ "thiserror 2.0.3",
+]
+
+[[package]]
 name = "sb_dbg_cli"
 version = "0.1.0"
 dependencies = [
@@ -1055,6 +1064,7 @@ version = "0.1.3"
 dependencies = [
  "anyhow",
  "ratatui",
+ "sb_dbg",
  "sb_dbg_tui_engine",
  "sb_dbg_tui_widget_device_display",
  "sb_dbg_tui_widget_device_gpout",
@@ -1075,8 +1085,8 @@ dependencies = [
  "anyhow",
  "crossterm",
  "ratatui",
+ "sb_dbg",
  "sb_disasm",
- "sb_emu",
  "thiserror 2.0.3",
 ]
 
@@ -1089,8 +1099,8 @@ dependencies = [
  "image",
  "ratatui",
  "ratatui-image",
+ "sb_dbg",
  "sb_dbg_tui_engine",
- "sb_emu",
  "thiserror 2.0.3",
 ]
 
@@ -1101,8 +1111,8 @@ dependencies = [
  "anyhow",
  "crossterm",
  "ratatui",
+ "sb_dbg",
  "sb_dbg_tui_engine",
- "sb_emu",
  "thiserror 2.0.3",
 ]
 
@@ -1113,8 +1123,8 @@ dependencies = [
  "anyhow",
  "crossterm",
  "ratatui",
+ "sb_dbg",
  "sb_dbg_tui_engine",
- "sb_emu",
  "thiserror 2.0.3",
 ]
 
@@ -1125,9 +1135,9 @@ dependencies = [
  "anyhow",
  "crossterm",
  "ratatui",
+ "sb_dbg",
  "sb_dbg_tui_engine",
  "sb_disasm",
- "sb_emu",
  "thiserror 2.0.3",
 ]
 
@@ -1138,8 +1148,8 @@ dependencies = [
  "anyhow",
  "crossterm",
  "ratatui",
+ "sb_dbg",
  "sb_dbg_tui_engine",
- "sb_emu",
  "thiserror 2.0.3",
 ]
 
@@ -1150,8 +1160,8 @@ dependencies = [
  "anyhow",
  "crossterm",
  "ratatui",
+ "sb_dbg",
  "sb_dbg_tui_engine",
- "sb_emu",
  "thiserror 2.0.3",
 ]
 

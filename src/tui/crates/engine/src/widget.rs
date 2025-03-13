@@ -9,10 +9,10 @@ use ratatui::style::Stylize;
 use ratatui::symbols::border;
 use ratatui::text::Line;
 
-use sb_emu::Emulator;
+use sb_dbg::Debugger;
 
 pub trait Widget {
-    fn draw(&self, area: &Rect, emu: &Emulator) -> WidgetView;
+    fn draw(&self, area: &Rect, debugger: &Debugger) -> WidgetView;
 
     fn new() -> Rc<RefCell<dyn Widget>>
     where
@@ -21,7 +21,7 @@ pub trait Widget {
         Rc::new(RefCell::new(Self::default()))
     }
 
-    fn on_emu_updating(&mut self, _: &mut Emulator) {}
+    fn on_debugger_updating(&mut self, _: &mut Debugger) {}
 
     fn on_key_pressed(&mut self, _: KeyEvent) {}
 }
