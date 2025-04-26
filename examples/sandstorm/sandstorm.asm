@@ -59,7 +59,7 @@
 
             // アドレス計算
             add r7 = r0, r5
-            slli r7 = r7, 6          // addr  = y * 64
+            slli r7 = r7, 7          // addr  = y * 128
             add r7 = r7, r6          // addr += x
             addi r7 = r7, 0x10000000 // addr += 0x10000000
 
@@ -71,31 +71,15 @@
             slli r9 = r4, 17         // rand_a = rand << 17
             xor r4 = r4, r9          // rand = rand ^ rand_a
 
-            // ピクセル決定 (左)
-            andi r9 = r4, 0x0000000f // p_l = rand & 0x0000000f
-            addi r11 = r0, 16
-            sll r10 = r9, r11        // pixel = p_l << 16
-
-            // xorshift 法による乱数生成
-            slli r9 = r4, 13         // rand_a = rand << 13
-            xor r4 = r4, r9          // rand = rand ^ rand_a
-            srli r9 = r4, 7          // rand_a = rand >> 7
-            xor r4 = r4, r9          // rand = rand ^ rand_a
-            slli r9 = r4, 17         // rand_a = rand << 17
-            xor r4 = r4, r9          // rand = rand ^ rand_a
-
-            // ピクセル決定 (右)
-            andi r9 = r4, 0x0000000f // p_r = rand & 0x0000000f
-            add r10 = r10, r9        // pixel += p_r
-
             // 書き込み
-            out r7[0] = r10
+            andi r10 = r4, 0xFF
+            out r7[0] = r10          // pixel = rand & 0xFF
 
             // カウンタ加算
             addi r6 = r6, 1
 
             // ループ終了判定
-            addi r8 = r0, 64
+            addi r8 = r0, 128
             beq r0, (r6, r8) -> @loop_w.end.func_main
             beq r0, (r0, r0) -> @loop_w.func_main
 

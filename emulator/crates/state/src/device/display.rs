@@ -44,18 +44,11 @@ impl Device for Display {
 
             // フレームバッファ (16色モード)
             0x1000_0000..=0x1FFF_FFFF if self.width == 128 => {
-                let x = ((addr - 0x1000_0000) % 64 * 2) as u32;
-                let y = ((addr - 0x1000_0000) / 64) as u32;
-
-                // ピクセル1
-                let pixel = (data >> 16) & 0x0F;
-                let pixel = *self.palette.get(&pixel).unwrap_or(&Rgba([0, 0, 0, 0]));
-                self.canvas.put_pixel(x, y, pixel);
-
-                // ピクセル2
+                let x = ((addr - 0x1000_0000) % 128) as u32;
+                let y = ((addr - 0x1000_0000) / 128) as u32;
                 let pixel = data & 0x0F;
                 let pixel = *self.palette.get(&pixel).unwrap_or(&Rgba([0, 0, 0, 0]));
-                self.canvas.put_pixel(x + 1, y, pixel);
+                self.canvas.put_pixel(x, y, pixel);
             }
 
             _ => {}
