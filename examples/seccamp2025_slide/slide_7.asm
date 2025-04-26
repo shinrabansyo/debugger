@@ -186,21 +186,25 @@ $image
 
             // アドレス計算
             add r7 = r0, r5
-            slli r7 = r7, 7          // addr_y  = y * 128
-            add r7 = r7, r6          // addr = addr_y + idx_x
+            slli r7 = r7, 6          // addr_y  = y * 64
+            srli r4 = r6, 1
+            add r7 = r7, r4          // addr = addr_y + idx_x
             addi r7 = r7, 0x10000000 // addr += 0x10000000
 
             // ピクセル取得
             slli r4 = r5, 7          // img_addr = y * 128
             add r4 = r4, r6          // img_addr += x
-            add r11 = r0, r4
-            lb r10 = r4[0]           // pixel = img[img_addr]
+            lb r10 = r4[0]           // pixel_even = img[img_addr]
+            lb r11 = r4[1]           // pixel_odd  = img[img_addr+1]
+            add r4 = r0, r11
+            slli r11 = r4, 4
+            or r10 = r10, r11        // pixel = (pixel_odd << 4) | pixel_even
 
             // 書き込み
             out r7[0] = r10
 
             // カウンタ加算
-            addi r6 = r6, 1
+            addi r6 = r6, 2
 
             // ループ終了判定
             addi r8 = r0, 128
