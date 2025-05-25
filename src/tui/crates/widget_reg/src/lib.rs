@@ -4,7 +4,7 @@ use ratatui::text::{Line, Span, Text};
 
 use sb_dbg::Debugger;
 
-use sb_dbg_tui_engine::widget::{Widget, WidgetView};
+use sb_emulator_tui_engine::widget::{Widget, WidgetView};
 
 #[derive(Default)]
 pub struct Register;
