@@ -1,4 +1,4 @@
-# SB Debugger
+# SB Emulator
 
 ## Examples
 
