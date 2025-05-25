@@ -1,4 +1,4 @@
-use sb_emu::Emulator;
+use sb_emulator::Emulator;
 use sb_dbg_utils::setup_from_args;
 
 fn main() -> anyhow::Result<()> {

@@ -1,10 +1,10 @@
 [package]
-name = "sb_emu_inst"
+name = "sb_emulator_inst"
 version = "0.1.3"
 edition = "2021"
 
 [dependencies]
 anyhow = { workspace = true }
 thiserror = { workspace = true }
-sb_emu_inst_macros = { path = "../inst_macros" }
-sb_emu_state = {  path = "../state" }
+sb_emulator_inst_macros = { path = "../inst_macros" }
+sb_emulator_state = {  path = "../state" }

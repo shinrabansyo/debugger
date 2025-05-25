@@ -1,6 +1,6 @@
 use std::ops::{Deref, DerefMut};
 
-use sb_emu::Emulator;
+use sb_emulator::Emulator;
 
 pub struct Debugger {
     emu: Emulator,

@@ -1,5 +1,5 @@
 [package]
-name = "sb_emu_inst_macros"
+name = "sb_emulator_inst_macros"
 version = "0.1.3"
 edition = "2021"
 
@@ -11,7 +11,7 @@ quote = "1.0"
 syn = { version ="2.0", features = ["full", "extra-traits"] }
 
 [dev-dependencies]
-sb_emu_inst_macros = { path = "." }
+sb_emulator_inst_macros = { path = "." }
 
 [lib]
 proc-macro = true

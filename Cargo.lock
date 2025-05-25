@@ -1044,7 +1044,7 @@ name = "sb_dbg"
 version = "0.1.0"
 dependencies = [
  "anyhow",
- "sb_emu",
+ "sb_emulator",
  "thiserror 2.0.3",
 ]
 
@@ -1054,7 +1054,7 @@ version = "0.1.0"
 dependencies = [
  "anyhow",
  "sb_dbg_utils",
- "sb_emu",
+ "sb_emulator",
  "thiserror 2.0.3",
 ]
 
@@ -1074,7 +1074,7 @@ dependencies = [
  "sb_dbg_tui_widget_reg",
  "sb_dbg_utils",
  "sb_disasm",
- "sb_emu",
+ "sb_emulator",
  "thiserror 2.0.3",
 ]
 
@@ -1184,39 +1184,39 @@ dependencies = [
 ]
 
 [[package]]
-name = "sb_emu"
+name = "sb_emulator"
 version = "0.1.3"
 dependencies = [
  "anyhow",
- "sb_emu_inst",
- "sb_emu_state",
+ "sb_emulator_inst",
+ "sb_emulator_state",
  "thiserror 2.0.3",
 ]
 
 [[package]]
-name = "sb_emu_inst"
+name = "sb_emulator_inst"
 version = "0.1.3"
 dependencies = [
  "anyhow",
- "sb_emu_inst_macros",
- "sb_emu_state",
+ "sb_emulator_inst_macros",
+ "sb_emulator_state",
  "thiserror 2.0.3",
 ]
 
 [[package]]
-name = "sb_emu_inst_macros"
+name = "sb_emulator_inst_macros"
 version = "0.1.3"
 dependencies = [
  "anyhow",
  "proc-macro2",
  "quote",
- "sb_emu_inst_macros",
+ "sb_emulator_inst_macros",
  "syn",
  "thiserror 2.0.3",
 ]
 
 [[package]]
-name = "sb_emu_state"
+name = "sb_emulator_state"
 version = "0.1.3"
 dependencies = [
  "anyhow",

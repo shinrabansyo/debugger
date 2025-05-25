@@ -1,4 +1,4 @@
-use sb_emu::Emulator;
+use sb_emulator::Emulator;
 use sb_dbg::Debugger;
 use sb_dbg_tui::prelude::*;
 use sb_dbg_tui::widget::{Inst, Register, Mem, Gpout, Uart, Display};

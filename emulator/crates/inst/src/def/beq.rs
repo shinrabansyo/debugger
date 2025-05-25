@@ -1,5 +1,5 @@
-use sb_emu_inst_macros::B_style;
-use sb_emu_state::State;
+use sb_emulator_inst_macros::B_style;
+use sb_emulator_state::State;
 
 use crate::Inst;
 
