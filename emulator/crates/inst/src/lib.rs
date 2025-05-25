@@ -1,6 +1,6 @@
 mod def;
 
-use sb_emu_state::State;
+use sb_emulator_state::State;
 
 pub use def::*;
 

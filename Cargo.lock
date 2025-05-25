@@ -1044,54 +1044,103 @@ name = "sb_dbg"
 version = "0.1.0"
 dependencies = [
  "anyhow",
- "sb_emu",
+ "sb_emulator",
  "thiserror 2.0.3",
 ]
 
 [[package]]
-name = "sb_dbg_cli"
+name = "sb_disassembler"
+version = "0.1.3"
+dependencies = [
+ "anyhow",
+ "thiserror 2.0.3",
+]
+
+[[package]]
+name = "sb_emulator"
+version = "0.1.3"
+dependencies = [
+ "anyhow",
+ "sb_emulator_inst",
+ "sb_emulator_state",
+ "thiserror 2.0.3",
+]
+
+[[package]]
+name = "sb_emulator_cli"
 version = "0.1.0"
 dependencies = [
  "anyhow",
- "sb_dbg_utils",
- "sb_emu",
+ "sb_emulator",
+ "sb_emulator_ui_utils",
  "thiserror 2.0.3",
 ]
 
 [[package]]
-name = "sb_dbg_tui"
+name = "sb_emulator_inst"
+version = "0.1.3"
+dependencies = [
+ "anyhow",
+ "sb_emulator_inst_macros",
+ "sb_emulator_state",
+ "thiserror 2.0.3",
+]
+
+[[package]]
+name = "sb_emulator_inst_macros"
+version = "0.1.3"
+dependencies = [
+ "anyhow",
+ "proc-macro2",
+ "quote",
+ "sb_emulator_inst_macros",
+ "syn",
+ "thiserror 2.0.3",
+]
+
+[[package]]
+name = "sb_emulator_state"
+version = "0.1.3"
+dependencies = [
+ "anyhow",
+ "image",
+ "thiserror 2.0.3",
+]
+
+[[package]]
+name = "sb_emulator_tui"
 version = "0.1.3"
 dependencies = [
  "anyhow",
  "ratatui",
  "sb_dbg",
- "sb_dbg_tui_engine",
- "sb_dbg_tui_widget_device_display",
- "sb_dbg_tui_widget_device_gpout",
- "sb_dbg_tui_widget_device_uart",
- "sb_dbg_tui_widget_inst",
- "sb_dbg_tui_widget_mem",
- "sb_dbg_tui_widget_reg",
- "sb_dbg_utils",
- "sb_disasm",
- "sb_emu",
+ "sb_disassembler",
+ "sb_emulator",
+ "sb_emulator_tui_engine",
+ "sb_emulator_tui_widget_device_display",
+ "sb_emulator_tui_widget_device_gpout",
+ "sb_emulator_tui_widget_device_uart",
+ "sb_emulator_tui_widget_inst",
+ "sb_emulator_tui_widget_mem",
+ "sb_emulator_tui_widget_reg",
+ "sb_emulator_ui_utils",
  "thiserror 2.0.3",
 ]
 
 [[package]]
-name = "sb_dbg_tui_engine"
+name = "sb_emulator_tui_engine"
 version = "0.1.0"
 dependencies = [
  "anyhow",
  "crossterm",
  "ratatui",
  "sb_dbg",
- "sb_disasm",
+ "sb_disassembler",
  "thiserror 2.0.3",
 ]
 
 [[package]]
-name = "sb_dbg_tui_widget_device_display"
+name = "sb_emulator_tui_widget_device_display"
 version = "0.1.0"
 dependencies = [
  "anyhow",
@@ -1100,127 +1149,78 @@ dependencies = [
  "ratatui",
  "ratatui-image",
  "sb_dbg",
- "sb_dbg_tui_engine",
+ "sb_emulator_tui_engine",
  "thiserror 2.0.3",
 ]
 
 [[package]]
-name = "sb_dbg_tui_widget_device_gpout"
+name = "sb_emulator_tui_widget_device_gpout"
 version = "0.1.0"
 dependencies = [
  "anyhow",
  "crossterm",
  "ratatui",
  "sb_dbg",
- "sb_dbg_tui_engine",
+ "sb_emulator_tui_engine",
  "thiserror 2.0.3",
 ]
 
 [[package]]
-name = "sb_dbg_tui_widget_device_uart"
+name = "sb_emulator_tui_widget_device_uart"
 version = "0.1.0"
 dependencies = [
  "anyhow",
  "crossterm",
  "ratatui",
  "sb_dbg",
- "sb_dbg_tui_engine",
+ "sb_emulator_tui_engine",
  "thiserror 2.0.3",
 ]
 
 [[package]]
-name = "sb_dbg_tui_widget_inst"
+name = "sb_emulator_tui_widget_inst"
 version = "0.1.0"
 dependencies = [
  "anyhow",
  "crossterm",
  "ratatui",
  "sb_dbg",
- "sb_dbg_tui_engine",
- "sb_disasm",
+ "sb_disassembler",
+ "sb_emulator_tui_engine",
  "thiserror 2.0.3",
 ]
 
 [[package]]
-name = "sb_dbg_tui_widget_mem"
+name = "sb_emulator_tui_widget_mem"
 version = "0.1.0"
 dependencies = [
  "anyhow",
  "crossterm",
  "ratatui",
  "sb_dbg",
- "sb_dbg_tui_engine",
+ "sb_emulator_tui_engine",
  "thiserror 2.0.3",
 ]
 
 [[package]]
-name = "sb_dbg_tui_widget_reg"
+name = "sb_emulator_tui_widget_reg"
 version = "0.1.0"
 dependencies = [
  "anyhow",
  "crossterm",
  "ratatui",
  "sb_dbg",
- "sb_dbg_tui_engine",
+ "sb_emulator_tui_engine",
  "thiserror 2.0.3",
 ]
 
 [[package]]
-name = "sb_dbg_utils"
+name = "sb_emulator_ui_utils"
 version = "0.1.0"
 dependencies = [
  "anyhow",
  "bpaf",
  "sb_asm",
- "thiserror 2.0.3",
-]
-
-[[package]]
-name = "sb_disasm"
-version = "0.1.3"
-dependencies = [
- "anyhow",
- "thiserror 2.0.3",
-]
-
-[[package]]
-name = "sb_emu"
-version = "0.1.3"
-dependencies = [
- "anyhow",
- "sb_emu_inst",
- "sb_emu_state",
- "thiserror 2.0.3",
-]
-
-[[package]]
-name = "sb_emu_inst"
-version = "0.1.3"
-dependencies = [
- "anyhow",
- "sb_emu_inst_macros",
- "sb_emu_state",
- "thiserror 2.0.3",
-]
-
-[[package]]
-name = "sb_emu_inst_macros"
-version = "0.1.3"
-dependencies = [
- "anyhow",
- "proc-macro2",
- "quote",
- "sb_emu_inst_macros",
- "syn",
- "thiserror 2.0.3",
-]
-
-[[package]]
-name = "sb_emu_state"
-version = "0.1.3"
-dependencies = [
- "anyhow",
- "image",
  "thiserror 2.0.3",
 ]
 

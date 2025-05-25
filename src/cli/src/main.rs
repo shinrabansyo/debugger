@@ -1,5 +1,5 @@
-use sb_emu::Emulator;
-use sb_dbg_utils::setup_from_args;
+use sb_emulator::Emulator;
+use sb_emulator_ui_utils::setup_from_args;
 
 fn main() -> anyhow::Result<()> {
     let (pc, dmem, imem) = setup_from_args()?;

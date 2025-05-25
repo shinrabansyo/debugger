@@ -1,9 +1,9 @@
 use std::ops::Deref;
 
-use sb_emu_inst::parse;
-use sb_emu_state::State;
+use sb_emulator_inst::parse;
+use sb_emulator_state::State;
 
-pub use sb_emu_state::{Registers, Memory, DeviceMap};
+pub use sb_emulator_state::{Registers, Memory, DeviceMap};
 
 #[derive(Debug, Clone)]
 pub struct Emulator {

@@ -1,10 +1,10 @@
 [package]
-name = "sb_dbg_cli"
+name = "sb_emulator_cli"
 version = "0.1.0"
 edition = "2021"
 
 [dependencies]
 anyhow = { workspace = true }
 thiserror = { workspace = true }
-sb_emu = { workspace = true }
-sb_dbg_utils = { workspace = true }
+sb_emulator = { workspace = true }
+sb_emulator_ui_utils = { path = "../utils" }

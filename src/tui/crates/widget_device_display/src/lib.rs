@@ -9,7 +9,7 @@ use ratatui_image::protocol::Protocol;
 use ratatui_image::{Image, Resize};
 
 use sb_dbg::Debugger;
-use sb_dbg_tui_engine::widget::{Widget, WidgetView};
+use sb_emulator_tui_engine::widget::{Widget, WidgetView};
 
 pub struct Display<const W: u32, const H: u32> {
     // 表示画像

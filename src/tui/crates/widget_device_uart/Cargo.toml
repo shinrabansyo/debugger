@@ -1,5 +1,5 @@
 [package]
-name = "sb_dbg_tui_widget_device_uart"
+name = "sb_emulator_tui_widget_device_uart"
 version = "0.1.0"
 edition = "2024"
 
@@ -9,4 +9,4 @@ thiserror = { workspace = true }
 ratatui = "0.29.0"
 crossterm = "0.28.1"
 sb_dbg = { workspace = true }
-sb_dbg_tui_engine = { path = "../engine" }
+sb_emulator_tui_engine = { path = "../engine" }

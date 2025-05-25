@@ -1,4 +1,4 @@
-use sb_emu_inst_macros::{I_style, S_style, R_style, B_style};
+use sb_emulator_inst_macros::{I_style, S_style, R_style, B_style};
 
 #[test]
 fn check_compile_i() {
