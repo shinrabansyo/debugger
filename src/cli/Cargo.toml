@@ -7,4 +7,4 @@ edition = "2021"
 anyhow = { workspace = true }
 thiserror = { workspace = true }
 sb_emulator = { workspace = true }
-sb_dbg_utils = { workspace = true }
+sb_emulator_ui_utils = { path = "../utils" }

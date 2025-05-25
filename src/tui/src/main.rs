@@ -3,7 +3,7 @@ use sb_dbg::Debugger;
 use sb_emulator_tui::prelude::*;
 use sb_emulator_tui::widget::{Inst, Register, Mem, Gpout, Uart, Display};
 use sb_emulator_tui::{UI, Workspace};
-use sb_dbg_utils::setup_from_args;
+use sb_emulator_ui_utils::setup_from_args;
 
 fn main() -> anyhow::Result<()> {
     let (pc, dmem, imem) = setup_from_args()?;
