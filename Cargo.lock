@@ -1049,16 +1049,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "sb_dbg_cli"
-version = "0.1.0"
-dependencies = [
- "anyhow",
- "sb_dbg_utils",
- "sb_emulator",
- "thiserror 2.0.3",
-]
-
-[[package]]
 name = "sb_dbg_utils"
 version = "0.1.0"
 dependencies = [
@@ -1083,6 +1073,16 @@ dependencies = [
  "anyhow",
  "sb_emulator_inst",
  "sb_emulator_state",
+ "thiserror 2.0.3",
+]
+
+[[package]]
+name = "sb_emulator_cli"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "sb_dbg_utils",
+ "sb_emulator",
  "thiserror 2.0.3",
 ]
 
