@@ -6,7 +6,7 @@ use ratatui::style::{Color, Style, Stylize};
 use ratatui::text::{Text, Line, Span};
 
 use sb_dbg::Debugger;
-use sb_disasm::disassemble;
+use sb_disassembler::disassemble;
 
 use sb_dbg_tui_engine::widget::{Widget, WidgetView};
 

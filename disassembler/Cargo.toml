@@ -1,5 +1,5 @@
 [package]
-name = "sb_disasm"
+name = "sb_disassembler"
 version = "0.1.3"
 edition = "2021"
 
