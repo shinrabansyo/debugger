@@ -1,6 +1,6 @@
 use std::fs::File;
-use std::path::Path;
 use std::io::{BufReader, Read};
+use std::path::Path;
 
 use sb_asm::assemble;
 
@@ -11,15 +11,21 @@ pub fn load_assembly(path: &Path) -> anyhow::Result<(Vec<u8>, Vec<u8>)> {
     Ok((dmem, imem))
 }
 
-pub fn load_bytechar(path: &Path) -> anyhow::Result<Vec<u8>> {
+pub fn load_hexfile(path: &Path) -> anyhow::Result<Vec<u8>> {
     let bytechar = read_file(path)?;
     let bytechar = str_to_bytechar(&bytechar);
     Ok(bytechar)
 }
 
-pub fn load_bytechar2(d_path: &Path, i_path: &Path) -> anyhow::Result<(Vec<u8>, Vec<u8>)> {
-    let dmem = load_bytechar(d_path)?;
-    let imem = load_bytechar(i_path)?;
+pub fn load_bytechar(
+    d_path: Option<std::path::PathBuf>,
+    i_path: &Path,
+) -> anyhow::Result<(Vec<u8>, Vec<u8>)> {
+    let imem = load_hexfile(i_path)?;
+    let dmem = match d_path {
+        Some(path) => load_hexfile(&path)?,
+        None => vec![],
+    };
     Ok((dmem, imem))
 }
 
@@ -31,11 +37,26 @@ fn read_file(path: &Path) -> anyhow::Result<String> {
     Ok(buf)
 }
 
+// 任意 byte の16進文字列を Vec<u8> に変換
+fn hexstr_to_le_bytes(hex_str: &str) -> anyhow::Result<Vec<u8>> {
+    if hex_str.len() % 2 != 0 {
+        return Err(anyhow::anyhow!("Hex string has odd length"));
+    }
+    let mut bytes = (0..hex_str.len())
+        .step_by(2)
+        .map(|i| u8::from_str_radix(&hex_str[i..i + 2], 16))
+        .collect::<Result<Vec<u8>, _>>()?;
+    bytes.reverse();
+
+    Ok(bytes)
+}
+
+// 改行区切りの16進文字列を Vec<u8> に変換
 fn str_to_bytechar(s: &str) -> Vec<u8> {
     let mut result = Vec::new();
     for line in s.lines() {
-        let byte = u8::from_str_radix(&line, 16).unwrap();
-        result.push(byte);
+        let bytes = hexstr_to_le_bytes(line).unwrap();
+        result.extend_from_slice(&bytes);
     }
     result
 }
