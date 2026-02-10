@@ -28,6 +28,7 @@ pub fn parse(raw_inst: u64) -> anyhow::Result<Box<dyn Inst>> {
         (0b00101, 0b000) => Ok(Box::new(Sw::from(raw_inst))),
         (0b00101, 0b001) => Ok(Box::new(Sh::from(raw_inst))),
         (0b00101, 0b010) => Ok(Box::new(Sb::from(raw_inst))),
+        (0b00101, 0b011) => Ok(Box::new(Isb::from(raw_inst))),
         (0b00110, 0b000) => Ok(Box::new(In::from(raw_inst))),
         (0b00110, 0b001) => Ok(Box::new(Out::from(raw_inst))),
         (0b00111, 0b000) => Ok(Box::new(And::from(raw_inst))),

@@ -22,6 +22,7 @@ pub fn disassemble(raw_inst: u64) -> String {
         (0b00101, 0b000) => s_common("sw", raw_inst),
         (0b00101, 0b001) => s_common("sh", raw_inst),
         (0b00101, 0b010) => s_common("sb", raw_inst),
+        (0b00101, 0b011) => s_common("isb", raw_inst),
         (0b00110, 0b000) => i_load("in", raw_inst),
         (0b00110, 0b001) => s_common("out", raw_inst),
         (0b00111, 0b000) => r_common("and", raw_inst),
