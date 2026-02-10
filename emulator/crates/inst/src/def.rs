@@ -16,6 +16,7 @@ mod lbu;    pub use lbu::Lbu;
 mod sw;     pub use sw::Sw;
 mod sh;     pub use sh::Sh;
 mod sb;     pub use sb::Sb;
+mod isb;    pub use isb::Isb;
 mod r#in;   pub use r#in::In;
 mod out;    pub use out::Out;
 mod and;    pub use and::And;
@@ -30,3 +31,4 @@ mod xori;   pub use xori::Xori;
 mod srli;   pub use srli::Srli;
 mod srai;   pub use srai::Srai;
 mod slli;   pub use slli::Slli;
+
