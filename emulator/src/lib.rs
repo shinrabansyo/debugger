@@ -1,13 +1,35 @@
+use std::fs::File;
+use std::io::{BufWriter, Write};
 use std::ops::Deref;
+use std::path::PathBuf;
 
 use sb_emulator_inst::parse;
-use sb_emulator_state::State;
+use sb_emulator_state::{InstLog, State};
 
-pub use sb_emulator_state::{Registers, Memory, DeviceMap};
+pub use sb_emulator_state::{DeviceMap, Memory, Registers};
 
-#[derive(Debug, Clone)]
+#[derive(Debug)]
+struct TraceDumper {
+    writer: BufWriter<File>,
+}
+impl TraceDumper {
+    fn new(path: &PathBuf) -> anyhow::Result<Self> {
+        let file = File::create(path)?;
+        let mut writer = BufWriter::new(file);
+        writer.write_all(b"")?;
+        Ok(TraceDumper { writer })
+    }
+
+    fn write(&mut self, content: &str) -> anyhow::Result<()> {
+        self.writer.write_all(content.as_bytes())?;
+        Ok(())
+    }
+}
+
+#[derive(Debug)]
 pub struct Emulator {
     state: Option<State>,
+    tracer: Option<TraceDumper>,
 }
 
 impl Deref for Emulator {
@@ -19,9 +41,13 @@ impl Deref for Emulator {
 }
 
 impl Emulator {
-    pub fn new(pc: u32, dmem: &[u8], imem: &[u8]) -> Self {
+    pub fn new(pc: u32, dmem: &[u8], imem: &[u8], trace_path: Option<PathBuf>) -> Self {
         Emulator {
             state: Some(State::new(pc, dmem, imem)),
+            tracer: match trace_path {
+                Some(path) => Some(TraceDumper::new(&path).unwrap()),
+                None => None,
+            },
         }
     }
 
@@ -29,6 +55,11 @@ impl Emulator {
         let state = self.state.take().unwrap();
         let raw_inst = state.imem.read::<6>(state.pc as usize)?;
         self.state = Some(parse(raw_inst)?.exec(state)?);
+        if let Some(tracer) = &mut self.tracer {
+            tracer.write(&String::from(
+                self.state.as_ref().unwrap().last_result.unwrap(),
+            ))?;
+        }
         Ok(())
     }
 }

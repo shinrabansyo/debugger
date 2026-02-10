@@ -1,5 +1,5 @@
 use sb_emulator_inst_macros::I_style;
-use sb_emulator_state::State;
+use sb_emulator_state::{InstType, State};
 
 use crate::Inst;
 
@@ -9,7 +9,9 @@ pub struct Jal;
 impl Inst for Jal {
     fn exec(&self, mut state: State) -> anyhow::Result<State> {
         let rs1 = state.regs.read(self.rs1)?;
-        state.regs.write(self.rd, (state.pc as i32) + 6)?;
+        let result = (state.pc as i32) + 6;
+        state.regs.write(self.rd, result)?;
+        state.add_trace(InstType::RegWrite, None, Some(result), Some(self.rd));
         state.pc = (rs1 + self.imm).try_into()?;
         Ok(state)
     }

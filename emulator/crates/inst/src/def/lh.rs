@@ -1,5 +1,5 @@
 use sb_emulator_inst_macros::I_style;
-use sb_emulator_state::State;
+use sb_emulator_state::{InstType, State};
 
 use crate::Inst;
 
@@ -12,6 +12,12 @@ impl Inst for Lh {
         let addr = (rs1 + self.imm).try_into()?;
         let data = state.dmem.read_half(addr)?;
         state.regs.write(self.rd, sext(data))?;
+        state.add_trace(
+            InstType::MemRead,
+            Some(addr),
+            Some(sext(data)),
+            Some(self.rd),
+        );
         state.pc += 6;
         Ok(state)
     }

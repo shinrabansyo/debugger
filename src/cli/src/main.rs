@@ -2,8 +2,8 @@ use sb_emulator::Emulator;
 use sb_emulator_ui_utils::setup_from_args;
 
 fn main() -> anyhow::Result<()> {
-    let (pc, dmem, imem) = setup_from_args()?;
-    let mut emu = Emulator::new(pc, &dmem, &imem);
+    let (pc, dmem, imem, trace_path) = setup_from_args()?;
+    let mut emu = Emulator::new(pc, &dmem, &imem, trace_path);
     loop {
         emu.step()?;
         update_stdout(&emu);

@@ -18,6 +18,9 @@ pub struct Options {
     /// File format [default: bytechar]
     #[bpaf(short, long, fallback(FileFormat::Assembly))]
     pub format: FileFormat,
+    /// Enable trace dump (optional)
+    #[bpaf(short, long)]
+    pub trace_path: Option<PathBuf>,
 }
 
 #[derive(Debug, Clone)]
