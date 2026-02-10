@@ -15,11 +15,16 @@ pub struct Options {
     /// Initial PC value [default: 0]
     #[bpaf(short, long, fallback(0))]
     pub pc: u32,
-    /// File format [default: bytechar]
-    #[bpaf(short, long, fallback(FileFormat::Assembly))]
+    /// File format [default: assembly]
+    #[bpaf(
+        short,
+        long,
+        fallback(FileFormat::Assembly),
+        argument("assembly|bytechar")
+    )]
     pub format: FileFormat,
     /// Enable trace dump (optional)
-    #[bpaf(short, long)]
+    #[bpaf(short, long, argument("path to trace file"))]
     pub trace_path: Option<PathBuf>,
 }
 
