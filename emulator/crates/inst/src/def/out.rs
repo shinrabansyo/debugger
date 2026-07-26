@@ -3,7 +3,7 @@ use sb_emulator_state::{InstType, State};
 
 use crate::Inst;
 
-#[S_style(0b00110, 0b001)]
+#[S_style(0b011110)]
 pub struct Out;
 
 impl Inst for Out {

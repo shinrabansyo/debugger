@@ -3,7 +3,7 @@ use sb_emulator_state::{InstType, State};
 
 use crate::Inst;
 
-#[I_style(0b00011, 0b100)]
+#[I_style(0b100100)]
 pub struct Jal;
 
 impl Inst for Jal {

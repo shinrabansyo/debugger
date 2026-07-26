@@ -7,4 +7,4 @@ edition = "2021"
 anyhow = { workspace = true }
 thiserror = { workspace = true }
 bpaf = { version = "0.9.15", features = ["derive"] }
-sb_asm = { package = "sb_asm", git = "https://github.com/shinrabansyo/assembler", rev = "16955a950b30a2c879f4acd7dff661db6d2bf741" }
+sb_asm = { package = "sb_assembler", git = "https://github.com/shinrabansyo/assembler", rev = "1f40c9597e8307595cc0b6b261e251570150ddb2" }

@@ -3,7 +3,7 @@ use sb_emulator_state::{InstType, State};
 
 use crate::Inst;
 
-#[S_style(0b00101, 0b011)]
+#[S_style(0b011101)]
 pub struct Isb;
 
 impl Inst for Isb {

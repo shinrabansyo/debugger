@@ -1031,9 +1031,9 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "28d3b2b1366ec20994f1fd18c3c594f05c5dd4bc44d8bb0c1c632c8d6829481f"
 
 [[package]]
-name = "sb_asm"
+name = "sb_assembler"
 version = "0.1.0"
-source = "git+https://github.com/shinrabansyo/assembler?rev=16955a950b30a2c879f4acd7dff661db6d2bf741#16955a950b30a2c879f4acd7dff661db6d2bf741"
+source = "git+https://github.com/shinrabansyo/assembler?rev=1f40c9597e8307595cc0b6b261e251570150ddb2#1f40c9597e8307595cc0b6b261e251570150ddb2"
 dependencies = [
  "anyhow",
  "thiserror 2.0.3",
@@ -1220,7 +1220,7 @@ version = "0.1.0"
 dependencies = [
  "anyhow",
  "bpaf",
- "sb_asm",
+ "sb_assembler",
  "thiserror 2.0.3",
 ]
 

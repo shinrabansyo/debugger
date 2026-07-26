@@ -4,11 +4,10 @@ use syn::ItemStruct;
 
 pub fn proc_macro_impl(args: TokenStream, ast: ItemStruct) -> TokenStream {
     let args = args.into_iter().collect::<Vec<_>>();
-    if args.len() != 3 {
+    if args.len() != 1 {
         panic!("Invalid number of arguments: {:?}", args.len());
     }
     let opcode = &args[0];
-    let opcode_sb = &args[2];
 
     let vis = &ast.vis;
     let ident = &ast.ident;
@@ -22,12 +21,11 @@ pub fn proc_macro_impl(args: TokenStream, ast: ItemStruct) -> TokenStream {
 
         impl From<u64> for #ident {
             fn from(raw: u64) -> Self {
-                assert_eq!(((raw >> 0) & 0b11111) as u8, #opcode);
-                assert_eq!(((raw >> 5) & 0b111) as u8, #opcode_sb);
+                assert_eq!(((raw >> 32) & 0b111111) as u8, #opcode);
                 Self {
-                    rd:  ((raw >>  8) &    0b11111) as usize,
-                    rs1: ((raw >> 13) &      0b111) as usize,
-                    imm: ((raw >> 16) & 0xffffffff) as i32,
+                    rd:  ((raw >> 43) & 0b11111) as usize,
+                    rs1: ((raw >> 38) & 0b11111) as usize,
+                    imm: (raw & 0xffffffff) as i32,
                 }
             }
         }

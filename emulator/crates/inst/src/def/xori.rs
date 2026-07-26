@@ -3,7 +3,7 @@ use sb_emulator_state::{InstType, State};
 
 use crate::Inst;
 
-#[I_style(0b01000, 0b010)]
+#[I_style(0b000100)]
 pub struct Xori;
 
 impl Inst for Xori {

@@ -3,7 +3,7 @@ use sb_emulator_state::{InstType, State};
 
 use crate::Inst;
 
-#[R_style(0b00111, 0b010)]
+#[R_style(0b001100)]
 pub struct Xor;
 
 impl Inst for Xor {

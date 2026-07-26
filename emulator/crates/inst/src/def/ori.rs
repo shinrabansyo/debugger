@@ -3,7 +3,7 @@ use sb_emulator_state::{InstType, State};
 
 use crate::Inst;
 
-#[I_style(0b01000, 0b001)]
+#[I_style(0b000011)]
 pub struct Ori;
 
 impl Inst for Ori {

@@ -1,52 +1,49 @@
-use sb_emulator_inst_macros::{I_style, S_style, R_style, B_style};
+use sb_emulator_inst_macros::{B_style, I_style, R_style, S_style};
 
 #[test]
 fn check_compile_i() {
-    #[I_style(0b10101, 0b111)]
+    #[I_style(0b100101)]
     struct TestInst;
 
     const RAW_INST: u64 = 0x0
-        | (0b10101    << 0)   // opcode
-        | (0b111      << 5)   // opcode_sub
-        | (0b00100    << 8)   // rd
-        | (0b101      << 13)  // rs1
-        | (0x12345678 << 16); // imm
+        | 0x12345678          // imm
+        | (0b100101 << 32)    // opcode
+        | (0b10101 << 38)     // rs1
+        | (0b00100 << 43); // rd
 
     let inst = TestInst::from(RAW_INST);
     assert_eq!(inst.rd, 0b00100);
-    assert_eq!(inst.rs1, 0b101);
+    assert_eq!(inst.rs1, 0b10101);
     assert_eq!(inst.imm, 0x12345678);
 }
 
 #[test]
 fn check_compile_s() {
-    #[S_style(0b10101, 0b111)]
+    #[S_style(0b100101)]
     struct TestInst;
 
     const RAW_INST: u64 = 0x0
-        | (0b10101    << 0)   // opcode
-        | (0b111      << 5)   // opcode_sub
-        | (0b00100    << 8)   // rs2
-        | (0b101      << 13)  // rs1
-        | (0x12345678 << 16); // imm
+        | 0x12345678          // imm
+        | (0b100101 << 32)    // opcode
+        | (0b10101 << 38)     // rs1
+        | (0b00100 << 43); // rs2
 
     let inst = TestInst::from(RAW_INST);
     assert_eq!(inst.rs2, 0b00100);
-    assert_eq!(inst.rs1, 0b101);
+    assert_eq!(inst.rs1, 0b10101);
     assert_eq!(inst.imm, 0x12345678);
 }
 
 #[test]
 fn check_compile_r() {
-    #[R_style(0b10101, 0b111)]
+    #[R_style(0b100101)]
     struct TestInst;
 
     const RAW_INST: u64 = 0x0
-        | (0b10101    << 0)   // opcode
-        | (0b111      << 5)   // opcode_sub
-        | (0b00100    << 8)   // rd
-        | (0b10100    << 13)  // rs1
-        | (0b00101    << 18); // rs2
+        | (0b00101 << 27)  // rs2
+        | (0b100101 << 32) // opcode
+        | (0b10100 << 38)  // rs1
+        | (0b00100 << 43); // rd
 
     let inst = TestInst::from(RAW_INST);
     assert_eq!(inst.rd, 0b00100);
@@ -56,20 +53,19 @@ fn check_compile_r() {
 
 #[test]
 fn check_compile_b() {
-    #[B_style(0b10101, 0b111)]
+    #[B_style(0b100101)]
     struct TestInst;
 
     const RAW_INST: u64 = 0x0
-        | (0b10101   << 0)   // opcode
-        | (0b111     << 5)   // opcode_sub
-        | (0b00100   << 8)   // rd
-        | (0b10100   << 13)  // rs1
-        | (0b00101   << 18)  // rs2
-        | (0x1345678 << 23); // imm
+        | 0x7345678          // imm 
+        | (0b00101 << 27)    // rs2
+        | (0b100101 << 32)   // opcode
+        | (0b10100 << 38)    // rs1
+        | (0b00100 << 43); // rd
 
     let inst = TestInst::from(RAW_INST);
     assert_eq!(inst.rd, 0b00100);
     assert_eq!(inst.rs1, 0b10100);
     assert_eq!(inst.rs2, 0b00101);
-    assert_eq!(inst.imm as u32, 0xff345678);
+    assert_eq!(inst.imm, 0xff345678);
 }

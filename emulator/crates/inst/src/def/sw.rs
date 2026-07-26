@@ -3,7 +3,7 @@ use sb_emulator_state::{InstType, State};
 
 use crate::Inst;
 
-#[S_style(0b00101, 0b000)]
+#[S_style(0b011000)]
 pub struct Sw;
 
 impl Inst for Sw {
@@ -12,12 +12,7 @@ impl Inst for Sw {
         let rs2 = state.regs.read(self.rs2)?;
         let addr = (rs1 + self.imm).try_into()?;
         state.dmem.write_word(addr, rs2 as u32)?;
-        state.add_trace(
-            InstType::MemWrite,
-            Some(addr),
-            Some(rs2),
-            None,
-        );
+        state.add_trace(InstType::MemWrite, Some(addr), Some(rs2), None);
         state.pc += 6;
         Ok(state)
     }

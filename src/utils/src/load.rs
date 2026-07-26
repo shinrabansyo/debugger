@@ -6,7 +6,7 @@ use sb_asm::assemble;
 
 pub fn load_assembly(path: &Path) -> anyhow::Result<(Vec<u8>, Vec<u8>)> {
     let asm = read_file(path)?;
-    let (dmem, imem) = assemble(&asm)?;
+    let (dmem, imem) = assemble(&asm, 1)?;
     let (dmem, imem) = (str_to_bytechar(&dmem), str_to_bytechar(&imem));
     Ok((dmem, imem))
 }
