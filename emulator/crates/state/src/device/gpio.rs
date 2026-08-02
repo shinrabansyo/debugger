@@ -6,13 +6,23 @@ pub struct Gpio {
 }
 
 impl Device for Gpio {
-    fn read(&self, _: usize) -> anyhow::Result<u32> {
-        Ok(self.state as u32)
+    fn read(&self, addr: usize) -> anyhow::Result<u32> {
+        match addr {
+            0x0000_0200 => Ok(self.state as u32), // GPOut
+            0x0000_0201 => Ok(0),                 // GPIn
+            _ => Err(anyhow::anyhow!("Invalid device addr: 0x{:08x}", addr)),
+        }
     }
 
-    fn write(&mut self, _: usize, data: u32) -> anyhow::Result<()> {
-        self.state = (data & 0xff) as u8;
-        Ok(())
+    fn write(&mut self, addr: usize, data: u32) -> anyhow::Result<()> {
+        match addr {
+            // GPOut
+            0x0000_0200 => {
+                self.state = (data & 0xff) as u8;
+                Ok(())
+            }
+            _ => Err(anyhow::anyhow!("Invalid device addr: 0x{:08x}", addr)),
+        }
     }
 }
 
