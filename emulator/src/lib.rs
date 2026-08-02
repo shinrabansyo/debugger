@@ -4,7 +4,7 @@ use std::ops::Deref;
 use std::path::PathBuf;
 
 use sb_emulator_inst::parse;
-use sb_emulator_state::{InstLog, State};
+use sb_emulator_state::State;
 
 pub use sb_emulator_state::{DeviceMap, Memory, Registers};
 

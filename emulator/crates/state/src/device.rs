@@ -4,9 +4,9 @@ mod uart;
 
 use image::DynamicImage;
 
-use uart::Uart;
-use gpio::Gpio;
 use display::Display;
+use gpio::Gpio;
+use uart::Uart;
 
 pub(super) trait Device {
     fn read(&self, addr: usize) -> anyhow::Result<u32>;
@@ -23,20 +23,26 @@ pub struct DeviceMap {
 impl DeviceMap {
     pub fn read(&self, addr: usize) -> anyhow::Result<u32> {
         match addr {
-            0x0000_0000 => self.uart.read(addr),
-            0x0000_0004 => self.gpio.read(addr),
-            0x0000_0006..=0x0000_0007 => self.display.read(addr),
-            0x1000_0000..=0x1000_ffff => self.display.read(addr),
+            0x0000_0000..0x0000_0100 => self.uart.read(addr),
+            0x0000_0100..0x0000_0200 => unimplemented!("SPI is not implemented yet"),
+            0x0000_0200..0x0000_0300 => self.gpio.read(addr),
+            0x0000_0300..0x0000_0400 => self.display.read(addr),
+            0x0000_0400..0x0000_0500 => unimplemented!("Clock Counter"),
+            0x0000_0500..0x0000_0600 => unimplemented!("Interrupt Controller"),
+            0x0100_0000..0x01ff_ffff => self.display.read(addr),
             _ => Err(anyhow::anyhow!("Invalid device addr: 0x{:08x}", addr)),
         }
     }
 
     pub fn write(&mut self, addr: usize, data: u32) -> anyhow::Result<()> {
         match addr {
-            0x0000_0000 => self.uart.write(addr, data),
-            0x0000_0004 => self.gpio.write(addr, data),
-            0x0000_0006..=0x0000_0007 => self.display.write(addr, data),
-            0x1000_0000..=0x1000_ffff => self.display.write(addr, data),
+            0x0000_0000..0x0000_0100 => self.uart.write(addr, data),
+            0x0000_0100..0x0000_0200 => unimplemented!("SPI is not implemented yet"),
+            0x0000_0200..0x0000_0300 => self.gpio.write(addr, data),
+            0x0000_0300..0x0000_0400 => self.display.write(addr, data),
+            0x0000_0400..0x0000_0500 => unimplemented!("Clock Counter"),
+            0x0000_0500..0x0000_0600 => unimplemented!("Interrupt Controller"),
+            0x0100_0000..0x01ff_ffff => self.display.write(addr, data),
             _ => Err(anyhow::anyhow!("Invalid device addr: 0x{:08x}", addr)),
         }
     }
