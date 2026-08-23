@@ -1,11 +1,15 @@
 mod display;
 mod gpio;
+pub mod interrupt;
+mod timer;
 mod uart;
 
 use image::DynamicImage;
 
 use display::Display;
 use gpio::Gpio;
+use interrupt::InterruptController;
+use timer::Timer;
 use uart::Uart;
 
 pub(super) trait Device {
@@ -17,7 +21,9 @@ pub(super) trait Device {
 pub struct DeviceMap {
     uart: Uart,
     gpio: Gpio,
+    pub interrupt: InterruptController,
     display: Display,
+    pub timer: Timer,
 }
 
 impl DeviceMap {
@@ -28,7 +34,7 @@ impl DeviceMap {
             0x0000_0200..0x0000_0300 => self.gpio.read(addr),
             0x0000_0300..0x0000_0400 => self.display.read(addr),
             0x0000_0400..0x0000_0500 => unimplemented!("Clock Counter"),
-            0x0000_0500..0x0000_0600 => unimplemented!("Interrupt Controller"),
+            0x0000_0500..0x0000_0600 => self.interrupt.read(addr),
             0x0100_0000..0x01ff_ffff => self.display.read(addr),
             _ => Err(anyhow::anyhow!("Invalid device addr: 0x{:08x}", addr)),
         }
@@ -41,7 +47,7 @@ impl DeviceMap {
             0x0000_0200..0x0000_0300 => self.gpio.write(addr, data),
             0x0000_0300..0x0000_0400 => self.display.write(addr, data),
             0x0000_0400..0x0000_0500 => unimplemented!("Clock Counter"),
-            0x0000_0500..0x0000_0600 => unimplemented!("Interrupt Controller"),
+            0x0000_0500..0x0000_0600 => self.interrupt.write(addr, data),
             0x0100_0000..0x01ff_ffff => self.display.write(addr, data),
             _ => Err(anyhow::anyhow!("Invalid device addr: 0x{:08x}", addr)),
         }

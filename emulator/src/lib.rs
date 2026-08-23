@@ -52,13 +52,29 @@ impl Emulator {
     }
 
     pub fn step(&mut self) -> anyhow::Result<()> {
-        let state = self.state.take().unwrap();
+        let mut state = self.state.take().unwrap();
+
+        // check interrupt
+        if state.devices.interrupt.get_gie() {
+            if state.devices.interrupt.get_tie() && state.devices.timer.check_interrupt() {
+                // interrupt
+                state.devices.interrupt.previous_pc = state.pc as usize;
+                state.pc = state.devices.interrupt.trap_vector as u32;
+                state.devices.interrupt.interrupt_cause = 0x01; // timer interrupt
+                state.devices.interrupt.interrupt_enable &= !0x01; // disable interrupt
+                return Ok(());
+            }
+        }
+
         let raw_inst = state.imem.read::<6>(state.pc as usize)?;
         self.state = Some(parse(raw_inst)?.exec(state)?);
         if let Some(tracer) = &mut self.tracer {
             tracer.write(&String::from(
                 self.state.as_ref().unwrap().last_result.unwrap(),
             ))?;
+        }
+        if let Some(state) = &mut self.state {
+            state.devices.timer.tick();
         }
         Ok(())
     }

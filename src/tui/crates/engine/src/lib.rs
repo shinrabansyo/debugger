@@ -1,15 +1,13 @@
-#![feature(gen_blocks)]
-
 pub mod widget;
 pub mod workspace;
 
 use std::cmp::min;
 use std::time::Duration;
 
-use crossterm::event::{KeyEvent, KeyCode};
 use crossterm::event;
-use ratatui::widgets::Clear;
+use crossterm::event::{KeyCode, KeyEvent};
 use ratatui::text::Text;
+use ratatui::widgets::Clear;
 use ratatui::{DefaultTerminal, Frame};
 
 use sb_dbg::Debugger;
@@ -35,7 +33,10 @@ pub struct UI {
 }
 
 impl UI {
-    pub fn start<const N: usize>(debugger: Debugger, workspaces: [Workspace; N]) -> anyhow::Result<()> {
+    pub fn start<const N: usize>(
+        debugger: Debugger,
+        workspaces: [Workspace; N],
+    ) -> anyhow::Result<()> {
         let mut ui = UI {
             running: true,
             workspace_id: 0,
@@ -155,7 +156,7 @@ impl UI {
             KeyCode::Char(c) if c.is_digit(10) => {
                 let num = c.to_digit(10).unwrap();
                 let num = if num == 0 { 9 } else { num - 1 };
-                self.workspace_id = min(num as usize, self.workspaces.len()-1);
+                self.workspace_id = min(num as usize, self.workspaces.len() - 1);
             }
 
             // 終了
@@ -173,7 +174,9 @@ impl UI {
 
             // コマンド入力
             KeyCode::Char(c) if c.is_ascii() => self.command.push(c),
-            KeyCode::Backspace if !self.command.is_empty() => { self.command.pop(); },
+            KeyCode::Backspace if !self.command.is_empty() => {
+                self.command.pop();
+            }
             KeyCode::Enter => self.command.clear(),
 
             _ => {}

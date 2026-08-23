@@ -2,6 +2,7 @@ mod device;
 mod mem;
 mod reg;
 
+pub use device::interrupt::InterruptCause;
 pub use device::DeviceMap;
 pub use mem::Memory;
 pub use reg::Registers;
