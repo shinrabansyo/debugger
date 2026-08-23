@@ -6,41 +6,41 @@
 
     // 表示モード設定 (16色モード, 128 x 128)
     addi r4 = r0, 2
-    out r0[6] = r4
+    out r0[0x300] = r4
 
     // パレット設定
     addi r4 = r0, 0x00ffffff      // rgb(255, 255, 255)
-    out r0[7] = r4
+    out r0[0x301] = r4
     addi r4 = r0, 0x010000ff      // rgb(0, 0, 255)
-    out r0[7] = r4
+    out r0[0x301] = r4
     addi r4 = r0, 0x02ff0000      // rgb(255, 0, 0)
-    out r0[7] = r4
+    out r0[0x301] = r4
     addi r4 = r0, 0x0300ff00      // rgb(0, 255, 0)
-    out r0[7] = r4
+    out r0[0x301] = r4
     addi r4 = r0, 0x04ffff00      // rgb(255, 255, 0)
-    out r0[7] = r4
+    out r0[0x301] = r4
     addi r4 = r0, 0x05ff00ff      // rgb(255, 0, 255)
-    out r0[7] = r4
+    out r0[0x301] = r4
     addi r4 = r0, 0x0600ffff      // rgb(0, 255, 255)
-    out r0[7] = r4
+    out r0[0x301] = r4
     addi r4 = r0, 0x07ff8000      // rgb(255, 128, 0)
-    out r0[7] = r4
+    out r0[0x301] = r4
     addi r4 = r0, 0x08ff0080      // rgb(255, 0, 128)
-    out r0[7] = r4
+    out r0[0x301] = r4
     addi r4 = r0, 0x09ff80ff      // rgb(128, 0, 255)
-    out r0[7] = r4
+    out r0[0x301] = r4
     addi r4 = r0, 0x0a80ff00      // rgb(0, 128, 255)
-    out r0[7] = r4
+    out r0[0x301] = r4
     addi r4 = r0, 0x0bff0080      // rgb(0, 128, 255)
-    out r0[7] = r4
+    out r0[0x301] = r4
     addi r4 = r0, 0x0cff8000      // rgb(128, 255, 0)
-    out r0[7] = r4
+    out r0[0x301] = r4
     addi r4 = r0, 0x0dff80ff      // rgb(128, 255, 255)
-    out r0[7] = r4
+    out r0[0x301] = r4
     addi r4 = r0, 0x0e80ff80      // rgb(128, 255, 128)
-    out r0[7] = r4
+    out r0[0x301] = r4
     addi r4 = r0, 0x0f808080      // rgb(128, 128, 128)
-    out r0[7] = r4
+    out r0[0x301] = r4
 
     // 乱数のシード
     addi r4 = r0, 0x12345678
@@ -61,14 +61,14 @@
             add r7 = r0, r5
             slli r7 = r7, 7          // addr  = y * 128
             add r7 = r7, r6          // addr += x
-            addi r7 = r7, 0x10000000 // addr += 0x10000000
+            addi r7 = r7, 0x01000000 // addr += 0x01000000
 
             // xorshift 法による乱数生成
             slli r9 = r4, 13         // rand_a = rand << 13
             xor r4 = r4, r9          // rand = rand ^ rand_a
-            srli r9 = r4, 7          // rand_a = rand >> 7
+            srli r9 = r4, 17         // rand_a = rand >> 17
             xor r4 = r4, r9          // rand = rand ^ rand_a
-            slli r9 = r4, 17         // rand_a = rand << 17
+            slli r9 = r4, 5          // rand_a = rand << 5
             xor r4 = r4, r9          // rand = rand ^ rand_a
 
             // 書き込み

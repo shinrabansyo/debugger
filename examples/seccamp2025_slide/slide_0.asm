@@ -136,41 +136,41 @@ $image
 
     // 表示モード設定 (16色モード, 128 x 128)
     addi r4 = r0, 2
-    out r0[6] = r4
+    out r0[0x300] = r4
 
     // パレット設定
     addi r4 = r0, 0x00020201    // rgb(2, 2, 1)
-    out r0[7] = r4
+    out r0[0x301] = r4
     addi r4 = r0, 0x01fbfbfb    // rgb(251, 251, 251)
-    out r0[7] = r4
+    out r0[0x301] = r4
     addi r4 = r0, 0x02161b60    // rgb(22, 27, 96)
-    out r0[7] = r4
+    out r0[0x301] = r4
     addi r4 = r0, 0x03ffce53    // rgb(255, 206, 83)
-    out r0[7] = r4
+    out r0[0x301] = r4
     addi r4 = r0, 0x04a8a8a9    // rgb(168, 168, 169)
-    out r0[7] = r4
+    out r0[0x301] = r4
     addi r4 = r0, 0x05636363    // rgb(99, 99, 99)
-    out r0[7] = r4
+    out r0[0x301] = r4
     addi r4 = r0, 0x06de6900    // rgb(222, 105, 0)
-    out r0[7] = r4
+    out r0[0x301] = r4
     addi r4 = r0, 0x07feaa3e    // rgb(254, 170, 62)
-    out r0[7] = r4
+    out r0[0x301] = r4
     addi r4 = r0, 0x08646791    // rgb(100, 103, 145)
-    out r0[7] = r4
+    out r0[0x301] = r4
     addi r4 = r0, 0x09673100    // rgb(103, 49, 0)
-    out r0[7] = r4
+    out r0[0x301] = r4
     addi r4 = r0, 0x0aecac5a    // rgb(236, 172, 90)
-    out r0[7] = r4
+    out r0[0x301] = r4
     addi r4 = r0, 0x0bffe39d    // rgb(255, 227, 157)
-    out r0[7] = r4
+    out r0[0x301] = r4
     addi r4 = r0, 0x0c853e00    // rgb(133, 62, 0)
-    out r0[7] = r4
+    out r0[0x301] = r4
     addi r4 = r0, 0x0db85700    // rgb(184, 87, 0)
-    out r0[7] = r4
+    out r0[0x301] = r4
     addi r4 = r0, 0x0eb8b9c5    // rgb(184, 185, 197)
-    out r0[7] = r4
+    out r0[0x301] = r4
     addi r4 = r0, 0x0f7f551f    // rgb(127, 85, 31)
-    out r0[7] = r4
+    out r0[0x301] = r4
 
     // Y 軸方向ループカウンタ
     addi r5 = r0, 0
@@ -186,25 +186,49 @@ $image
 
             // アドレス計算
             add r7 = r0, r5
-            slli r7 = r7, 6          // addr_y  = y * 64
-            srli r4 = r6, 1
-            add r7 = r7, r4          // addr = addr_y + idx_x
-            addi r7 = r7, 0x10000000 // addr += 0x10000000
+            slli r7 = r7, 7          // addr_y  = y * 128
+            add r7 = r7, r6          // addr = addr_y + idx_x
+            addi r7 = r7, 0x01000000 // addr += 0x01000000
 
             // ピクセル取得
             slli r4 = r5, 7          // img_addr = y * 128
             add r4 = r4, r6          // img_addr += x
-            lb r10 = r4[0]           // pixel_even = img[img_addr]
-            lb r11 = r4[1]           // pixel_odd  = img[img_addr+1]
-            add r4 = r0, r11
-            slli r11 = r4, 4
-            or r10 = r10, r11        // pixel = (pixel_odd << 4) | pixel_even
 
-            // 書き込み
-            out r7[0] = r10
+            lb r10 = r4[0]           // pixel_even = img[img_addr]
+            out      r7[0] = r10
+            lb r10 = r4[1]           // pixel_even = img[img_addr]
+            out      r7[1] = r10
+            lb r10 = r4[2]           // pixel_even = img[img_addr]
+            out      r7[2] = r10
+            lb r10 = r4[3]           // pixel_even = img[img_addr]
+            out      r7[3] = r10
+            lb r10 = r4[4]           // pixel_even = img[img_addr]
+            out      r7[4] = r10
+            lb r10 = r4[5]           // pixel_even = img[img_addr]
+            out      r7[5] = r10
+            lb r10 = r4[6]           // pixel_even = img[img_addr]
+            out      r7[6] = r10
+            lb r10 = r4[7]           // pixel_even = img[img_addr]
+            out      r7[7] = r10
+            lb r10 = r4[8]           // pixel_even = img[img_addr]
+            out      r7[8] = r10
+            lb r10 = r4[9]           // pixel_even = img[img_addr]
+            out      r7[9] = r10
+            lb r10 = r4[10]           // pixel_even = img[img_addr]
+            out      r7[10] = r10
+            lb r10 = r4[11]           // pixel_even = img[img_addr]
+            out      r7[11] = r10
+            lb r10 = r4[12]           // pixel_even = img[img_addr]
+            out      r7[12] = r10
+            lb r10 = r4[13]           // pixel_even = img[img_addr]
+            out      r7[13] = r10
+            lb r10 = r4[14]           // pixel_even = img[img_addr]
+            out      r7[14] = r10
+            lb r10 = r4[15]           // pixel_even = img[img_addr]
+            out      r7[15] = r10
 
             // カウンタ加算
-            addi r6 = r6, 2
+            addi r6 = r6, 8
 
             // ループ終了判定
             addi r8 = r0, 128
