@@ -23,18 +23,18 @@ impl Device for Display {
     fn write(&mut self, addr: usize, data: u32) -> anyhow::Result<()> {
         match addr {
             // 出力モード指定
-            0x0000_0006 => {
+            0x0000_0300 => {
                 (self.width, self.height) = match data {
                     0x00 => (0, 0),
                     0x01 => (640, 480),
                     0x02 => (128, 128),
-                    _ => (0, 0)
+                    _ => (0, 0),
                 };
                 self.canvas = DynamicImage::new_rgb8(self.width, self.height);
             }
 
             // パレット設定 (16色モード)
-            0x0000_0007 => {
+            0x0000_0301 => {
                 let idx = (data >> 24) & 0x0F;
                 let r = ((data >> 16) & 0xFF) as u8;
                 let g = ((data >> 8) & 0xFF) as u8;
@@ -43,10 +43,10 @@ impl Device for Display {
             }
 
             // フレームバッファ (16色モード)
-            0x1000_0000..=0x1FFF_FFFF if self.width == 128 => {
-                let x = ((addr - 0x1000_0000) % 128) as u32;
-                let y = ((addr - 0x1000_0000) / 128) as u32;
-                let pixel = data & 0x0F;
+            0x0100_0000..=0x01FF_FFFF if self.width == 128 => {
+                let x = ((addr - 0x0100_0000) % 128) as u32;
+                let y = ((addr - 0x0100_0000) / 128) as u32;
+                let pixel = data & 0x0F; // パレット番号
                 let pixel = *self.palette.get(&pixel).unwrap_or(&Rgba([0, 0, 0, 0]));
                 self.canvas.put_pixel(x, y, pixel);
             }
