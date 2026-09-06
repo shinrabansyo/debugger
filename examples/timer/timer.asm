@@ -1,5 +1,7 @@
 $helloworld
     string "Hello world!"
+$hellointerrupt
+    string "Hello interrupt!"
 
 ===
 
@@ -9,7 +11,8 @@ $helloworld
 
     // 割込みの設定
     // 割込みベクタの設定 / 割込みタイマー設定 / 割込み有効化
-    out r0[0x500] = @trap_vector
+    addi r21 = r0, @trap_vector
+    out r0[0x500] = r21
 
     // 割込みのためのタイマー設定
     in r21 = r0[0x403]
@@ -77,6 +80,7 @@ $helloworld
 // ここで割込み時の処理
 @trap_vector
     // レジスタの退避
+
     // 割込み原因の確認
     in r21 = r0[0x502]
     addi r22 = r0, 1
@@ -84,8 +88,8 @@ $helloworld
     // 割込み時の処理
     @trap_vector.timer_interrupt
         // "Hello world!"
-        addi r10 = r0, $helloworld
-        beq r21, (r0, r0) -> @func_print
+        addi r10 = r0, $hellointerrupt
+        beq r1, (r0, r0) -> @func_print
 
     @trap_vector.end
     // 次の割込みのためのタイマー設定
@@ -93,12 +97,12 @@ $helloworld
     addi r21 = r21, 1000
     out r0[0x405] = r21
 
-    // レジスタの復元
-
     // 割込み有効化
     in r21 = r0[0x503]
     ori r21 = r21, 0x01 // global interrupt enable
     out r0[0x503] = r21
+
+    // レジスタの復元
 
     // 元の処理にreturn
     in r21 = r0[0x501]

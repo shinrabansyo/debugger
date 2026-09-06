@@ -62,6 +62,7 @@ impl Emulator {
                 state.pc = state.devices.interrupt.trap_vector as u32;
                 state.devices.interrupt.interrupt_cause = 0x01; // timer interrupt
                 state.devices.interrupt.interrupt_enable &= !0x01; // disable interrupt
+                self.state = Some(state);
                 return Ok(());
             }
         }
